@@ -17,6 +17,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amita:wght@400;700&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
     <!-- Theme Switcher CSS -->
     <link rel="stylesheet" href="{% static 'css/theme-switcher.css' %}">
 
@@ -35,26 +38,30 @@
                     <div class="col-md-6">
                         <ul class="list-inline mb-0">
                             <li class="list-inline-item me-3">
-                                <i class="fas fa-phone-alt me-1"></i> +1 234 567 8900
+                                <a href="tel:+12345678900" class="text-white text-decoration-none">
+                                    <i class="fas fa-phone-alt me-1"></i> +1 234 567 8900
+                                </a>
                             </li>
                             <li class="list-inline-item">
-                                <i class="fas fa-envelope me-1"></i> info@varnikakart.com
+                                <a href="mailto:info@varnikakart.com" class="text-white text-decoration-none">
+                                    <i class="fas fa-envelope me-1"></i> info@varnikakart.com
+                                </a>
                             </li>
                         </ul>
                     </div>
                     <div class="col-md-6 text-end">
                         <ul class="list-inline mb-0">
-                            <li class="list-inline-item me-3">
-                                <a href="#" class="text-white"><i class="fab fa-facebook-f"></i></a>
+                            <li class="list-inline-item me-2">
+                                <a href="#" class="text-white social-icon"><i class="fab fa-facebook-f"></i></a>
                             </li>
-                            <li class="list-inline-item me-3">
-                                <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
+                            <li class="list-inline-item me-2">
+                                <a href="#" class="text-white social-icon"><i class="fab fa-instagram"></i></a>
                             </li>
-                            <li class="list-inline-item me-3">
-                                <a href="#" class="text-white"><i class="fab fa-twitter"></i></a>
+                            <li class="list-inline-item me-2">
+                                <a href="#" class="text-white social-icon"><i class="fab fa-twitter"></i></a>
                             </li>
                             <li class="list-inline-item">
-                                <a href="#" class="text-white"><i class="fab fa-pinterest"></i></a>
+                                <a href="#" class="text-white social-icon"><i class="fab fa-pinterest"></i></a>
                             </li>
                         </ul>
                     </div>
@@ -63,58 +70,180 @@
         </div>
 
         <!-- Main Navigation -->
-        <nav class="navbar navbar-expand-lg navbar-light sticky-top shadow-sm py-3" style="background-color: #ffffff;">
+        <nav class="navbar navbar-expand-lg navbar-light main-navbar py-3" style="background-color: #ffffff;">
             <div class="container">
                 <!-- Logo -->
-                <a class="navbar-brand fw-bold" href="{% url 'home' %}" style="font-size: 1.8rem; background: linear-gradient(90deg, #ff6b6b, #4ecdc4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                    VarnikaKart
+                <a class="navbar-brand fw-bold d-flex align-items-center" href="{% url 'home' %}" style="font-size: 1.8rem; background: linear-gradient(90deg, #ff6b6b, #4ecdc4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    <span class="me-2 logo-3d">VarnikaKart</span>
+                    <span class="brand-icon d-none d-sm-inline" style="font-size: 1.2rem;">
+                        <i class="fas fa-paint-brush" style="transform: rotate(-15deg);"></i>
+                    </span>
                 </a>
 
                 <!-- Mobile Icons -->
                 <div class="d-flex d-lg-none">
-                    <a href="{% url 'orders:cart' %}" class="btn btn-outline-dark btn-sm me-2 position-relative">
+                    <a href="{% url 'orders:cart' %}" class="btn btn-outline-dark btn-sm me-2 position-relative nav-icon-btn">
                         <i class="fas fa-shopping-cart"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             0
                             <span class="visually-hidden">items in cart</span>
                         </span>
                     </a>
-                    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                 </div>
 
-                <!-- Search Form -->
+                <!-- Search Form with Autocomplete -->
                 <div class="d-none d-lg-block mx-auto" style="width: 40%;">
-                    <form class="d-flex">
+                    <form class="d-flex position-relative">
                         <div class="input-group">
-                            <input class="form-control" type="search" placeholder="Search for products..." aria-label="Search">
-                            <button class="btn btn-outline-primary" type="submit">
+                            <input id="searchInput" class="form-control border-end-0 rounded-start" type="search" placeholder="Search for products..." aria-label="Search" autocomplete="off">
+                            <button class="btn btn-outline-primary border-start-0 rounded-end" type="submit">
                                 <i class="fas fa-search"></i>
                             </button>
+                        </div>
+                        <!-- Search Autocomplete Results -->
+                        <div id="searchResults" class="search-results shadow-lg">
+                            <div class="p-3 border-bottom">
+                                <h6 class="mb-2 fw-bold">Popular Searches</h6>
+                            </div>
+                            <div class="search-item d-flex align-items-center p-3 border-bottom">
+                                <div class="search-icon me-3 bg-light rounded-circle">
+                                    <i class="fas fa-search text-primary"></i>
+                                </div>
+                                <div>
+                                    <span class="d-block">Handmade Jewelry</span>
+                                </div>
+                            </div>
+                            <div class="search-item d-flex align-items-center p-3 border-bottom">
+                                <div class="search-icon me-3 bg-light rounded-circle">
+                                    <i class="fas fa-search text-primary"></i>
+                                </div>
+                                <div>
+                                    <span class="d-block">Madhubani Paintings</span>
+                                </div>
+                            </div>
+                            <div class="search-item d-flex align-items-center p-3 border-bottom">
+                                <div class="search-icon me-3 bg-light rounded-circle">
+                                    <i class="fas fa-search text-primary"></i>
+                                </div>
+                                <div>
+                                    <span class="d-block">Personalized Gifts</span>
+                                </div>
+                            </div>
+                            <div class="p-3 border-bottom">
+                                <h6 class="mb-2 fw-bold">Popular Products</h6>
+                            </div>
+                            <div class="search-item d-flex align-items-center p-3 border-bottom">
+                                <div class="search-product-img me-3">
+                                    <img src="https://via.placeholder.com/40" alt="Product" class="rounded">
+                                </div>
+                                <div>
+                                    <span class="d-block fw-medium">Handcrafted Silver Earrings</span>
+                                    <span class="text-primary fw-bold">$45.99</span>
+                                </div>
+                            </div>
+                            <div class="search-item d-flex align-items-center p-3 border-bottom">
+                                <div class="search-product-img me-3">
+                                    <img src="https://via.placeholder.com/40" alt="Product" class="rounded">
+                                </div>
+                                <div>
+                                    <span class="d-block fw-medium">Decorative Wall Hanging</span>
+                                    <span class="text-primary fw-bold">$29.99</span>
+                                </div>
+                            </div>
+                            <div class="p-2 text-center">
+                                <a href="#" class="btn btn-link text-decoration-none">View all results</a>
+                            </div>
                         </div>
                     </form>
                 </div>
 
                 <!-- Desktop Icons -->
                 <div class="d-none d-lg-flex align-items-center">
-                    <a href="{% url 'users:wishlist' %}" class="btn btn-outline-dark btn-sm me-2 position-relative">
+                    <!-- Notifications -->
+                    <div class="dropdown me-3">
+                        <button class="btn btn-outline-dark btn-sm nav-icon-btn position-relative" type="button" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge show">3</span>
+                            <span class="nav-icon-text">Notifications</span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end shadow border-0 p-0" aria-labelledby="notificationsDropdown" style="width: 320px; max-height: 400px; overflow-y: auto;">
+                            <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0 fw-bold">Notifications</h6>
+                                <button class="btn btn-sm text-primary p-0 fw-medium">Mark all as read</button>
+                            </div>
+                            <div class="notifications-list">
+                                <a href="#" class="dropdown-item p-3 border-bottom d-flex unread">
+                                    <div class="notification-icon me-3 bg-primary-soft rounded-circle">
+                                        <i class="fas fa-tag text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <p class="mb-1 fw-medium">Flash Sale: 50% off on all handmade jewelry!</p>
+                                        <small class="text-muted">2 hours ago</small>
+                                    </div>
+                                </a>
+                                <a href="#" class="dropdown-item p-3 border-bottom d-flex unread">
+                                    <div class="notification-icon me-3 bg-success-soft rounded-circle">
+                                        <i class="fas fa-check text-success"></i>
+                                    </div>
+                                    <div>
+                                        <p class="mb-1 fw-medium">Your order #12345 has been shipped!</p>
+                                        <small class="text-muted">Yesterday</small>
+                                    </div>
+                                </a>
+                                <a href="#" class="dropdown-item p-3 border-bottom d-flex unread">
+                                    <div class="notification-icon me-3 bg-warning-soft rounded-circle">
+                                        <i class="fas fa-star text-warning"></i>
+                                    </div>
+                                    <div>
+                                        <p class="mb-1 fw-medium">New collection of handmade crafts available!</p>
+                                        <small class="text-muted">3 days ago</small>
+                                    </div>
+                                </a>
+                                <a href="#" class="dropdown-item p-3 border-bottom d-flex">
+                                    <div class="notification-icon me-3 bg-info-soft rounded-circle">
+                                        <i class="fas fa-gift text-info"></i>
+                                    </div>
+                                    <div>
+                                        <p class="mb-1">Special offer: Free shipping on orders over $50</p>
+                                        <small class="text-muted">1 week ago</small>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="p-2 text-center border-top">
+                                <a href="#" class="btn btn-link text-decoration-none">View all notifications</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Wishlist -->
+                    <a href="{% url 'users:wishlist' %}" class="btn btn-outline-dark btn-sm me-3 position-relative nav-icon-btn">
                         <i class="fas fa-heart"></i>
+                        <span class="notification-badge show">2</span>
+                        <span class="nav-icon-text">Wishlist</span>
                     </a>
-                    <a href="{% url 'orders:cart' %}" class="btn btn-outline-dark btn-sm me-2 position-relative">
+
+                    <!-- Cart -->
+                    <a href="{% url 'orders:cart' %}" class="btn btn-outline-dark btn-sm me-3 position-relative nav-icon-btn">
                         <i class="fas fa-shopping-cart"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             0
                             <span class="visually-hidden">items in cart</span>
                         </span>
+                        <span class="nav-icon-text">Cart</span>
                     </a>
+
+                    <!-- Theme Switcher -->
                     <div class="dropdown me-3">
-                        <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" id="themeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-palette me-1"></i> <span id="current-theme-name">Theme</span>
+                        <button class="btn btn-outline-dark btn-sm dropdown-toggle nav-icon-btn" type="button" id="themeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-palette me-1"></i>
+                            <span id="current-theme-name">Theme</span>
                         </button>
-                        <div class="dropdown-menu dropdown-menu-end shadow-sm border-0 theme-dropdown p-0" aria-labelledby="themeDropdown" id="theme-menu">
+                        <div class="dropdown-menu dropdown-menu-end shadow border-0 theme-dropdown p-0" aria-labelledby="themeDropdown" id="theme-menu" style="width: 280px;">
                             <div class="p-3 border-bottom">
-                                <h6 class="mb-2">Choose a Theme</h6>
+                                <h6 class="mb-2 fw-bold"><i class="fas fa-paint-brush me-2"></i>Choose a Theme</h6>
                                 <p class="text-muted small mb-0">Select a theme that matches your style</p>
                             </div>
                             <div class="theme-options p-2">
@@ -123,7 +252,7 @@
                                         <div class="theme-color" style="background: linear-gradient(135deg, #d4a5a5, #a5a6d4);"></div>
                                     </div>
                                     <div>
-                                        <span class="d-block">Artisanal Elegance</span>
+                                        <span class="d-block fw-medium">Artisanal Elegance</span>
                                         <small class="text-muted">Soft, elegant, handcrafted</small>
                                     </div>
                                 </button>
@@ -133,7 +262,7 @@
                                         <div class="theme-color" style="background: linear-gradient(135deg, #c77d5e, #8ba888);"></div>
                                     </div>
                                     <div>
-                                        <span class="d-block">Boho & Brush</span>
+                                        <span class="d-block fw-medium">Boho & Brush</span>
                                         <small class="text-muted">Bohemian, artistic strokes</small>
                                     </div>
                                 </button>
@@ -143,7 +272,7 @@
                                         <div class="theme-color" style="background: linear-gradient(135deg, #4361ee, #f72585);"></div>
                                     </div>
                                     <div>
-                                        <span class="d-block">Modern Minimal</span>
+                                        <span class="d-block fw-medium">Modern Minimal</span>
                                         <small class="text-muted">Clean, professional design</small>
                                     </div>
                                 </button>
@@ -153,7 +282,7 @@
                                         <div class="theme-color" style="background: linear-gradient(135deg, #9c0e0e, #f1c40f);"></div>
                                     </div>
                                     <div>
-                                        <span class="d-block">Mystic Indian</span>
+                                        <span class="d-block fw-medium">Mystic Indian</span>
                                         <small class="text-muted">Traditional meets modern</small>
                                     </div>
                                 </button>
@@ -163,7 +292,7 @@
                                         <div class="theme-color" style="background: linear-gradient(135deg, #ffafcc, #a2d2ff);"></div>
                                     </div>
                                     <div>
-                                        <span class="d-block">Pastel Dream</span>
+                                        <span class="d-block fw-medium">Pastel Dream</span>
                                         <small class="text-muted">Soft, feminine, creative</small>
                                     </div>
                                 </button>
@@ -173,21 +302,30 @@
 
                     {% if user.is_authenticated %}
                     <div class="dropdown">
-                        <button class="btn btn-outline-dark dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user me-1"></i> {{ user.username }}
+                        <button class="btn btn-outline-dark dropdown-toggle nav-icon-btn" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle me-1"></i> {{ user.username }}
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="{% url 'users:profile' %}"><i class="fas fa-user-circle me-2"></i>My Profile</a></li>
-                            <li><a class="dropdown-item" href="{% url 'orders:order_history' %}"><i class="fas fa-shopping-bag me-2"></i>My Orders</a></li>
-                            <li><a class="dropdown-item" href="{% url 'users:wishlist' %}"><i class="fas fa-heart me-2"></i>My Wishlist</a></li>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="userDropdown" style="min-width: 200px;">
+                            <li class="px-3 py-2 d-flex align-items-center border-bottom">
+                                <div class="avatar-circle me-2">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <span class="d-block fw-medium">{{ user.username }}</span>
+                                    <small class="text-muted">{{ user.email }}</small>
+                                </div>
+                            </li>
+                            <li><a class="dropdown-item py-2" href="{% url 'users:profile' %}"><i class="fas fa-user-circle me-2 text-primary"></i>My Profile</a></li>
+                            <li><a class="dropdown-item py-2" href="{% url 'orders:order_history' %}"><i class="fas fa-shopping-bag me-2 text-primary"></i>My Orders</a></li>
+                            <li><a class="dropdown-item py-2" href="{% url 'users:wishlist' %}"><i class="fas fa-heart me-2 text-primary"></i>My Wishlist</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            <li><a class="dropdown-item py-2 text-danger" href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                         </ul>
                     </div>
                     {% else %}
-                    <div>
-                        <a href="{% url 'account_login' %}" class="btn btn-outline-primary btn-sm me-2">Login</a>
-                        <a href="{% url 'account_signup' %}" class="btn btn-primary btn-sm">Register</a>
+                    <div class="ms-3">
+                        <a href="{% url 'account_login' %}" class="btn btn-outline-primary btn-sm me-2 nav-btn">Login</a>
+                        <a href="{% url 'account_signup' %}" class="btn btn-primary btn-sm nav-btn">Register</a>
                     </div>
                     {% endif %}
                 </div>
@@ -196,37 +334,94 @@
                 <div class="collapse navbar-collapse mt-3 mt-lg-0" id="navbarNav">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link fw-medium" href="{% url 'home' %}">Home</a>
+                            <a class="nav-link fw-medium" href="{% url 'home' %}">
+                                <i class="fas fa-home me-1 d-inline d-lg-none"></i> Home
+                            </a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle fw-medium" href="#" id="shopDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Shop
+                                <i class="fas fa-store me-1 d-inline d-lg-none"></i> Shop
                             </a>
-                            <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="shopDropdown">
-                                <li><a class="dropdown-item" href="{% url 'products:product_list' %}">All Products</a></li>
+                            <ul class="dropdown-menu border-0 shadow" aria-labelledby="shopDropdown">
+                                <li>
+                                    <a class="dropdown-item py-2" href="{% url 'products:product_list' %}">
+                                        <i class="fas fa-th-large me-2 text-primary"></i>All Products
+                                    </a>
+                                </li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><h6 class="dropdown-header">Categories</h6></li>
-                                <li><a class="dropdown-item" href="#">Paintings</a></li>
-                                <li><a class="dropdown-item" href="#">Jewelry</a></li>
-                                <li><a class="dropdown-item" href="#">Home Decor</a></li>
-                                <li><a class="dropdown-item" href="#">Personalized Gifts</a></li>
+                                <li><h6 class="dropdown-header text-uppercase small fw-bold">Categories</h6></li>
+                                <li>
+                                    <a class="dropdown-item py-2" href="#">
+                                        <i class="fas fa-palette me-2 text-primary"></i>Paintings
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item py-2" href="#">
+                                        <i class="fas fa-gem me-2 text-primary"></i>Jewelry
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item py-2" href="#">
+                                        <i class="fas fa-home me-2 text-primary"></i>Home Decor
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item py-2" href="#">
+                                        <i class="fas fa-gift me-2 text-primary"></i>Personalized Gifts
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item py-2" href="#">
+                                        <i class="fas fa-tags me-2 text-primary"></i>Sale Items
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item py-2" href="#">
+                                        <i class="fas fa-star me-2 text-primary"></i>New Arrivals
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link fw-medium" href="{% url 'contact' %}">Contact</a>
+                            <a class="nav-link fw-medium" href="{% url 'contact' %}">
+                                <i class="fas fa-envelope me-1 d-inline d-lg-none"></i> Contact
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link fw-medium" href="#">About Us</a>
+                            <a class="nav-link fw-medium" href="#">
+                                <i class="fas fa-info-circle me-1 d-inline d-lg-none"></i> About Us
+                            </a>
                         </li>
                     </ul>
 
                     <!-- Mobile Search -->
-                    <form class="d-lg-none mt-3">
+                    <form class="d-lg-none mt-3 position-relative">
                         <div class="input-group">
-                            <input class="form-control" type="search" placeholder="Search for products..." aria-label="Search">
-                            <button class="btn btn-outline-primary" type="submit">
+                            <span class="input-group-text bg-white border-end-0 text-muted">
                                 <i class="fas fa-search"></i>
-                            </button>
+                            </span>
+                            <input id="mobileSearchInput" class="form-control border-start-0 ps-0" type="search" placeholder="Search for products..." aria-label="Search" autocomplete="off">
+                        </div>
+                        <!-- Quick Search Categories -->
+                        <div class="quick-search-categories mt-2 pb-2">
+                            <div class="d-flex flex-nowrap overflow-auto pb-2">
+                                <a href="#" class="quick-search-tag me-2 flex-shrink-0">
+                                    <i class="fas fa-palette me-1"></i> Paintings
+                                </a>
+                                <a href="#" class="quick-search-tag me-2 flex-shrink-0">
+                                    <i class="fas fa-gem me-1"></i> Jewelry
+                                </a>
+                                <a href="#" class="quick-search-tag me-2 flex-shrink-0">
+                                    <i class="fas fa-home me-1"></i> Home Decor
+                                </a>
+                                <a href="#" class="quick-search-tag me-2 flex-shrink-0">
+                                    <i class="fas fa-gift me-1"></i> Gifts
+                                </a>
+                                <a href="#" class="quick-search-tag flex-shrink-0">
+                                    <i class="fas fa-tags me-1"></i> Sale
+                                </a>
+                            </div>
                         </div>
                     </form>
 
@@ -330,40 +525,45 @@
             </div>
         </nav>
 
-        <!-- Category Navigation (Optional) -->
-        <div class="bg-light py-2 d-none d-lg-block border-bottom">
+        <!-- Category Navigation -->
+        <div class="category-navbar py-2 d-none d-lg-block">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <ul class="list-inline mb-0 category-nav">
-                            <li class="list-inline-item me-4">
-                                <a href="#" class="text-dark text-decoration-none fw-medium">
+                        <ul class="list-inline mb-0 category-nav text-center">
+                            <li class="list-inline-item">
+                                <a href="#" class="category-link text-decoration-none fw-medium">
                                     <i class="fas fa-palette me-1"></i> Paintings
                                 </a>
                             </li>
-                            <li class="list-inline-item me-4">
-                                <a href="#" class="text-dark text-decoration-none fw-medium">
+                            <li class="list-inline-item">
+                                <a href="#" class="category-link text-decoration-none fw-medium">
                                     <i class="fas fa-gem me-1"></i> Jewelry
                                 </a>
                             </li>
-                            <li class="list-inline-item me-4">
-                                <a href="#" class="text-dark text-decoration-none fw-medium">
+                            <li class="list-inline-item">
+                                <a href="#" class="category-link text-decoration-none fw-medium">
                                     <i class="fas fa-home me-1"></i> Home Decor
                                 </a>
                             </li>
-                            <li class="list-inline-item me-4">
-                                <a href="#" class="text-dark text-decoration-none fw-medium">
+                            <li class="list-inline-item">
+                                <a href="#" class="category-link text-decoration-none fw-medium">
                                     <i class="fas fa-gift me-1"></i> Personalized Gifts
                                 </a>
                             </li>
-                            <li class="list-inline-item me-4">
-                                <a href="#" class="text-dark text-decoration-none fw-medium">
+                            <li class="list-inline-item">
+                                <a href="#" class="category-link text-decoration-none fw-medium">
                                     <i class="fas fa-tags me-1"></i> Sale
                                 </a>
                             </li>
                             <li class="list-inline-item">
-                                <a href="#" class="text-dark text-decoration-none fw-medium">
+                                <a href="#" class="category-link text-decoration-none fw-medium">
                                     <i class="fas fa-star me-1"></i> New Arrivals
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#" class="category-link text-decoration-none fw-medium">
+                                    <i class="fas fa-award me-1"></i> Best Sellers
                                 </a>
                             </li>
                         </ul>

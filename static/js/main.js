@@ -7,6 +7,120 @@ document.addEventListener('DOMContentLoaded', function() {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
+    // Handle fixed navbar on scroll with smooth transition
+    const mainNav = document.querySelector('.main-navbar');
+    const categoryNav = document.querySelector('.category-navbar');
+    const topBarHeight = document.querySelector('.top-bar') ? document.querySelector('.top-bar').offsetHeight : 0;
+    let isFixed = false;
+    let lastScrollTop = 0;
+    let scrollTimer;
+
+    // Function to handle scroll behavior
+    function handleScroll() {
+        const currentScrollTop = window.scrollY;
+
+        // Determine scroll direction
+        const isScrollingDown = currentScrollTop > lastScrollTop;
+
+        // Fixed navbar logic
+        if (currentScrollTop > topBarHeight) {
+            if (!isFixed) {
+                mainNav.classList.add('navbar-fixed');
+                if (categoryNav) {
+                    categoryNav.style.marginTop = mainNav.offsetHeight + 'px';
+                }
+                isFixed = true;
+
+                // Add animation class
+                mainNav.classList.add('animate__animated', 'animate__fadeInDown');
+                setTimeout(() => {
+                    mainNav.classList.remove('animate__animated', 'animate__fadeInDown');
+                }, 500);
+            }
+        } else {
+            if (isFixed) {
+                mainNav.classList.remove('navbar-fixed');
+                if (categoryNav) {
+                    categoryNav.style.marginTop = '0';
+                }
+                isFixed = false;
+            }
+        }
+
+        // Update last scroll position
+        lastScrollTop = currentScrollTop;
+    }
+
+    // Throttle scroll event for better performance
+    window.addEventListener('scroll', function() {
+        if (!scrollTimer) {
+            scrollTimer = setTimeout(function() {
+                handleScroll();
+                scrollTimer = null;
+            }, 10);
+        }
+    });
+
+    // Initialize on page load
+    handleScroll();
+
+    // Search autocomplete functionality
+    const searchInput = document.getElementById('searchInput');
+    const mobileSearchInput = document.getElementById('mobileSearchInput');
+    const searchResults = document.getElementById('searchResults');
+
+    if (searchInput) {
+        searchInput.addEventListener('focus', function() {
+            if (searchResults) {
+                searchResults.style.display = 'block';
+            }
+        });
+
+        // Close search results when clicking outside
+        document.addEventListener('click', function(e) {
+            if (searchResults && searchInput && !searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.style.display = 'none';
+            }
+        });
+
+        // Simple search functionality
+        searchInput.addEventListener('input', function() {
+            // Here you would typically make an AJAX call to get search results
+            // For demo purposes, we're just showing/hiding the results
+            if (this.value.length > 0) {
+                if (searchResults) {
+                    searchResults.style.display = 'block';
+                }
+            } else {
+                if (searchResults) {
+                    searchResults.style.display = 'none';
+                }
+            }
+        });
+    }
+
+    // Notification system
+    const notificationBadges = document.querySelectorAll('.notification-badge');
+    const markAllAsReadBtn = document.querySelector('.dropdown-menu button.text-primary');
+
+    if (markAllAsReadBtn) {
+        markAllAsReadBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Remove unread class from all notifications
+            const unreadItems = document.querySelectorAll('.notifications-list .unread');
+            unreadItems.forEach(item => {
+                item.classList.remove('unread');
+            });
+
+            // Hide notification badges
+            notificationBadges.forEach(badge => {
+                badge.classList.remove('show');
+            });
+        });
+    }
+
     // Handle theme changes
     document.addEventListener('themeChanged', function(e) {
         console.log('Theme changed to:', e.detail.theme);
