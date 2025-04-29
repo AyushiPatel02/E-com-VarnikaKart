@@ -8,24 +8,17 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Amita:wght@400;700&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Animate.css -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-
-    <!-- Theme Switcher CSS -->
-    <link rel="stylesheet" href="{% static 'css/theme-switcher.css' %}">
-
-    <!-- Custom CSS -->
+    
+    {% load static %}
+    <!-- Custom CSS files -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/theme-switcher.css' %}">
+    
+    <!-- Additional CSS block for templates -->
     {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -70,456 +63,141 @@
         </div>
 
         <!-- Main Navigation -->
-        <nav class="navbar navbar-expand-lg navbar-light main-navbar py-3" style="background-color: #ffffff;">
+        <nav class="pro-navbar navbar navbar-expand-lg">
             <div class="container">
-                <!-- Logo -->
-                <a class="navbar-brand fw-bold d-flex align-items-center" href="{% url 'home' %}" style="font-size: 1.8rem; background: linear-gradient(90deg, #ff6b6b, #4ecdc4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                    <span class="me-2 logo-3d">VarnikaKart</span>
-                    <span class="brand-icon d-none d-sm-inline" style="font-size: 1.2rem;">
-                        <i class="fas fa-paint-brush" style="transform: rotate(-15deg);"></i>
-                    </span>
+                <!-- Brand -->
+                <a class="navbar-brand" href="{% url 'home' %}">
+                    VarnikaKart
                 </a>
 
-                <!-- Mobile Icons -->
-                <div class="d-flex d-lg-none">
-                    <a href="{% url 'orders:cart' %}" class="btn btn-outline-dark btn-sm me-2 position-relative nav-icon-btn">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            0
-                            <span class="visually-hidden">items in cart</span>
-                        </span>
-                    </a>
-                    <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                </div>
+                <!-- Mobile Menu Button -->
+                <button class="mobile-menu-btn d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <i class="fas fa-bars"></i>
+                </button>
 
-                <!-- Search Form with Autocomplete -->
-                <div class="d-none d-lg-block mx-auto" style="width: 40%;">
-                    <form class="d-flex position-relative">
-                        <div class="input-group">
-                            <input id="searchInput" class="form-control border-end-0 rounded-start" type="search" placeholder="Search for products..." aria-label="Search" autocomplete="off">
-                            <button class="btn btn-outline-primary border-start-0 rounded-end" type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                        <!-- Search Autocomplete Results -->
-                        <div id="searchResults" class="search-results shadow-lg">
-                            <div class="p-3 border-bottom">
-                                <h6 class="mb-2 fw-bold">Popular Searches</h6>
-                            </div>
-                            <div class="search-item d-flex align-items-center p-3 border-bottom">
-                                <div class="search-icon me-3 bg-light rounded-circle">
-                                    <i class="fas fa-search text-primary"></i>
-                                </div>
-                                <div>
-                                    <span class="d-block">Handmade Jewelry</span>
-                                </div>
-                            </div>
-                            <div class="search-item d-flex align-items-center p-3 border-bottom">
-                                <div class="search-icon me-3 bg-light rounded-circle">
-                                    <i class="fas fa-search text-primary"></i>
-                                </div>
-                                <div>
-                                    <span class="d-block">Madhubani Paintings</span>
-                                </div>
-                            </div>
-                            <div class="search-item d-flex align-items-center p-3 border-bottom">
-                                <div class="search-icon me-3 bg-light rounded-circle">
-                                    <i class="fas fa-search text-primary"></i>
-                                </div>
-                                <div>
-                                    <span class="d-block">Personalized Gifts</span>
-                                </div>
-                            </div>
-                            <div class="p-3 border-bottom">
-                                <h6 class="mb-2 fw-bold">Popular Products</h6>
-                            </div>
-                            <div class="search-item d-flex align-items-center p-3 border-bottom">
-                                <div class="search-product-img me-3">
-                                    <img src="https://via.placeholder.com/40" alt="Product" class="rounded">
-                                </div>
-                                <div>
-                                    <span class="d-block fw-medium">Handcrafted Silver Earrings</span>
-                                    <span class="text-primary fw-bold">$45.99</span>
-                                </div>
-                            </div>
-                            <div class="search-item d-flex align-items-center p-3 border-bottom">
-                                <div class="search-product-img me-3">
-                                    <img src="https://via.placeholder.com/40" alt="Product" class="rounded">
-                                </div>
-                                <div>
-                                    <span class="d-block fw-medium">Decorative Wall Hanging</span>
-                                    <span class="text-primary fw-bold">$29.99</span>
-                                </div>
-                            </div>
-                            <div class="p-2 text-center">
-                                <a href="#" class="btn btn-link text-decoration-none">View all results</a>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Desktop Icons -->
-                <div class="d-none d-lg-flex align-items-center">
-                    <!-- Notifications -->
-                    <div class="dropdown me-3">
-                        <button class="btn btn-outline-dark btn-sm nav-icon-btn position-relative" type="button" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-                            <i class="fas fa-bell"></i>
-                            <span class="notification-badge show">3</span>
-                            <span class="nav-icon-text">Notifications</span>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end shadow border-0 p-0" aria-labelledby="notificationsDropdown" style="width: 320px; max-height: 400px; overflow-y: auto;">
-                            <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
-                                <h6 class="mb-0 fw-bold">Notifications</h6>
-                                <button class="btn btn-sm text-primary p-0 fw-medium">Mark all as read</button>
-                            </div>
-                            <div class="notifications-list">
-                                <a href="#" class="dropdown-item p-3 border-bottom d-flex unread">
-                                    <div class="notification-icon me-3 bg-primary-soft rounded-circle">
-                                        <i class="fas fa-tag text-primary"></i>
-                                    </div>
-                                    <div>
-                                        <p class="mb-1 fw-medium">Flash Sale: 50% off on all handmade jewelry!</p>
-                                        <small class="text-muted">2 hours ago</small>
-                                    </div>
-                                </a>
-                                <a href="#" class="dropdown-item p-3 border-bottom d-flex unread">
-                                    <div class="notification-icon me-3 bg-success-soft rounded-circle">
-                                        <i class="fas fa-check text-success"></i>
-                                    </div>
-                                    <div>
-                                        <p class="mb-1 fw-medium">Your order #12345 has been shipped!</p>
-                                        <small class="text-muted">Yesterday</small>
-                                    </div>
-                                </a>
-                                <a href="#" class="dropdown-item p-3 border-bottom d-flex unread">
-                                    <div class="notification-icon me-3 bg-warning-soft rounded-circle">
-                                        <i class="fas fa-star text-warning"></i>
-                                    </div>
-                                    <div>
-                                        <p class="mb-1 fw-medium">New collection of handmade crafts available!</p>
-                                        <small class="text-muted">3 days ago</small>
-                                    </div>
-                                </a>
-                                <a href="#" class="dropdown-item p-3 border-bottom d-flex">
-                                    <div class="notification-icon me-3 bg-info-soft rounded-circle">
-                                        <i class="fas fa-gift text-info"></i>
-                                    </div>
-                                    <div>
-                                        <p class="mb-1">Special offer: Free shipping on orders over $50</p>
-                                        <small class="text-muted">1 week ago</small>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="p-2 text-center border-top">
-                                <a href="#" class="btn btn-link text-decoration-none">View all notifications</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Wishlist -->
-                    <a href="{% url 'users:wishlist' %}" class="btn btn-outline-dark btn-sm me-3 position-relative nav-icon-btn">
-                        <i class="fas fa-heart"></i>
-                        <span class="notification-badge show">2</span>
-                        <span class="nav-icon-text">Wishlist</span>
-                    </a>
-
-                    <!-- Cart -->
-                    <a href="{% url 'orders:cart' %}" class="btn btn-outline-dark btn-sm me-3 position-relative nav-icon-btn">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            0
-                            <span class="visually-hidden">items in cart</span>
-                        </span>
-                        <span class="nav-icon-text">Cart</span>
-                    </a>
-
-                    <!-- Theme Switcher -->
-                    <div class="dropdown me-3">
-                        <button class="btn btn-outline-dark btn-sm dropdown-toggle nav-icon-btn" type="button" id="themeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-palette me-1"></i>
-                            <span id="current-theme-name">Theme</span>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end shadow border-0 theme-dropdown p-0" aria-labelledby="themeDropdown" id="theme-menu" style="width: 280px;">
-                            <div class="p-3 border-bottom">
-                                <h6 class="mb-2 fw-bold"><i class="fas fa-paint-brush me-2"></i>Choose a Theme</h6>
-                                <p class="text-muted small mb-0">Select a theme that matches your style</p>
-                            </div>
-                            <div class="theme-options p-2">
-                                <button class="dropdown-item theme-option d-flex align-items-center p-2 rounded" data-theme="artisanal-elegance">
-                                    <div class="theme-preview me-2">
-                                        <div class="theme-color" style="background: linear-gradient(135deg, #d4a5a5, #a5a6d4);"></div>
-                                    </div>
-                                    <div>
-                                        <span class="d-block fw-medium">Artisanal Elegance</span>
-                                        <small class="text-muted">Soft, elegant, handcrafted</small>
-                                    </div>
-                                </button>
-
-                                <button class="dropdown-item theme-option d-flex align-items-center p-2 rounded" data-theme="boho-brush">
-                                    <div class="theme-preview me-2">
-                                        <div class="theme-color" style="background: linear-gradient(135deg, #c77d5e, #8ba888);"></div>
-                                    </div>
-                                    <div>
-                                        <span class="d-block fw-medium">Boho & Brush</span>
-                                        <small class="text-muted">Bohemian, artistic strokes</small>
-                                    </div>
-                                </button>
-
-                                <button class="dropdown-item theme-option d-flex align-items-center p-2 rounded" data-theme="modern-minimal">
-                                    <div class="theme-preview me-2">
-                                        <div class="theme-color" style="background: linear-gradient(135deg, #4361ee, #f72585);"></div>
-                                    </div>
-                                    <div>
-                                        <span class="d-block fw-medium">Modern Minimal</span>
-                                        <small class="text-muted">Clean, professional design</small>
-                                    </div>
-                                </button>
-
-                                <button class="dropdown-item theme-option d-flex align-items-center p-2 rounded" data-theme="mystic-indian">
-                                    <div class="theme-preview me-2">
-                                        <div class="theme-color" style="background: linear-gradient(135deg, #9c0e0e, #f1c40f);"></div>
-                                    </div>
-                                    <div>
-                                        <span class="d-block fw-medium">Mystic Indian</span>
-                                        <small class="text-muted">Traditional meets modern</small>
-                                    </div>
-                                </button>
-
-                                <button class="dropdown-item theme-option d-flex align-items-center p-2 rounded" data-theme="pastel-dream">
-                                    <div class="theme-preview me-2">
-                                        <div class="theme-color" style="background: linear-gradient(135deg, #ffafcc, #a2d2ff);"></div>
-                                    </div>
-                                    <div>
-                                        <span class="d-block fw-medium">Pastel Dream</span>
-                                        <small class="text-muted">Soft, feminine, creative</small>
-                                    </div>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {% if user.is_authenticated %}
-                    <div class="dropdown">
-                        <button class="btn btn-outline-dark dropdown-toggle nav-icon-btn" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user-circle me-1"></i> {{ user.username }}
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="userDropdown" style="min-width: 200px;">
-                            <li class="px-3 py-2 d-flex align-items-center border-bottom">
-                                <div class="avatar-circle me-2">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <div>
-                                    <span class="d-block fw-medium">{{ user.username }}</span>
-                                    <small class="text-muted">{{ user.email }}</small>
-                                </div>
-                            </li>
-                            <li><a class="dropdown-item py-2" href="{% url 'users:profile' %}"><i class="fas fa-user-circle me-2 text-primary"></i>My Profile</a></li>
-                            <li><a class="dropdown-item py-2" href="{% url 'orders:order_history' %}"><i class="fas fa-shopping-bag me-2 text-primary"></i>My Orders</a></li>
-                            <li><a class="dropdown-item py-2" href="{% url 'users:wishlist' %}"><i class="fas fa-heart me-2 text-primary"></i>My Wishlist</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item py-2 text-danger" href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
-                        </ul>
-                    </div>
-                    {% else %}
-                    <div class="ms-3">
-                        <a href="{% url 'account_login' %}" class="btn btn-outline-primary btn-sm me-2 nav-btn">Login</a>
-                        <a href="{% url 'account_signup' %}" class="btn btn-primary btn-sm nav-btn">Register</a>
-                    </div>
-                    {% endif %}
-                </div>
-
-                <!-- Mobile Menu -->
-                <div class="collapse navbar-collapse mt-3 mt-lg-0" id="navbarNav">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <!-- Navbar Content -->
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <!-- Navigation Links -->
+                    <ul class="nav-links navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link fw-medium" href="{% url 'home' %}">
-                                <i class="fas fa-home me-1 d-inline d-lg-none"></i> Home
-                            </a>
+                            <a class="nav-link active" href="{% url 'home' %}">Home</a>
                         </li>
+                        
+                        <!-- Shop Dropdown with Mega Menu -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-toggle="dropdown">Shop</a>
+                            <div class="mega-menu">
+                                <div class="mega-menu-grid">
+                                    <div class="mega-menu-column">
+                                        <h6>Categories</h6>
+                                        <ul class="mega-menu-list">
+                                            <li><a href="#"><i class="fas fa-palette"></i> Paintings</a></li>
+                                            <li><a href="#"><i class="fas fa-gem"></i> Jewelry</a></li>
+                                            <li><a href="#"><i class="fas fa-gift"></i> Gifts</a></li>
+                                            <li><a href="#"><i class="fas fa-home"></i> Home Decor</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="mega-menu-column">
+                                        <h6>Collections</h6>
+                                        <ul class="mega-menu-list">
+                                            <li><a href="#"><i class="fas fa-star"></i> New Arrivals</a></li>
+                                            <li><a href="#"><i class="fas fa-fire"></i> Best Sellers</a></li>
+                                            <li><a href="#"><i class="fas fa-tag"></i> On Sale</a></li>
+                                            <li><a href="#"><i class="fas fa-award"></i> Featured</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="mega-menu-column">
+                                        <h6>Artists</h6>
+                                        <ul class="mega-menu-list">
+                                            <li><a href="#"><i class="fas fa-user-artist"></i> Featured Artists</a></li>
+                                            <li><a href="#"><i class="fas fa-store"></i> Artist Stores</a></li>
+                                            <li><a href="#"><i class="fas fa-handshake"></i> Become an Artist</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="mega-menu-column">
+                                        <h6>Trending</h6>
+                                        <div class="trending-items">
+                                            <!-- Add trending items here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Categories Dropdown -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle fw-medium" href="#" id="shopDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-store me-1 d-inline d-lg-none"></i> Shop
-                            </a>
-                            <ul class="dropdown-menu border-0 shadow" aria-labelledby="shopDropdown">
-                                <li>
-                                    <a class="dropdown-item py-2" href="{% url 'products:product_list' %}">
-                                        <i class="fas fa-th-large me-2 text-primary"></i>All Products
-                                    </a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><h6 class="dropdown-header text-uppercase small fw-bold">Categories</h6></li>
-                                <li>
-                                    <a class="dropdown-item py-2" href="#">
-                                        <i class="fas fa-palette me-2 text-primary"></i>Paintings
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item py-2" href="#">
-                                        <i class="fas fa-gem me-2 text-primary"></i>Jewelry
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item py-2" href="#">
-                                        <i class="fas fa-home me-2 text-primary"></i>Home Decor
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item py-2" href="#">
-                                        <i class="fas fa-gift me-2 text-primary"></i>Personalized Gifts
-                                    </a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="dropdown-item py-2" href="#">
-                                        <i class="fas fa-tags me-2 text-primary"></i>Sale Items
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item py-2" href="#">
-                                        <i class="fas fa-star me-2 text-primary"></i>New Arrivals
-                                    </a>
-                                </li>
+                            <a class="nav-link" href="#" data-bs-toggle="dropdown">Categories</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-palette"></i> Paintings</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-gem"></i> Jewelry</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-gift"></i> Gifts</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-home"></i> Home Decor</a></li>
                             </ul>
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link fw-medium" href="{% url 'contact' %}">
-                                <i class="fas fa-envelope me-1 d-inline d-lg-none"></i> Contact
-                            </a>
+                            <a class="nav-link" href="{% url 'deals' %}">Deals</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link fw-medium" href="#">
-                                <i class="fas fa-info-circle me-1 d-inline d-lg-none"></i> About Us
-                            </a>
+                            <a class="nav-link" href="{% url 'about' %}">About</a>
                         </li>
                     </ul>
 
-                    <!-- Mobile Search -->
-                    <form class="d-lg-none mt-3 position-relative">
-                        <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0 text-muted">
-                                <i class="fas fa-search"></i>
-                            </span>
-                            <input id="mobileSearchInput" class="form-control border-start-0 ps-0" type="search" placeholder="Search for products..." aria-label="Search" autocomplete="off">
-                        </div>
-                        <!-- Quick Search Categories -->
-                        <div class="quick-search-categories mt-2 pb-2">
-                            <div class="d-flex flex-nowrap overflow-auto pb-2">
-                                <a href="#" class="quick-search-tag me-2 flex-shrink-0">
-                                    <i class="fas fa-palette me-1"></i> Paintings
-                                </a>
-                                <a href="#" class="quick-search-tag me-2 flex-shrink-0">
-                                    <i class="fas fa-gem me-1"></i> Jewelry
-                                </a>
-                                <a href="#" class="quick-search-tag me-2 flex-shrink-0">
-                                    <i class="fas fa-home me-1"></i> Home Decor
-                                </a>
-                                <a href="#" class="quick-search-tag me-2 flex-shrink-0">
-                                    <i class="fas fa-gift me-1"></i> Gifts
-                                </a>
-                                <a href="#" class="quick-search-tag flex-shrink-0">
-                                    <i class="fas fa-tags me-1"></i> Sale
-                                </a>
-                            </div>
-                        </div>
-                    </form>
-
-                    <!-- Mobile Theme Switcher -->
-                    <div class="d-lg-none mt-3">
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-body">
-                                <h6 class="mb-2"><i class="fas fa-palette me-2"></i>Choose a Theme</h6>
-                                <p class="text-muted small mb-3">Select a theme that matches your style</p>
-
-                                <div class="mobile-theme-options">
-                                    <div class="mobile-theme-option-wrapper mb-2">
-                                        <button class="mobile-theme-btn w-100 text-start p-2 rounded border-0 d-flex align-items-center mobile-theme-option" data-theme="artisanal-elegance">
-                                            <div class="mobile-theme-preview me-3">
-                                                <div class="mobile-theme-color" style="background: linear-gradient(135deg, #d4a5a5, #a5a6d4);"></div>
-                                            </div>
-                                            <div>
-                                                <span class="d-block fw-medium">Artisanal Elegance</span>
-                                                <small class="text-muted">Soft, elegant, handcrafted</small>
-                                            </div>
-                                        </button>
-                                    </div>
-
-                                    <div class="mobile-theme-option-wrapper mb-2">
-                                        <button class="mobile-theme-btn w-100 text-start p-2 rounded border-0 d-flex align-items-center mobile-theme-option" data-theme="boho-brush">
-                                            <div class="mobile-theme-preview me-3">
-                                                <div class="mobile-theme-color" style="background: linear-gradient(135deg, #c77d5e, #8ba888);"></div>
-                                            </div>
-                                            <div>
-                                                <span class="d-block fw-medium">Boho & Brush</span>
-                                                <small class="text-muted">Bohemian, artistic strokes</small>
-                                            </div>
-                                        </button>
-                                    </div>
-
-                                    <div class="mobile-theme-option-wrapper mb-2">
-                                        <button class="mobile-theme-btn w-100 text-start p-2 rounded border-0 d-flex align-items-center mobile-theme-option" data-theme="modern-minimal">
-                                            <div class="mobile-theme-preview me-3">
-                                                <div class="mobile-theme-color" style="background: linear-gradient(135deg, #4361ee, #f72585);"></div>
-                                            </div>
-                                            <div>
-                                                <span class="d-block fw-medium">Modern Minimal</span>
-                                                <small class="text-muted">Clean, professional design</small>
-                                            </div>
-                                        </button>
-                                    </div>
-
-                                    <div class="mobile-theme-option-wrapper mb-2">
-                                        <button class="mobile-theme-btn w-100 text-start p-2 rounded border-0 d-flex align-items-center mobile-theme-option" data-theme="mystic-indian">
-                                            <div class="mobile-theme-preview me-3">
-                                                <div class="mobile-theme-color" style="background: linear-gradient(135deg, #9c0e0e, #f1c40f);"></div>
-                                            </div>
-                                            <div>
-                                                <span class="d-block fw-medium">Mystic Indian</span>
-                                                <small class="text-muted">Traditional meets modern</small>
-                                            </div>
-                                        </button>
-                                    </div>
-
-                                    <div class="mobile-theme-option-wrapper">
-                                        <button class="mobile-theme-btn w-100 text-start p-2 rounded border-0 d-flex align-items-center mobile-theme-option" data-theme="pastel-dream">
-                                            <div class="mobile-theme-preview me-3">
-                                                <div class="mobile-theme-color" style="background: linear-gradient(135deg, #ffafcc, #a2d2ff);"></div>
-                                            </div>
-                                            <div>
-                                                <span class="d-block fw-medium">Pastel Dream</span>
-                                                <small class="text-muted">Soft, feminine, creative</small>
-                                            </div>
-                                        </button>
-                                    </div>
+                    <!-- Search Bar with Suggestions -->
+                    <div class="search-bar me-3">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="search" class="search-input" placeholder="Search products...">
+                        
+                        <!-- Search Suggestions -->
+                        <div class="search-suggestions">
+                            <div class="suggestion-item">
+                                <img src="product1.jpg" alt="Product">
+                                <div class="details">
+                                    <div class="name">Handmade Pottery</div>
+                                    <div class="category">Home Decor</div>
                                 </div>
+                                <div class="price">$49.99</div>
                             </div>
+                            <!-- More suggestion items -->
                         </div>
                     </div>
 
-                    <!-- Mobile User Menu -->
-                    <div class="d-lg-none mt-3">
-                        {% if user.is_authenticated %}
-                        <div class="list-group">
-                            <a href="{% url 'users:profile' %}" class="list-group-item list-group-item-action">
-                                <i class="fas fa-user-circle me-2"></i>My Profile
-                            </a>
-                            <a href="{% url 'orders:order_history' %}" class="list-group-item list-group-item-action">
-                                <i class="fas fa-shopping-bag me-2"></i>My Orders
-                            </a>
-                            <a href="{% url 'users:wishlist' %}" class="list-group-item list-group-item-action">
-                                <i class="fas fa-heart me-2"></i>My Wishlist
-                            </a>
-                            <a href="{% url 'account_logout' %}" class="list-group-item list-group-item-action text-danger">
-                                <i class="fas fa-sign-out-alt me-2"></i>Logout
-                            </a>
+                    <!-- Action Buttons -->
+                    <div class="nav-actions">
+                        <button class="action-btn" title="Notifications">
+                            <i class="fas fa-bell"></i>
+                            <span class="badge">3</span>
+                        </button>
+                        <button class="action-btn" title="Wishlist">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                        <button class="action-btn" title="Cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="badge">2</span>
+                        </button>
+                        
+                        <!-- User Menu Button -->
+                        <button class="action-btn" title="Profile" id="userMenuBtn">
+                            <i class="fas fa-user"></i>
+                        </button>
+                        
+                        <!-- User Menu Dropdown -->
+                        <div class="user-menu">
+                            <div class="user-header">
+                                <div class="user-avatar">JD</div>
+                                <div class="user-info">
+                                    <h6>John Doe</h6>
+                                    <p>john.doe@example.com</p>
+                                </div>
+                            </div>
+                            <ul class="mega-menu-list">
+                                <li><a href="#"><i class="fas fa-user-circle"></i> My Profile</a></li>
+                                <li><a href="#"><i class="fas fa-shopping-bag"></i> My Orders</a></li>
+                                <li><a href="#"><i class="fas fa-heart"></i> Wishlist</a></li>
+                                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                                <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                            </ul>
                         </div>
-                        {% else %}
-                        <div class="d-grid gap-2">
-                            <a href="{% url 'account_login' %}" class="btn btn-outline-primary">Login</a>
-                            <a href="{% url 'account_signup' %}" class="btn btn-primary">Register</a>
-                        </div>
-                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -713,3 +391,6 @@
     {% block extra_js %}{% endblock %}
 </body>
 </html>
+
+
+

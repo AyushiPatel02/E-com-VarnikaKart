@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Handle fixed navbar on scroll with smooth transition
-    const mainNav = document.querySelector('.main-navbar');
+    const mainNav = document.querySelector('.pro-navbar');
     const categoryNav = document.querySelector('.category-navbar');
     const topBarHeight = document.querySelector('.top-bar') ? document.querySelector('.top-bar').offsetHeight : 0;
     let isFixed = false;
@@ -28,22 +28,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 mainNav.classList.add('navbar-fixed');
                 if (categoryNav) {
                     categoryNav.style.marginTop = mainNav.offsetHeight + 'px';
+                    categoryNav.classList.add('category-navbar-fixed');
                 }
+                document.body.style.paddingTop = mainNav.offsetHeight + 'px';
                 isFixed = true;
 
-                // Add animation class
-                mainNav.classList.add('animate__animated', 'animate__fadeInDown');
-                setTimeout(() => {
-                    mainNav.classList.remove('animate__animated', 'animate__fadeInDown');
-                }, 500);
+                // Add animation class for smooth transition
+                mainNav.style.animation = 'slideDown 0.3s ease-in-out forwards';
             }
         } else {
             if (isFixed) {
                 mainNav.classList.remove('navbar-fixed');
                 if (categoryNav) {
                     categoryNav.style.marginTop = '0';
+                    categoryNav.classList.remove('category-navbar-fixed');
                 }
+                document.body.style.paddingTop = '0';
                 isFixed = false;
+
+                // Reset animation
+                mainNav.style.animation = '';
             }
         }
 

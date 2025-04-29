@@ -118,3 +118,16 @@ def contact(request):
 def about(request):
     """View for the about page"""
     return render(request, 'core/about.html')
+
+def deals(request):
+    """View for displaying deals and special offers"""
+    # Get products with discounts
+    discounted_products = Product.objects.filter(
+        is_available=True,
+        discount_price__isnull=False
+    ).order_by('-discount_price')
+
+    context = {
+        'products': discounted_products
+    }
+    return render(request, 'core/deals.html', context)

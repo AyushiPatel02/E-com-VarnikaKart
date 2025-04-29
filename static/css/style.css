@@ -552,9 +552,21 @@ body {
 }
 
 /* Fixed category navbar */
+.category-navbar-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1029;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Adjust spacing when navbar is fixed */
 .navbar-fixed + .category-navbar {
     margin-top: 56px; /* Adjust based on your navbar height */
 }
+
+/* Animation for navbar is defined above */
 
 /* Card Styles */
 .card {
