@@ -97,20 +97,23 @@ let currentTheme = 'artisanal-elegance';
 
 // Function to apply theme
 function applyTheme(themeName) {
+    console.log('Applying theme:', themeName);
+
     if (!themes[themeName]) {
         console.error('Theme not found:', themeName);
         return;
     }
-    
+
     const theme = themes[themeName];
     currentTheme = themeName;
-    
+
     // Save theme preference to localStorage
     localStorage.setItem('varnikakart-theme', themeName);
-    
+    console.log('Theme saved to localStorage');
+
     // Apply CSS variables to root
     const root = document.documentElement;
-    
+
     // Apply colors
     root.style.setProperty('--primary-color', theme.colors.primary);
     root.style.setProperty('--secondary-color', theme.colors.secondary);
@@ -118,97 +121,126 @@ function applyTheme(themeName) {
     root.style.setProperty('--background-color', theme.colors.background);
     root.style.setProperty('--text-color', theme.colors.text);
     root.style.setProperty('--card-bg-color', theme.colors.cardBg);
-    
+
     // Apply styles
     root.style.setProperty('--border-radius', theme.styles.borderRadius);
     root.style.setProperty('--box-shadow', theme.styles.boxShadow);
     root.style.setProperty('--font-family', theme.styles.fontFamily);
-    
+
+    console.log('Applied CSS variables to root');
+
     // Update theme name in the UI
     const themeNameElement = document.getElementById('current-theme-name');
     if (themeNameElement) {
         themeNameElement.textContent = theme.name;
+        console.log('Updated theme name in UI to:', theme.name);
+    } else {
+        console.warn('Theme name element not found');
     }
-    
+
     // Update active theme in the theme switcher
-    document.querySelectorAll('.theme-option').forEach(option => {
+    const themeOptions = document.querySelectorAll('.theme-option');
+    console.log('Updating active state for', themeOptions.length, 'theme options');
+
+    themeOptions.forEach(option => {
         if (option.dataset.theme === themeName) {
             option.classList.add('active');
         } else {
             option.classList.remove('active');
         }
     });
-    
+
     // Add theme-specific class to body
     document.body.className = '';
     document.body.classList.add(`theme-${themeName}`);
-    
+    console.log('Added theme class to body:', `theme-${themeName}`);
+
     // Trigger custom event for theme change
     document.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: themeName } }));
+    console.log('Dispatched themeChanged event');
 }
 
 // Initialize theme switcher
 function initThemeSwitcher() {
-    // Create theme switcher container
-    const themeSwitcher = document.createElement('div');
-    themeSwitcher.className = 'theme-switcher';
-    themeSwitcher.innerHTML = `
-        <button class="theme-toggle-btn" aria-label="Toggle theme switcher">
-            <i class="fas fa-palette"></i>
-        </button>
-        <div class="theme-panel">
-            <div class="theme-panel-header">
-                <h5>Choose a Theme</h5>
-                <button class="theme-panel-close" aria-label="Close theme panel">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="theme-options">
-                ${Object.keys(themes).map(key => `
-                    <div class="theme-option" data-theme="${key}">
-                        <div class="theme-preview" style="background-color: ${themes[key].colors.primary}"></div>
-                        <div class="theme-info">
-                            <h6>${themes[key].name}</h6>
-                            <p>${themes[key].description}</p>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `;
-    
-    // Append to body
-    document.body.appendChild(themeSwitcher);
-    
-    // Add event listeners
-    const toggleBtn = themeSwitcher.querySelector('.theme-toggle-btn');
-    const closeBtn = themeSwitcher.querySelector('.theme-panel-close');
-    const themeOptions = themeSwitcher.querySelectorAll('.theme-option');
-    
-    toggleBtn.addEventListener('click', () => {
-        themeSwitcher.classList.toggle('open');
-    });
-    
-    closeBtn.addEventListener('click', () => {
-        themeSwitcher.classList.remove('open');
-    });
-    
+    console.log('Initializing theme switcher');
+
+    // Add event listeners to desktop theme options
+    const themeOptions = document.querySelectorAll('.theme-option');
     themeOptions.forEach(option => {
         option.addEventListener('click', () => {
             const themeName = option.dataset.theme;
+            console.log('Desktop theme option clicked:', themeName);
             applyTheme(themeName);
-            themeSwitcher.classList.remove('open');
         });
     });
-    
+
+    // Add event listeners to mobile theme options
+    const mobileThemeOptions = document.querySelectorAll('.mobile-theme-option');
+    mobileThemeOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            const themeName = option.dataset.theme;
+            console.log('Mobile theme option clicked:', themeName);
+            applyTheme(themeName);
+
+            // Update active state for mobile buttons
+            mobileThemeOptions.forEach(btn => {
+                if (btn.dataset.theme === themeName) {
+                    btn.classList.remove('btn-outline-primary');
+                    btn.classList.add('btn-primary');
+                } else {
+                    btn.classList.remove('btn-primary');
+                    btn.classList.add('btn-outline-primary');
+                }
+            });
+        });
+    });
+
     // Load saved theme or use default
     const savedTheme = localStorage.getItem('varnikakart-theme');
+    console.log('Saved theme from localStorage:', savedTheme);
+
     if (savedTheme && themes[savedTheme]) {
+        console.log('Applying saved theme:', savedTheme);
         applyTheme(savedTheme);
+
+        // Update active state for mobile buttons
+        if (mobileThemeOptions.length > 0) {
+            mobileThemeOptions.forEach(btn => {
+                if (btn.dataset.theme === savedTheme) {
+                    btn.classList.remove('btn-outline-primary');
+                    btn.classList.add('btn-primary');
+                }
+            });
+        }
     } else {
+        console.log('No saved theme found, applying default theme:', currentTheme);
         applyTheme(currentTheme);
+
+        // Update active state for mobile buttons
+        if (mobileThemeOptions.length > 0) {
+            mobileThemeOptions.forEach(btn => {
+                if (btn.dataset.theme === currentTheme) {
+                    btn.classList.remove('btn-outline-primary');
+                    btn.classList.add('btn-primary');
+                }
+            });
+        }
     }
+
+    console.log('Theme switcher initialization complete');
 }
 
 // Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', initThemeSwitcher);
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Theme switcher script loaded');
+
+    // Check if theme options exist
+    const themeOptions = document.querySelectorAll('.theme-option');
+    console.log('Found theme options:', themeOptions.length);
+
+    const mobileThemeOptions = document.querySelectorAll('.mobile-theme-option');
+    console.log('Found mobile theme options:', mobileThemeOptions.length);
+
+    // Initialize theme switcher
+    initThemeSwitcher();
+});

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}VarnikaKart - Handmade Crafts & Gifts{% endblock %}</title>
+    {% load static %}
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -17,10 +18,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Amita:wght@400;700&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Theme Switcher CSS -->
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/theme-switcher.css">
+    <link rel="stylesheet" href="{% static 'css/theme-switcher.css' %}">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
     {% block extra_css %}{% endblock %}
 </head>
@@ -100,13 +101,75 @@
                     <a href="{% url 'users:wishlist' %}" class="btn btn-outline-dark btn-sm me-2 position-relative">
                         <i class="fas fa-heart"></i>
                     </a>
-                    <a href="{% url 'orders:cart' %}" class="btn btn-outline-dark btn-sm me-3 position-relative">
+                    <a href="{% url 'orders:cart' %}" class="btn btn-outline-dark btn-sm me-2 position-relative">
                         <i class="fas fa-shopping-cart"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             0
                             <span class="visually-hidden">items in cart</span>
                         </span>
                     </a>
+                    <div class="dropdown me-3">
+                        <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" id="themeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-palette me-1"></i> <span id="current-theme-name">Theme</span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end shadow-sm border-0 theme-dropdown p-0" aria-labelledby="themeDropdown" id="theme-menu">
+                            <div class="p-3 border-bottom">
+                                <h6 class="mb-2">Choose a Theme</h6>
+                                <p class="text-muted small mb-0">Select a theme that matches your style</p>
+                            </div>
+                            <div class="theme-options p-2">
+                                <button class="dropdown-item theme-option d-flex align-items-center p-2 rounded" data-theme="artisanal-elegance">
+                                    <div class="theme-preview me-2">
+                                        <div class="theme-color" style="background: linear-gradient(135deg, #d4a5a5, #a5a6d4);"></div>
+                                    </div>
+                                    <div>
+                                        <span class="d-block">Artisanal Elegance</span>
+                                        <small class="text-muted">Soft, elegant, handcrafted</small>
+                                    </div>
+                                </button>
+
+                                <button class="dropdown-item theme-option d-flex align-items-center p-2 rounded" data-theme="boho-brush">
+                                    <div class="theme-preview me-2">
+                                        <div class="theme-color" style="background: linear-gradient(135deg, #c77d5e, #8ba888);"></div>
+                                    </div>
+                                    <div>
+                                        <span class="d-block">Boho & Brush</span>
+                                        <small class="text-muted">Bohemian, artistic strokes</small>
+                                    </div>
+                                </button>
+
+                                <button class="dropdown-item theme-option d-flex align-items-center p-2 rounded" data-theme="modern-minimal">
+                                    <div class="theme-preview me-2">
+                                        <div class="theme-color" style="background: linear-gradient(135deg, #4361ee, #f72585);"></div>
+                                    </div>
+                                    <div>
+                                        <span class="d-block">Modern Minimal</span>
+                                        <small class="text-muted">Clean, professional design</small>
+                                    </div>
+                                </button>
+
+                                <button class="dropdown-item theme-option d-flex align-items-center p-2 rounded" data-theme="mystic-indian">
+                                    <div class="theme-preview me-2">
+                                        <div class="theme-color" style="background: linear-gradient(135deg, #9c0e0e, #f1c40f);"></div>
+                                    </div>
+                                    <div>
+                                        <span class="d-block">Mystic Indian</span>
+                                        <small class="text-muted">Traditional meets modern</small>
+                                    </div>
+                                </button>
+
+                                <button class="dropdown-item theme-option d-flex align-items-center p-2 rounded" data-theme="pastel-dream">
+                                    <div class="theme-preview me-2">
+                                        <div class="theme-color" style="background: linear-gradient(135deg, #ffafcc, #a2d2ff);"></div>
+                                    </div>
+                                    <div>
+                                        <span class="d-block">Pastel Dream</span>
+                                        <small class="text-muted">Soft, feminine, creative</small>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
                     {% if user.is_authenticated %}
                     <div class="dropdown">
@@ -166,6 +229,78 @@
                             </button>
                         </div>
                     </form>
+
+                    <!-- Mobile Theme Switcher -->
+                    <div class="d-lg-none mt-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <h6 class="mb-2"><i class="fas fa-palette me-2"></i>Choose a Theme</h6>
+                                <p class="text-muted small mb-3">Select a theme that matches your style</p>
+
+                                <div class="mobile-theme-options">
+                                    <div class="mobile-theme-option-wrapper mb-2">
+                                        <button class="mobile-theme-btn w-100 text-start p-2 rounded border-0 d-flex align-items-center mobile-theme-option" data-theme="artisanal-elegance">
+                                            <div class="mobile-theme-preview me-3">
+                                                <div class="mobile-theme-color" style="background: linear-gradient(135deg, #d4a5a5, #a5a6d4);"></div>
+                                            </div>
+                                            <div>
+                                                <span class="d-block fw-medium">Artisanal Elegance</span>
+                                                <small class="text-muted">Soft, elegant, handcrafted</small>
+                                            </div>
+                                        </button>
+                                    </div>
+
+                                    <div class="mobile-theme-option-wrapper mb-2">
+                                        <button class="mobile-theme-btn w-100 text-start p-2 rounded border-0 d-flex align-items-center mobile-theme-option" data-theme="boho-brush">
+                                            <div class="mobile-theme-preview me-3">
+                                                <div class="mobile-theme-color" style="background: linear-gradient(135deg, #c77d5e, #8ba888);"></div>
+                                            </div>
+                                            <div>
+                                                <span class="d-block fw-medium">Boho & Brush</span>
+                                                <small class="text-muted">Bohemian, artistic strokes</small>
+                                            </div>
+                                        </button>
+                                    </div>
+
+                                    <div class="mobile-theme-option-wrapper mb-2">
+                                        <button class="mobile-theme-btn w-100 text-start p-2 rounded border-0 d-flex align-items-center mobile-theme-option" data-theme="modern-minimal">
+                                            <div class="mobile-theme-preview me-3">
+                                                <div class="mobile-theme-color" style="background: linear-gradient(135deg, #4361ee, #f72585);"></div>
+                                            </div>
+                                            <div>
+                                                <span class="d-block fw-medium">Modern Minimal</span>
+                                                <small class="text-muted">Clean, professional design</small>
+                                            </div>
+                                        </button>
+                                    </div>
+
+                                    <div class="mobile-theme-option-wrapper mb-2">
+                                        <button class="mobile-theme-btn w-100 text-start p-2 rounded border-0 d-flex align-items-center mobile-theme-option" data-theme="mystic-indian">
+                                            <div class="mobile-theme-preview me-3">
+                                                <div class="mobile-theme-color" style="background: linear-gradient(135deg, #9c0e0e, #f1c40f);"></div>
+                                            </div>
+                                            <div>
+                                                <span class="d-block fw-medium">Mystic Indian</span>
+                                                <small class="text-muted">Traditional meets modern</small>
+                                            </div>
+                                        </button>
+                                    </div>
+
+                                    <div class="mobile-theme-option-wrapper">
+                                        <button class="mobile-theme-btn w-100 text-start p-2 rounded border-0 d-flex align-items-center mobile-theme-option" data-theme="pastel-dream">
+                                            <div class="mobile-theme-preview me-3">
+                                                <div class="mobile-theme-color" style="background: linear-gradient(135deg, #ffafcc, #a2d2ff);"></div>
+                                            </div>
+                                            <div>
+                                                <span class="d-block fw-medium">Pastel Dream</span>
+                                                <small class="text-muted">Soft, feminine, creative</small>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Mobile User Menu -->
                     <div class="d-lg-none mt-3">
@@ -369,8 +504,11 @@
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- Theme Switcher JS -->
+    <script src="{% static 'js/simple-theme-switcher.js' %}"></script>
+
     <!-- Custom JS -->
-    <script src="{{ STATIC_URL }}js/main.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
 
     {% block extra_js %}{% endblock %}
 </body>

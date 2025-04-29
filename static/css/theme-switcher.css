@@ -13,7 +13,7 @@
     --border-radius: 15px;
     --box-shadow: 8px 8px 15px #e6e6e6, -8px -8px 15px #ffffff;
     --font-family: 'Cormorant Garamond', serif;
-    
+
     /* Animation variables */
     --transition-speed: 0.3s;
 }
@@ -63,126 +63,94 @@ body {
 }
 
 /* Theme Switcher UI */
-.theme-switcher {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    z-index: 1000;
-}
-
-.theme-toggle-btn {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    transition: all 0.3s ease;
-}
-
-.theme-toggle-btn:hover {
-    transform: scale(1.1);
-}
-
-.theme-panel {
-    position: absolute;
-    bottom: 60px;
-    right: 0;
-    width: 320px;
-    background-color: var(--card-bg-color);
-    border-radius: var(--border-radius);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    padding: 1rem;
-    transform: scale(0.8);
-    opacity: 0;
-    visibility: hidden;
-    transform-origin: bottom right;
-    transition: all 0.3s ease;
-}
-
-.theme-switcher.open .theme-panel {
-    transform: scale(1);
-    opacity: 1;
-    visibility: visible;
-}
-
-.theme-panel-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.theme-panel-header h5 {
-    margin: 0;
-    font-weight: 600;
-}
-
-.theme-panel-close {
-    background: none;
-    border: none;
-    font-size: 1rem;
-    cursor: pointer;
-    color: var(--text-color);
-    opacity: 0.7;
-}
-
-.theme-panel-close:hover {
-    opacity: 1;
+/* Theme dropdown styles */
+/* Theme Dropdown Styles */
+.theme-dropdown {
+    width: 300px;
+    max-height: 500px;
+    overflow-y: auto;
 }
 
 .theme-options {
-    max-height: 400px;
+    max-height: 350px;
     overflow-y: auto;
 }
 
 .theme-option {
-    display: flex;
-    align-items: center;
-    padding: 0.75rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    margin-bottom: 0.5rem;
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
 }
 
 .theme-option:hover {
     background-color: rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
 }
 
 .theme-option.active {
     background-color: rgba(0, 0, 0, 0.08);
+    color: var(--text-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .theme-preview {
     width: 40px;
     height: 40px;
     border-radius: 8px;
-    margin-right: 1rem;
+    overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.theme-info {
-    flex: 1;
+.theme-color {
+    width: 100%;
+    height: 100%;
 }
 
-.theme-info h6 {
-    margin: 0 0 0.25rem 0;
-    font-weight: 600;
+/* Mobile Theme Options */
+.mobile-theme-options {
+    max-height: 350px;
+    overflow-y: auto;
 }
 
-.theme-info p {
-    margin: 0;
-    font-size: 0.8rem;
-    opacity: 0.7;
+.mobile-theme-option-wrapper {
+    transition: all 0.2s ease;
+}
+
+.mobile-theme-btn {
+    background-color: #f8f9fa;
+    transition: all 0.2s ease;
+}
+
+.mobile-theme-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+}
+
+.mobile-theme-btn.active {
+    background-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-theme-preview {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-theme-color {
+    width: 100%;
+    height: 100%;
+}
+
+/* Theme Indicator in Navbar */
+.theme-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
 }
 
 /* Theme-specific styles */
@@ -227,7 +195,7 @@ body {
     .theme-panel {
         width: 280px;
     }
-    
+
     .theme-toggle-btn {
         width: 45px;
         height: 45px;

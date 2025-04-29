@@ -2,8 +2,18 @@
 
 /* Global Styles */
 :root {
+    /* These will be overridden by theme-switcher.css */
     --primary-color: #ff6b6b;
     --secondary-color: #4ecdc4;
+    --accent-color: #f7b733;
+    --background-color: #f9f9f9;
+    --text-color: #2d3436;
+    --card-bg-color: #ffffff;
+    --border-radius: 10px;
+    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    /* Additional colors */
     --dark-color: #2d3436;
     --light-color: #f8f9fa;
     --success-color: #6ab04c;
@@ -12,10 +22,11 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--font-family);
     line-height: 1.6;
-    color: var(--dark-color);
-    background-color: #f9f9f9;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Navbar Customization */
@@ -27,15 +38,17 @@ body {
 
 /* Card Styles */
 .card {
-    border-radius: 10px;
+    border-radius: var(--border-radius);
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--box-shadow);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: var(--card-bg-color);
+    border: none;
 }
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
 .card-img-top {
@@ -51,14 +64,22 @@ body {
 }
 
 /* Buttons */
+.btn {
+    transition: all 0.3s ease;
+    border-radius: 50px;
+}
+
 .btn-primary {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
 }
 
 .btn-primary:hover {
-    background-color: #ff5252;
-    border-color: #ff5252;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    filter: brightness(90%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .btn-outline-primary {
@@ -69,6 +90,19 @@ body {
 .btn-outline-primary:hover {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    filter: brightness(90%);
 }
 
 /* Footer */
