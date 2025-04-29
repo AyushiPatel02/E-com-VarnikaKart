@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% load product_tags %}
+
+{% block title %}
+    {% if category %}{{ category.name }}{% else %}All Products{% endif %} - VarnikaKart
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <!-- Sidebar with filters -->
+        <div class="col-lg-3 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Categories</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item {% if not category %}active{% endif %}">
+                            <a href="{% url 'products:product_list' %}" class="text-decoration-none {% if not category %}text-white{% endif %}">All Products</a>
+                        </li>
+                        {% for c in categories %}
+                        <li class="list-group-item {% if category.id == c.id %}active{% endif %}">
+                            <a href="{{ c.get_absolute_url }}" class="text-decoration-none {% if category.id == c.id %}text-white{% endif %}">{{ c.name }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Filter by Price</h5>
+                </div>
+                <div class="card-body">
+                    <form method="get" action="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'products:product_list' %}{% endif %}">
+                        {% if search_query %}
+                        <input type="hidden" name="q" value="{{ search_query }}">
+                        {% endif %}
+                        <div class="mb-3">
+                            <label for="min_price" class="form-label">Min Price</label>
+                            <input type="number" class="form-control" id="min_price" name="min_price" value="{{ min_price }}" min="0">
+                        </div>
+                        <div class="mb-3">
+                            <label for="max_price" class="form-label">Max Price</label>
+                            <input type="number" class="form-control" id="max_price" name="max_price" value="{{ max_price }}" min="0">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Apply Filter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h2">
+                    {% if category %}
+                        {{ category.name }}
+                    {% else %}
+                        All Products
+                    {% endif %}
+                </h1>
+
+                <!-- Search form -->
+                <form class="d-flex" method="get" action="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'products:product_list' %}{% endif %}">
+                    <input class="form-control me-2" type="search" placeholder="Search products" name="q" value="{{ search_query }}" aria-label="Search">
+                    <button class="btn btn-outline-primary" type="submit">Search</button>
+                </form>
+            </div>
+
+            <!-- Sort options -->
+            <div class="mb-4">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Sort by:
+                        {% if sort_by == 'price_low' %}
+                            Price: Low to High
+                        {% elif sort_by == 'price_high' %}
+                            Price: High to Low
+                        {% elif sort_by == 'newest' %}
+                            Newest
+                        {% elif sort_by == 'rating' %}
+                            Rating
+                        {% else %}
+                            Newest
+                        {% endif %}
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item {% if sort_by == 'newest' or not sort_by %}active{% endif %}"
+                               href="?{% if search_query %}q={{ search_query }}&{% endif %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}sort=newest">
+                                Newest
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {% if sort_by == 'price_low' %}active{% endif %}"
+                               href="?{% if search_query %}q={{ search_query }}&{% endif %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}sort=price_low">
+                                Price: Low to High
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {% if sort_by == 'price_high' %}active{% endif %}"
+                               href="?{% if search_query %}q={{ search_query }}&{% endif %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}sort=price_high">
+                                Price: High to Low
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {% if sort_by == 'rating' %}active{% endif %}"
+                               href="?{% if search_query %}q={{ search_query }}&{% endif %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}sort=rating">
+                                Rating
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Products grid -->
+            <div class="row">
+                {% for product in products %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        {% get_primary_image product as primary_image %}
+                        {% if primary_image %}
+                        <img src="{{ primary_image }}" alt="{{ product.name }}" class="card-img-top">
+                        {% else %}
+                        <div class="bg-light text-center py-5">
+                            <i class="fas fa-image fa-3x text-muted"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text text-muted">{{ product.category.name }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                {% if product.discount_price %}
+                                <div>
+                                    <span class="text-decoration-line-through text-muted">${{ product.price }}</span>
+                                    <span class="fw-bold text-danger">${{ product.discount_price }}</span>
+                                </div>
+                                {% get_discount_percentage product as discount_percentage %}
+                                <span class="badge bg-danger">{{ discount_percentage }}% OFF</span>
+                                {% else %}
+                                <span class="fw-bold">${{ product.price }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white d-flex justify-content-between">
+                            <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-outline-primary">View Details</a>
+                            <button class="btn btn-sm btn-primary add-to-cart" data-product-id="{{ product.id }}">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h3>No products found</h3>
+                    <p class="text-muted">Try adjusting your search or filter criteria</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if products.has_other_pages %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if products.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ products.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% for i in products.paginator.page_range %}
+                        {% if products.number == i %}
+                        <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                        {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ i }}{% if search_query %}&q={{ search_query }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}">{{ i }}</a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if products.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ products.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

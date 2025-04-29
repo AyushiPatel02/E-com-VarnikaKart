@@ -1,0 +1,388 @@
+{% extends 'base.html' %}
+{% load product_tags %}
+
+{% block title %}{{ product.name }} - VarnikaKart{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
+<style>
+    .swiper {
+        width: 100%;
+        height: 400px;
+        margin-bottom: 20px;
+    }
+    .swiper-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+    .swiper-thumbs {
+        height: 100px;
+    }
+    .swiper-thumbs .swiper-slide {
+        opacity: 0.4;
+        cursor: pointer;
+    }
+    .swiper-thumbs .swiper-slide-thumb-active {
+        opacity: 1;
+    }
+    .rating {
+        color: #ffc107;
+    }
+    .rating-empty {
+        color: #e4e5e9;
+    }
+    .model-viewer-container {
+        width: 100%;
+        height: 400px;
+        margin-bottom: 20px;
+    }
+    model-viewer {
+        width: 100%;
+        height: 100%;
+        background-color: #f8f9fa;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'products:product_list' %}">Products</a></li>
+            <li class="breadcrumb-item"><a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Product Images -->
+        <div class="col-md-6 mb-4">
+            {% get_product_images product as product_images %}
+            {% if product_images %}
+                <!-- Main Swiper -->
+                <div class="swiper main-swiper">
+                    <div class="swiper-wrapper">
+                        {% for image in product_images %}
+                        <div class="swiper-slide">
+                            <img src="{{ image.image.url }}" alt="{{ product.name }}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+
+                <!-- Thumbs Swiper -->
+                {% if product_images.count > 1 %}
+                <div class="swiper swiper-thumbs">
+                    <div class="swiper-wrapper">
+                        {% for image in product_images %}
+                        <div class="swiper-slide">
+                            <img src="{{ image.image.url }}" alt="{{ product.name }}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            {% else %}
+                <div class="bg-light text-center py-5 rounded">
+                    <i class="fas fa-image fa-5x text-muted mb-3"></i>
+                    <p class="text-muted">No images available</p>
+                </div>
+            {% endif %}
+
+            <!-- 3D Model Viewer (if available) -->
+            <!-- Uncomment and use when you have 3D models
+            <div class="model-viewer-container mt-4">
+                <model-viewer
+                    src="/media/models/product_model.glb"
+                    alt="{{ product.name }} 3D Model"
+                    auto-rotate
+                    camera-controls
+                    shadow-intensity="1">
+                </model-viewer>
+            </div>
+            -->
+        </div>
+
+        <!-- Product Details -->
+        <div class="col-md-6">
+            <h1 class="mb-3">{{ product.name }}</h1>
+
+            <!-- Rating -->
+            <div class="mb-3">
+                <div class="d-flex align-items-center">
+                    <div class="me-2">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= avg_rating %}
+                                <i class="fas fa-star rating"></i>
+                            {% elif forloop.counter <= avg_rating|add:"0.5" %}
+                                <i class="fas fa-star-half-alt rating"></i>
+                            {% else %}
+                                <i class="far fa-star rating-empty"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <span class="text-muted">{{ avg_rating|floatformat:1 }} ({{ reviews.count }} reviews)</span>
+                </div>
+            </div>
+
+            <!-- Price -->
+            <div class="mb-4">
+                {% if product.discount_price %}
+                <div class="d-flex align-items-center">
+                    <h3 class="text-danger me-3">${{ product.discount_price }}</h3>
+                    <h5 class="text-decoration-line-through text-muted">${{ product.price }}</h5>
+                    {% get_discount_percentage product as discount_percentage %}
+                    <span class="badge bg-danger ms-3">{{ discount_percentage }}% OFF</span>
+                </div>
+                {% else %}
+                <h3>${{ product.price }}</h3>
+                {% endif %}
+            </div>
+
+            <!-- Availability -->
+            <div class="mb-4">
+                {% if product.stock > 0 %}
+                <span class="badge bg-success">In Stock</span>
+                {% else %}
+                <span class="badge bg-danger">Out of Stock</span>
+                {% endif %}
+            </div>
+
+            <!-- Description -->
+            <div class="mb-4">
+                <h5>Description</h5>
+                <p>{{ product.description }}</p>
+            </div>
+
+            <!-- Variations -->
+            {% if product.variations.exists %}
+            <div class="mb-4">
+                <h5>Options</h5>
+                {% regroup product.variations.all by name as variation_groups %}
+
+                {% for group in variation_groups %}
+                <div class="mb-3">
+                    <label class="form-label">{{ group.grouper }}</label>
+                    <div class="btn-group" role="group">
+                        {% for variation in group.list %}
+                        <input type="radio" class="btn-check" name="{{ group.grouper }}" id="option{{ variation.id }}" autocomplete="off" {% if forloop.first %}checked{% endif %}>
+                        <label class="btn btn-outline-primary" for="option{{ variation.id }}">{{ variation.value }}</label>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Add to Cart Form -->
+            <form class="mb-4">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="quantity" class="form-label">Quantity</label>
+                        <input type="number" class="form-control" id="quantity-{{ product.id }}" min="1" max="{{ product.stock }}" value="1">
+                    </div>
+                    <div class="col-12">
+                        <button type="button" class="btn btn-primary btn-lg add-to-cart" data-product-id="{{ product.id }}">
+                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                        </button>
+                        <button type="button" class="btn btn-outline-danger btn-lg ms-2 add-to-wishlist" data-product-id="{{ product.id }}">
+                            {% if user.is_authenticated and product in user.wishlist.products.all %}
+                            <i class="fas fa-heart"></i>
+                            {% else %}
+                            <i class="far fa-heart"></i>
+                            {% endif %}
+                            Add to Wishlist
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Share -->
+            <div>
+                <h5>Share</h5>
+                <div class="d-flex">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="btn btn-outline-primary me-2">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ product.name }}" target="_blank" class="btn btn-outline-info me-2">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    {% get_primary_image product as primary_image %}
+                    <a href="https://pinterest.com/pin/create/button/?url={{ request.build_absolute_uri }}&media={{ primary_image }}&description={{ product.name }}" target="_blank" class="btn btn-outline-danger me-2">
+                        <i class="fab fa-pinterest"></i>
+                    </a>
+                    <a href="mailto:?subject={{ product.name }}&body=Check out this product: {{ request.build_absolute_uri }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs for Reviews and Additional Info -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <ul class="nav nav-tabs" id="productTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="true">
+                        Reviews ({{ reviews.count }})
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="shipping-tab" data-bs-toggle="tab" data-bs-target="#shipping" type="button" role="tab" aria-controls="shipping" aria-selected="false">
+                        Shipping & Returns
+                    </button>
+                </li>
+            </ul>
+            <div class="tab-content p-4 border border-top-0 rounded-bottom" id="productTabsContent">
+                <!-- Reviews Tab -->
+                <div class="tab-pane fade show active" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4>Customer Reviews</h4>
+                        {% if user.is_authenticated %}
+                            {% if user_review %}
+                            <a href="{% url 'products:add_review' product.id %}" class="btn btn-outline-primary">Edit Your Review</a>
+                            {% else %}
+                            <a href="{% url 'products:add_review' product.id %}" class="btn btn-primary">Write a Review</a>
+                            {% endif %}
+                        {% else %}
+                            <a href="{% url 'account_login' %}?next={% url 'products:add_review' product.id %}" class="btn btn-primary">Login to Review</a>
+                        {% endif %}
+                    </div>
+
+                    {% if reviews %}
+                        {% for review in reviews %}
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <h5 class="card-title">{{ review.title }}</h5>
+                                    <div>
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= review.rating %}
+                                                <i class="fas fa-star rating"></i>
+                                            {% else %}
+                                                <i class="far fa-star rating-empty"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <h6 class="card-subtitle mb-2 text-muted">By {{ review.user.username }} on {{ review.created_at|date:"F d, Y" }}</h6>
+                                <p class="card-text">{{ review.comment }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="far fa-comment-dots fa-3x text-muted mb-3"></i>
+                            <h5>No reviews yet</h5>
+                            <p class="text-muted">Be the first to review this product</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Shipping Tab -->
+                <div class="tab-pane fade" id="shipping" role="tabpanel" aria-labelledby="shipping-tab">
+                    <h4>Shipping Information</h4>
+                    <p>We offer standard shipping that typically takes 3-5 business days. For orders over $50, shipping is free!</p>
+
+                    <h4 class="mt-4">Return Policy</h4>
+                    <p>If you're not completely satisfied with your purchase, you can return it within 30 days for a full refund. Please note that the item must be in its original condition and packaging.</p>
+
+                    <h4 class="mt-4">International Shipping</h4>
+                    <p>We currently ship to select countries. International shipping typically takes 7-14 business days, and customs fees may apply.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    {% if related_products %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="mb-4">You May Also Like</h3>
+            <div class="row">
+                {% for related in related_products %}
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        {% get_primary_image related as primary_image %}
+                        {% if primary_image %}
+                        <img src="{{ primary_image }}" alt="{{ related.name }}" class="card-img-top">
+                        {% else %}
+                        <div class="bg-light text-center py-5">
+                            <i class="fas fa-image fa-3x text-muted"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ related.name }}</h5>
+                            <p class="card-text text-muted">{{ related.category.name }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                {% if related.discount_price %}
+                                <div>
+                                    <span class="text-decoration-line-through text-muted">${{ related.price }}</span>
+                                    <span class="fw-bold text-danger">${{ related.discount_price }}</span>
+                                </div>
+                                {% get_discount_percentage related as discount_percentage %}
+                                <span class="badge bg-danger">{{ discount_percentage }}% OFF</span>
+                                {% else %}
+                                <span class="fw-bold">${{ related.price }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white d-flex justify-content-between">
+                            <a href="{{ related.get_absolute_url }}" class="btn btn-sm btn-outline-primary">View Details</a>
+                            <button class="btn btn-sm btn-primary add-to-cart" data-product-id="{{ related.id }}">
+                                <i class="fas fa-shopping-cart"></i> Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+<!-- Uncomment when you have 3D models
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+-->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Swiper
+        const mainSwiper = new Swiper('.main-swiper', {
+            loop: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+        });
+
+        // Initialize thumbs swiper if it exists
+        if (document.querySelector('.swiper-thumbs')) {
+            const thumbsSwiper = new Swiper('.swiper-thumbs', {
+                spaceBetween: 10,
+                slidesPerView: 4,
+                freeMode: true,
+                watchSlidesProgress: true,
+            });
+
+            // Link the swipers
+            mainSwiper.controller.control = thumbsSwiper;
+            thumbsSwiper.controller.control = mainSwiper;
+        }
+    });
+</script>
+{% endblock %}

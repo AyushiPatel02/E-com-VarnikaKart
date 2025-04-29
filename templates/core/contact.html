@@ -1,0 +1,442 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - VarnikaKart{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Contact Page Styles */
+    .contact-hero {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding: 80px 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .contact-hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://images.unsplash.com/photo-1579762593175-20226054cad0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1236&q=80');
+        background-size: cover;
+        background-position: center;
+        opacity: 0.1;
+    }
+
+    .contact-title {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .contact-subtitle {
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin: 0 auto 2rem;
+    }
+
+    .contact-info-card {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        height: 100%;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .contact-info-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    .contact-icon-wrapper {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+        color: white;
+        font-size: 2rem;
+        box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+    }
+
+    .contact-info-card:nth-child(2) .contact-icon-wrapper {
+        background: linear-gradient(135deg, #4ecdc4 0%, #6cdfcb 100%);
+        box-shadow: 0 10px 20px rgba(78, 205, 196, 0.3);
+    }
+
+    .contact-info-card:nth-child(3) .contact-icon-wrapper {
+        background: linear-gradient(135deg, #f7b733 0%, #fc4a1a 100%);
+        box-shadow: 0 10px 20px rgba(247, 183, 51, 0.3);
+    }
+
+    .contact-form-wrapper {
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.05);
+        border: none;
+    }
+
+    .contact-form-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem;
+        color: white;
+    }
+
+    .contact-form-body {
+        padding: 2.5rem;
+    }
+
+    .form-floating > label {
+        font-weight: 500;
+        color: #6c757d;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        padding: 0.8rem 1rem;
+        border: 1px solid #e0e0e0;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+        border-color: #667eea;
+    }
+
+    .contact-submit-btn {
+        padding: 0.8rem 2.5rem;
+        font-weight: 600;
+        border-radius: 50px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .contact-submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .map-container {
+        height: 400px;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.05);
+    }
+
+    .faq-section {
+        background-color: #f8f9fa;
+        border-radius: 20px;
+        padding: 3rem;
+    }
+
+    .accordion-item {
+        border: none;
+        margin-bottom: 1rem;
+        border-radius: 10px !important;
+        overflow: hidden;
+    }
+
+    .accordion-button {
+        font-weight: 600;
+        padding: 1.25rem;
+        background-color: white;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .accordion-button:not(.collapsed) {
+        color: #667eea;
+        background-color: #f0f4ff;
+    }
+
+    .accordion-button:focus {
+        box-shadow: none;
+        border-color: rgba(102, 126, 234, 0.25);
+    }
+
+    .accordion-body {
+        padding: 1.5rem;
+        background-color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="contact-hero position-relative">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="contact-title">Get in Touch</h1>
+                <p class="contact-subtitle text-muted">Have questions about our products, custom orders, or need assistance? We're here to help! Reach out to us using any of the methods below.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Info Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card contact-info-card text-center p-4">
+                    <div class="card-body">
+                        <div class="contact-icon-wrapper">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Visit Our Store</h5>
+                        <p class="card-text text-muted mb-2">123 Craft Street</p>
+                        <p class="card-text text-muted mb-3">Artville, AV 12345</p>
+                        <a href="https://maps.google.com" target="_blank" class="btn btn-outline-primary rounded-pill">Get Directions</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card contact-info-card text-center p-4">
+                    <div class="card-body">
+                        <div class="contact-icon-wrapper">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Call Us</h5>
+                        <p class="card-text text-muted mb-2">+1 234 567 8900</p>
+                        <p class="card-text text-muted mb-3">Mon-Fri, 9am-6pm EST</p>
+                        <a href="tel:+12345678900" class="btn btn-outline-primary rounded-pill">Call Now</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card contact-info-card text-center p-4">
+                    <div class="card-body">
+                        <div class="contact-icon-wrapper">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Email Us</h5>
+                        <p class="card-text text-muted mb-2">info@varnikakart.com</p>
+                        <p class="card-text text-muted mb-3">support@varnikakart.com</p>
+                        <a href="mailto:info@varnikakart.com" class="btn btn-outline-primary rounded-pill">Send Email</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Form Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <div class="card contact-form-wrapper">
+                    <div class="contact-form-header">
+                        <h3 class="mb-2 fw-bold">Send us a Message</h3>
+                        <p class="mb-0">We'll get back to you as soon as possible</p>
+                    </div>
+                    <div class="contact-form-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.name }}
+                                        <label for="{{ form.name.id_for_label }}">Your Name</label>
+                                    </div>
+                                    {% if form.name.errors %}
+                                    <div class="text-danger mt-1 small">
+                                        {{ form.name.errors.0 }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.email }}
+                                        <label for="{{ form.email.id_for_label }}">Your Email</label>
+                                    </div>
+                                    {% if form.email.errors %}
+                                    <div class="text-danger mt-1 small">
+                                        {{ form.email.errors.0 }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        {{ form.subject }}
+                                        <label for="{{ form.subject.id_for_label }}">Subject</label>
+                                    </div>
+                                    {% if form.subject.errors %}
+                                    <div class="text-danger mt-1 small">
+                                        {{ form.subject.errors.0 }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        {{ form.message }}
+                                        <label for="{{ form.message.id_for_label }}">Message</label>
+                                    </div>
+                                    {% if form.message.errors %}
+                                    <div class="text-danger mt-1 small">
+                                        {{ form.message.errors.0 }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-12 mt-4">
+                                    <button type="submit" class="btn btn-primary contact-submit-btn">
+                                        <i class="fas fa-paper-plane me-2"></i>Send Message
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387193.30596552044!2d-74.25986548248684!3d40.69714941932609!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sin!4v1651825248037!5m2!1sen!2sin" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+
+                <div class="mt-4 p-4 bg-white rounded-3 shadow-sm">
+                    <h5 class="fw-bold mb-3">Business Hours</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="fw-medium">Monday - Friday</span>
+                            <span class="text-muted">9:00 AM - 6:00 PM</span>
+                        </li>
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="fw-medium">Saturday</span>
+                            <span class="text-muted">10:00 AM - 4:00 PM</span>
+                        </li>
+                        <li class="d-flex justify-content-between py-2">
+                            <span class="fw-medium">Sunday</span>
+                            <span class="text-muted">Closed</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-8 text-center">
+                <h2 class="fw-bold mb-3">Frequently Asked Questions</h2>
+                <p class="text-muted">Find answers to common questions about our products, shipping, returns, and more.</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                How long does shipping take?
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p class="mb-0 text-muted">Standard shipping typically takes 3-5 business days within the continental US. International shipping can take 7-14 business days depending on the destination. Expedited shipping options are available at checkout for faster delivery.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Can I customize my order?
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p class="mb-0 text-muted">Yes! We offer customization options for many of our products. You can add personalized engravings, choose different colors, or request specific designs. For custom orders, please contact our customer service team with your requirements, and we'll be happy to assist you.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                What is your return policy?
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p class="mb-0 text-muted">We offer a 30-day return policy for most items. Products must be in their original condition and packaging. Custom or personalized items cannot be returned unless there's a defect. Please contact our customer service team to initiate a return or exchange.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingFour">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                Do you ship internationally?
+                            </button>
+                        </h2>
+                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p class="mb-0 text-muted">Yes, we ship to most countries worldwide. International shipping rates and delivery times vary by location. Please note that customers are responsible for any customs fees, taxes, or duties that may apply when receiving international shipments.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h2 class="fw-bold mb-3">Connect With Us on Social Media</h2>
+                <p class="mb-4">Follow us for the latest product updates, behind-the-scenes content, and exclusive offers.</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="#" class="btn btn-light btn-lg rounded-circle">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="btn btn-light btn-lg rounded-circle">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="btn btn-light btn-lg rounded-circle">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="btn btn-light btn-lg rounded-circle">
+                        <i class="fab fa-pinterest"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize floating labels for form inputs
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add Bootstrap's form-control class to all form inputs
+        const formInputs = document.querySelectorAll('input, textarea');
+        formInputs.forEach(input => {
+            input.classList.add('form-control');
+
+            // Set appropriate height for textarea
+            if (input.tagName === 'TEXTAREA') {
+                input.style.height = '120px';
+            }
+        });
+    });
+</script>
+{% endblock %}

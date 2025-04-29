@@ -1,0 +1,341 @@
+{% extends 'base.html' %}
+{% load product_tags %}
+
+{% block title %}Checkout - VarnikaKart{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Checkout</h1>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Shipping Information</h5>
+                </div>
+                <div class="card-body">
+                    {% if addresses %}
+                    <div class="mb-4">
+                        <h6>Select a Saved Address</h6>
+                        <div class="row">
+                            {% for address in addresses %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100 {% if address.is_default %}border-primary{% endif %}">
+                                    <div class="card-body">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="saved_address" id="address{{ address.id }}" value="{{ address.id }}" {% if address.is_default %}checked{% endif %}>
+                                            <label class="form-check-label" for="address{{ address.id }}">
+                                                <strong>{{ address.get_address_type_display }}</strong>
+                                                {% if address.is_default %}<span class="badge bg-primary ms-2">Default</span>{% endif %}
+                                            </label>
+                                        </div>
+                                        <hr>
+                                        <p class="mb-1">{{ address.full_name }}</p>
+                                        <p class="mb-1">{{ address.street_address }}</p>
+                                        {% if address.apartment_address %}
+                                        <p class="mb-1">{{ address.apartment_address }}</p>
+                                        {% endif %}
+                                        <p class="mb-1">{{ address.city }}, {{ address.state }} {{ address.postal_code }}</p>
+                                        <p class="mb-0">{{ address.phone_number }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="saved_address" id="new_address" value="new">
+                                <label class="form-check-label" for="new_address">
+                                    Use a new address
+                                </label>
+                            </div>
+                            <a href="{% url 'users:add_address' %}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-plus"></i> Add New Address
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <form method="post" id="checkout-form">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.full_name.id_for_label }}" class="form-label">Full Name</label>
+                                {{ form.full_name }}
+                                {% if form.full_name.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.full_name.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.email.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.phone_number.id_for_label }}" class="form-label">Phone Number</label>
+                                {{ form.phone_number }}
+                                {% if form.phone_number.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.phone_number.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12">
+                                <label for="{{ form.address_line_1.id_for_label }}" class="form-label">Address Line 1</label>
+                                {{ form.address_line_1 }}
+                                {% if form.address_line_1.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.address_line_1.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12">
+                                <label for="{{ form.address_line_2.id_for_label }}" class="form-label">Address Line 2 (Optional)</label>
+                                {{ form.address_line_2 }}
+                                {% if form.address_line_2.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.address_line_2.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <label for="{{ form.city.id_for_label }}" class="form-label">City</label>
+                                {{ form.city }}
+                                {% if form.city.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.city.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <label for="{{ form.state.id_for_label }}" class="form-label">State</label>
+                                {{ form.state }}
+                                {% if form.state.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.state.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <label for="{{ form.postal_code.id_for_label }}" class="form-label">Postal Code</label>
+                                {{ form.postal_code }}
+                                {% if form.postal_code.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.postal_code.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12">
+                                <label for="{{ form.order_note.id_for_label }}" class="form-label">Order Notes (Optional)</label>
+                                {{ form.order_note }}
+                                {% if form.order_note.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.order_note.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Payment Method</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="payment_method" id="payment_cod" value="COD" checked>
+                                <label class="form-check-label" for="payment_cod">
+                                    Cash on Delivery
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="payment_method" id="payment_card" value="CC">
+                                <label class="form-check-label" for="payment_card">
+                                    Credit/Debit Card
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="payment_method" id="payment_upi" value="UPI">
+                                <label class="form-check-label" for="payment_upi">
+                                    UPI
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="payment_method" id="payment_netbanking" value="NB">
+                                <label class="form-check-label" for="payment_netbanking">
+                                    Net Banking
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Credit Card Form (hidden by default) -->
+                    <div id="card-payment-form" class="mt-3 d-none">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="card_number" class="form-label">Card Number</label>
+                                <input type="text" class="form-control" id="card_number" placeholder="1234 5678 9012 3456">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="expiry_date" class="form-label">Expiry Date</label>
+                                <input type="text" class="form-control" id="expiry_date" placeholder="MM/YY">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cvv" class="form-label">CVV</label>
+                                <input type="text" class="form-control" id="cvv" placeholder="123">
+                            </div>
+                            <div class="col-12">
+                                <label for="name_on_card" class="form-label">Name on Card</label>
+                                <input type="text" class="form-control" id="name_on_card" placeholder="John Doe">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Order Summary</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        {% for item in cart_items %}
+                        <div class="list-group-item">
+                            <div class="d-flex">
+                                {% get_primary_image item.product as primary_image %}
+                                {% if primary_image %}
+                                <img src="{{ primary_image }}" alt="{{ item.product.name }}" class="img-thumbnail me-3" style="width: 60px;">
+                                {% else %}
+                                <div class="bg-light text-center me-3" style="width: 60px; height: 60px;">
+                                    <i class="fas fa-image text-muted" style="line-height: 60px;"></i>
+                                </div>
+                                {% endif %}
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0">{{ item.product.name }}</h6>
+                                    <small class="text-muted">Qty: {{ item.quantity }}</small>
+                                </div>
+                                <div class="text-end">
+                                    <span class="fw-bold">${{ item.get_cost }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card-footer bg-white">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal:</span>
+                        <span>${{ cart.get_total_price }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Shipping:</span>
+                        <span>Free</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Tax (18%):</span>
+                        <span>${{ cart.get_total_price|floatformat:2|multiply:0.18 }}</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="fw-bold">Total:</span>
+                        <span class="fw-bold fs-5">${{ cart.get_total_price|floatformat:2|add:cart.get_total_price|floatformat:2|multiply:0.18 }}</span>
+                    </div>
+                    <button type="button" class="btn btn-primary w-100" id="place-order-btn">
+                        Place Order
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle payment method selection
+        const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
+        const cardPaymentForm = document.getElementById('card-payment-form');
+
+        paymentMethods.forEach(method => {
+            method.addEventListener('change', function() {
+                if (this.value === 'CC') {
+                    cardPaymentForm.classList.remove('d-none');
+                } else {
+                    cardPaymentForm.classList.add('d-none');
+                }
+            });
+        });
+
+        // Handle saved address selection
+        const savedAddresses = document.querySelectorAll('input[name="saved_address"]');
+        const checkoutForm = document.getElementById('checkout-form');
+
+        if (savedAddresses) {
+            savedAddresses.forEach(address => {
+                address.addEventListener('change', function() {
+                    if (this.value === 'new') {
+                        // Enable all form fields
+                        const formInputs = checkoutForm.querySelectorAll('input, textarea');
+                        formInputs.forEach(input => {
+                            input.disabled = false;
+                        });
+                    } else {
+                        // Fetch address details and fill the form
+                        fetch(`/users/addresses/${this.value}/json/`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    const address = data.address;
+                                    document.getElementById('id_full_name').value = address.full_name;
+                                    document.getElementById('id_phone_number').value = address.phone_number;
+                                    document.getElementById('id_address_line_1').value = address.street_address;
+                                    document.getElementById('id_address_line_2').value = address.apartment_address || '';
+                                    document.getElementById('id_city').value = address.city;
+                                    document.getElementById('id_state').value = address.state;
+                                    document.getElementById('id_postal_code').value = address.postal_code;
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                    }
+                });
+            });
+        }
+
+        // Handle place order button
+        const placeOrderBtn = document.getElementById('place-order-btn');
+        placeOrderBtn.addEventListener('click', function() {
+            // Set the payment method in the form
+            const selectedPaymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+            const paymentMethodInput = document.createElement('input');
+            paymentMethodInput.type = 'hidden';
+            paymentMethodInput.name = 'payment_method';
+            paymentMethodInput.value = selectedPaymentMethod;
+            checkoutForm.appendChild(paymentMethodInput);
+
+            // Submit the form
+            checkoutForm.submit();
+        });
+    });
+</script>
+{% endblock %}

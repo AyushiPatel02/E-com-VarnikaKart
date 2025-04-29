@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}VarnikaKart - Handmade Crafts & Gifts{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <header class="header">
+        <!-- Top Bar -->
+        <div class="top-bar py-2 bg-dark text-white d-none d-md-block">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <ul class="list-inline mb-0">
+                            <li class="list-inline-item me-3">
+                                <i class="fas fa-phone-alt me-1"></i> +1 234 567 8900
+                            </li>
+                            <li class="list-inline-item">
+                                <i class="fas fa-envelope me-1"></i> info@varnikakart.com
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <ul class="list-inline mb-0">
+                            <li class="list-inline-item me-3">
+                                <a href="#" class="text-white"><i class="fab fa-facebook-f"></i></a>
+                            </li>
+                            <li class="list-inline-item me-3">
+                                <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
+                            </li>
+                            <li class="list-inline-item me-3">
+                                <a href="#" class="text-white"><i class="fab fa-twitter"></i></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#" class="text-white"><i class="fab fa-pinterest"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-light sticky-top shadow-sm py-3" style="background-color: #ffffff;">
+            <div class="container">
+                <!-- Logo -->
+                <a class="navbar-brand fw-bold" href="{% url 'home' %}" style="font-size: 1.8rem; background: linear-gradient(90deg, #ff6b6b, #4ecdc4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    VarnikaKart
+                </a>
+
+                <!-- Mobile Icons -->
+                <div class="d-flex d-lg-none">
+                    <a href="{% url 'orders:cart' %}" class="btn btn-outline-dark btn-sm me-2 position-relative">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            0
+                            <span class="visually-hidden">items in cart</span>
+                        </span>
+                    </a>
+                    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+
+                <!-- Search Form -->
+                <div class="d-none d-lg-block mx-auto" style="width: 40%;">
+                    <form class="d-flex">
+                        <div class="input-group">
+                            <input class="form-control" type="search" placeholder="Search for products..." aria-label="Search">
+                            <button class="btn btn-outline-primary" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Desktop Icons -->
+                <div class="d-none d-lg-flex align-items-center">
+                    <a href="{% url 'users:wishlist' %}" class="btn btn-outline-dark btn-sm me-2 position-relative">
+                        <i class="fas fa-heart"></i>
+                    </a>
+                    <a href="{% url 'orders:cart' %}" class="btn btn-outline-dark btn-sm me-3 position-relative">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            0
+                            <span class="visually-hidden">items in cart</span>
+                        </span>
+                    </a>
+
+                    {% if user.is_authenticated %}
+                    <div class="dropdown">
+                        <button class="btn btn-outline-dark dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user me-1"></i> {{ user.username }}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="{% url 'users:profile' %}"><i class="fas fa-user-circle me-2"></i>My Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'orders:order_history' %}"><i class="fas fa-shopping-bag me-2"></i>My Orders</a></li>
+                            <li><a class="dropdown-item" href="{% url 'users:wishlist' %}"><i class="fas fa-heart me-2"></i>My Wishlist</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </div>
+                    {% else %}
+                    <div>
+                        <a href="{% url 'account_login' %}" class="btn btn-outline-primary btn-sm me-2">Login</a>
+                        <a href="{% url 'account_signup' %}" class="btn btn-primary btn-sm">Register</a>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Mobile Menu -->
+                <div class="collapse navbar-collapse mt-3 mt-lg-0" id="navbarNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link fw-medium" href="{% url 'home' %}">Home</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle fw-medium" href="#" id="shopDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Shop
+                            </a>
+                            <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="shopDropdown">
+                                <li><a class="dropdown-item" href="{% url 'products:product_list' %}">All Products</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><h6 class="dropdown-header">Categories</h6></li>
+                                <li><a class="dropdown-item" href="#">Paintings</a></li>
+                                <li><a class="dropdown-item" href="#">Jewelry</a></li>
+                                <li><a class="dropdown-item" href="#">Home Decor</a></li>
+                                <li><a class="dropdown-item" href="#">Personalized Gifts</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fw-medium" href="{% url 'contact' %}">Contact</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fw-medium" href="#">About Us</a>
+                        </li>
+                    </ul>
+
+                    <!-- Mobile Search -->
+                    <form class="d-lg-none mt-3">
+                        <div class="input-group">
+                            <input class="form-control" type="search" placeholder="Search for products..." aria-label="Search">
+                            <button class="btn btn-outline-primary" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Mobile User Menu -->
+                    <div class="d-lg-none mt-3">
+                        {% if user.is_authenticated %}
+                        <div class="list-group">
+                            <a href="{% url 'users:profile' %}" class="list-group-item list-group-item-action">
+                                <i class="fas fa-user-circle me-2"></i>My Profile
+                            </a>
+                            <a href="{% url 'orders:order_history' %}" class="list-group-item list-group-item-action">
+                                <i class="fas fa-shopping-bag me-2"></i>My Orders
+                            </a>
+                            <a href="{% url 'users:wishlist' %}" class="list-group-item list-group-item-action">
+                                <i class="fas fa-heart me-2"></i>My Wishlist
+                            </a>
+                            <a href="{% url 'account_logout' %}" class="list-group-item list-group-item-action text-danger">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a>
+                        </div>
+                        {% else %}
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'account_login' %}" class="btn btn-outline-primary">Login</a>
+                            <a href="{% url 'account_signup' %}" class="btn btn-primary">Register</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Category Navigation (Optional) -->
+        <div class="bg-light py-2 d-none d-lg-block border-bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <ul class="list-inline mb-0 category-nav">
+                            <li class="list-inline-item me-4">
+                                <a href="#" class="text-dark text-decoration-none fw-medium">
+                                    <i class="fas fa-palette me-1"></i> Paintings
+                                </a>
+                            </li>
+                            <li class="list-inline-item me-4">
+                                <a href="#" class="text-dark text-decoration-none fw-medium">
+                                    <i class="fas fa-gem me-1"></i> Jewelry
+                                </a>
+                            </li>
+                            <li class="list-inline-item me-4">
+                                <a href="#" class="text-dark text-decoration-none fw-medium">
+                                    <i class="fas fa-home me-1"></i> Home Decor
+                                </a>
+                            </li>
+                            <li class="list-inline-item me-4">
+                                <a href="#" class="text-dark text-decoration-none fw-medium">
+                                    <i class="fas fa-gift me-1"></i> Personalized Gifts
+                                </a>
+                            </li>
+                            <li class="list-inline-item me-4">
+                                <a href="#" class="text-dark text-decoration-none fw-medium">
+                                    <i class="fas fa-tags me-1"></i> Sale
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#" class="text-dark text-decoration-none fw-medium">
+                                    <i class="fas fa-star me-1"></i> New Arrivals
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="container py-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer pt-5">
+        <!-- Newsletter Section -->
+        <div class="bg-primary text-white py-4 mb-5">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h4 class="mb-1">Subscribe to our Newsletter</h4>
+                        <p class="mb-0">Get the latest updates, offers and special announcements.</p>
+                    </div>
+                    <div class="col-lg-6 mt-3 mt-lg-0">
+                        <form class="d-flex">
+                            <div class="input-group">
+                                <input type="email" class="form-control" placeholder="Your email address" aria-label="Email" aria-describedby="subscribe-btn">
+                                <button class="btn btn-light" type="submit" id="subscribe-btn">Subscribe</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Footer -->
+        <div class="container pb-4">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                    <h5 class="fw-bold mb-4" style="font-size: 1.5rem; background: linear-gradient(90deg, #ff6b6b, #4ecdc4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">VarnikaKart</h5>
+                    <p class="text-muted">Your one-stop shop for handmade crafts and customizable gifts. We connect artisans with customers who appreciate unique, handcrafted items.</p>
+                    <div class="d-flex mt-4">
+                        <a href="#" class="btn btn-outline-dark btn-sm rounded-circle me-2">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-dark btn-sm rounded-circle me-2">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-dark btn-sm rounded-circle me-2">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-dark btn-sm rounded-circle">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Shop</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">All Products</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">New Arrivals</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Best Sellers</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Sale</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Gift Cards</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Categories</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Paintings</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Jewelry</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Home Decor</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Personalized Gifts</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Handmade Crafts</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Customer Service</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Contact Us</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">FAQs</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Shipping & Returns</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Track Order</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="fw-bold mb-3">Contact Us</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2 text-muted">
+                            <i class="fas fa-map-marker-alt me-2"></i>123 Craft Street, Artville
+                        </li>
+                        <li class="mb-2 text-muted">
+                            <i class="fas fa-phone me-2"></i>+1 234 567 8900
+                        </li>
+                        <li class="mb-2 text-muted">
+                            <i class="fas fa-envelope me-2"></i>info@varnikakart.com
+                        </li>
+                        <li class="mb-2 text-muted">
+                            <i class="fas fa-clock me-2"></i>Mon-Fri: 9AM - 6PM
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Payment Methods -->
+            <div class="row mt-4 pt-4 border-top">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <p class="mb-0 text-muted">&copy; {% now "Y" %} VarnikaKart. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <img src="https://cdn.pixabay.com/photo/2021/12/06/13/48/visa-6850402_1280.png" alt="Payment Methods" height="30" class="me-2">
+                    <img src="https://cdn.pixabay.com/photo/2021/12/06/13/48/mastercard-6850401_1280.png" alt="Payment Methods" height="30" class="me-2">
+                    <img src="https://cdn.pixabay.com/photo/2021/12/06/13/48/paypal-6850403_1280.png" alt="Payment Methods" height="30" class="me-2">
+                    <img src="https://cdn.pixabay.com/photo/2022/03/16/19/45/american-express-7073836_1280.png" alt="Payment Methods" height="30">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="{{ STATIC_URL }}js/main.js"></script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

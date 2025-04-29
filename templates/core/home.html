@@ -1,0 +1,1011 @@
+{% extends 'base.html' %}
+
+{% block title %}VarnikaKart - Handmade Crafts & Gifts{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Global Styles */
+    body {
+        overflow-x: hidden;
+    }
+
+    /* Floating Action Button */
+    .floating-action-btn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .floating-action-btn:hover {
+        transform: scale(1.1) rotate(10deg);
+    }
+
+    .floating-action-btn i {
+        font-size: 24px;
+    }
+
+    /* Scroll Progress Bar */
+    .scroll-progress-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+
+    .scroll-progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+        width: 0%;
+        transition: width 0.2s ease;
+    }
+
+    /* Hero Section Styles */
+    .hero-section {
+        position: relative;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        overflow: hidden;
+        min-height: 600px;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 4rem 0;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1.2;
+    }
+
+    .hero-subtitle {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        color: #4a4a4a;
+    }
+
+    .hero-btn {
+        padding: 0.8rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .hero-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Hero Cards Container */
+    .hero-cards-container {
+        position: relative;
+        height: 500px;
+        perspective: 1000px;
+    }
+
+    /* Hero Cards */
+    .hero-card {
+        position: absolute;
+        width: 280px;
+        height: 380px;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        transition: all 0.5s ease;
+    }
+
+    .hero-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-card .card-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .hero-card:hover .card-img {
+        transform: scale(1.1);
+    }
+
+    .hero-card .card-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 20px;
+        background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+        color: white;
+    }
+
+    .card-1 {
+        top: 0;
+        left: 0;
+        z-index: 3;
+    }
+
+    .card-2 {
+        top: 50px;
+        left: 100px;
+        z-index: 2;
+    }
+
+    .card-3 {
+        top: 100px;
+        left: 200px;
+        z-index: 1;
+    }
+
+    .float-animation-delay {
+        animation: float 6s ease-in-out infinite;
+        animation-delay: 2s;
+    }
+
+    /* Category Cards */
+    .category-card {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        height: 250px;
+        position: relative;
+    }
+
+    .category-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .category-card img {
+        height: 180px;
+        object-fit: cover;
+    }
+
+    .category-card .card-body {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(5px);
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    /* Product Cards */
+    .product-card {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .product-card:hover {
+        transform: translateY(-10px) rotate(1deg);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-card .card-img-top {
+        height: 220px;
+        object-fit: cover;
+        transition: all 0.5s ease;
+    }
+
+    .product-card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+
+    .product-card .card-body {
+        padding: 1.5rem;
+    }
+
+    .product-card .card-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .product-card .card-footer {
+        background-color: transparent;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 1rem 1.5rem;
+    }
+
+    /* Newsletter Section */
+    .newsletter-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 5rem 0;
+        color: white;
+        border-radius: 15px;
+        margin: 3rem 0;
+    }
+
+    .newsletter-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .newsletter-form .form-control {
+        height: 3.5rem;
+        border-radius: 50px;
+        padding-left: 1.5rem;
+        font-size: 1.1rem;
+        border: none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .newsletter-form .btn {
+        height: 3.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Features Section */
+    .feature-card {
+        padding: 2rem;
+        border-radius: 15px;
+        background: white;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        color: white;
+        font-size: 1.8rem;
+    }
+
+    .feature-card:nth-child(2) .feature-icon {
+        background: linear-gradient(135deg, #4ecdc4 0%, #6cdfcb 100%);
+    }
+
+    .feature-card:nth-child(3) .feature-icon {
+        background: linear-gradient(135deg, #f7b733 0%, #fc4a1a 100%);
+    }
+
+    .feature-title {
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    /* Product Showcase Cards */
+    .showcase-card {
+        transition: all 0.3s ease;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .showcase-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .showcase-card .card-title {
+        font-weight: 600;
+    }
+
+    .showcase-card .btn {
+        border-radius: 50px;
+        padding: 8px 20px;
+        font-weight: 500;
+    }
+
+    /* Product Carousel Controls */
+    .carousel-control-prev, .carousel-control-next {
+        width: 40px;
+        height: 40px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .carousel-control-prev {
+        left: -20px;
+    }
+
+    .carousel-control-next {
+        right: -20px;
+    }
+
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Animations */
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+        100% { transform: translateY(0px); }
+    }
+
+    .float-animation {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .float-animation-delay {
+        animation: float 6s ease-in-out infinite;
+        animation-delay: 2s;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 992px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+        }
+
+        .hero-image-container {
+            height: 400px;
+            margin-top: 2rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero-section {
+            min-height: auto;
+        }
+
+        .hero-image-container {
+            height: 300px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Scroll Progress Bar -->
+<div class="scroll-progress-container">
+    <div class="scroll-progress-bar" id="scrollProgress"></div>
+</div>
+
+<!-- Floating Action Button -->
+<a href="{% url 'products:product_list' %}" class="floating-action-btn">
+    <i class="fas fa-shopping-cart"></i>
+</a>
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="hero-title">Handcrafted Artistry, Delivered to You</h1>
+                    <p class="hero-subtitle">Discover unique handmade crafts, paintings, jewelry, and customizable gifts that tell a story and bring joy to your space.</p>
+                    <div class="d-flex gap-3">
+                        <a href="{% url 'products:product_list' %}" class="btn btn-primary btn-lg hero-btn">
+                            <i class="fas fa-shopping-bag me-2"></i>Shop Collection
+                        </a>
+                        <a href="{% url 'contact' %}" class="btn btn-outline-primary btn-lg hero-btn">
+                            <i class="fas fa-paint-brush me-2"></i>Custom Orders
+                        </a>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="row mt-5">
+                        <div class="col-4">
+                            <h3 class="fw-bold mb-0">500+</h3>
+                            <p class="text-muted">Unique Products</p>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="fw-bold mb-0">50+</h3>
+                            <p class="text-muted">Artisans</p>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="fw-bold mb-0">10k+</h3>
+                            <p class="text-muted">Happy Customers</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-cards-container">
+                    <!-- Modern Card Design -->
+                    <div class="card hero-card card-1 float-animation">
+                        <div class="card-body p-0">
+                            <img src="https://images.unsplash.com/photo-1579762593175-20226054cad0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1236&q=80" alt="Handmade Jewelry" class="card-img">
+                            <div class="card-overlay">
+                                <h4>Handcrafted Jewelry</h4>
+                                <p class="mb-0">Unique designs</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card hero-card card-2 float-animation-delay">
+                        <div class="card-body p-0">
+                            <img src="https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Paintings" class="card-img">
+                            <div class="card-overlay">
+                                <h4>Artistic Paintings</h4>
+                                <p class="mb-0">Express yourself</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card hero-card card-3 float-animation">
+                        <div class="card-body p-0">
+                            <img src="https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Custom Gifts" class="card-img">
+                            <div class="card-overlay">
+                                <h4>Personalized Gifts</h4>
+                                <p class="mb-0">Made with love</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Product Showcase Carousel -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Trending Now</h2>
+            <p class="lead text-muted mx-auto" style="max-width: 600px;">Discover our most popular handcrafted items this season.</p>
+        </div>
+
+        <div class="product-carousel">
+            <div class="row">
+                <div class="col-12">
+                    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="card h-100 border-0 shadow-sm showcase-card">
+                                            <div class="row g-0">
+                                                <div class="col-md-6">
+                                                    <img src="https://images.unsplash.com/photo-1579762593175-20226054cad0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1236&q=80" class="img-fluid rounded-start h-100" alt="Product" style="object-fit: cover;">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="card-body d-flex flex-column h-100">
+                                                        <div class="mb-3">
+                                                            <span class="badge bg-danger">Best Seller</span>
+                                                        </div>
+                                                        <h5 class="card-title">Handcrafted Silver Earrings</h5>
+                                                        <p class="card-text text-muted mb-3">Elegant silver earrings with intricate designs, perfect for any occasion.</p>
+                                                        <div class="d-flex align-items-center mb-3">
+                                                            <h4 class="mb-0 me-2">$45.99</h4>
+                                                            <span class="text-decoration-line-through text-muted">$59.99</span>
+                                                        </div>
+                                                        <a href="#" class="btn btn-primary mt-auto">Shop Now</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card h-100 border-0 shadow-sm showcase-card">
+                                            <div class="row g-0">
+                                                <div class="col-md-6">
+                                                    <img src="https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" class="img-fluid rounded-start h-100" alt="Product" style="object-fit: cover;">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="card-body d-flex flex-column h-100">
+                                                        <div class="mb-3">
+                                                            <span class="badge bg-success">New Arrival</span>
+                                                        </div>
+                                                        <h5 class="card-title">Abstract Canvas Painting</h5>
+                                                        <p class="card-text text-muted mb-3">Vibrant abstract painting on premium canvas, adds color to any room.</p>
+                                                        <div class="d-flex align-items-center mb-3">
+                                                            <h4 class="mb-0">$129.99</h4>
+                                                        </div>
+                                                        <a href="#" class="btn btn-primary mt-auto">Shop Now</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="card h-100 border-0 shadow-sm showcase-card">
+                                            <div class="row g-0">
+                                                <div class="col-md-6">
+                                                    <img src="https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" class="img-fluid rounded-start h-100" alt="Product" style="object-fit: cover;">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="card-body d-flex flex-column h-100">
+                                                        <div class="mb-3">
+                                                            <span class="badge bg-primary">Limited Edition</span>
+                                                        </div>
+                                                        <h5 class="card-title">Personalized Name Bracelet</h5>
+                                                        <p class="card-text text-muted mb-3">Custom engraved bracelet with your name or special message.</p>
+                                                        <div class="d-flex align-items-center mb-3">
+                                                            <h4 class="mb-0 me-2">$39.99</h4>
+                                                            <span class="text-decoration-line-through text-muted">$49.99</span>
+                                                        </div>
+                                                        <a href="#" class="btn btn-primary mt-auto">Shop Now</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card h-100 border-0 shadow-sm showcase-card">
+                                            <div class="row g-0">
+                                                <div class="col-md-6">
+                                                    <img src="https://images.unsplash.com/photo-1616876195047-522bd83c9cb2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" class="img-fluid rounded-start h-100" alt="Product" style="object-fit: cover;">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="card-body d-flex flex-column h-100">
+                                                        <div class="mb-3">
+                                                            <span class="badge bg-warning text-dark">Trending</span>
+                                                        </div>
+                                                        <h5 class="card-title">Handmade Ceramic Vase</h5>
+                                                        <p class="card-text text-muted mb-3">Beautifully crafted ceramic vase with unique glazing patterns.</p>
+                                                        <div class="d-flex align-items-center mb-3">
+                                                            <h4 class="mb-0">$79.99</h4>
+                                                        </div>
+                                                        <a href="#" class="btn btn-primary mt-auto">Shop Now</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <h4 class="feature-title">Handcrafted with Love</h4>
+                    <p>Each product is carefully crafted by skilled artisans, ensuring quality and uniqueness in every piece.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h4 class="feature-title">Fast & Free Shipping</h4>
+                    <p>Enjoy free shipping on all orders over $50 with delivery within 3-5 business days.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <h4 class="feature-title">Customizable Gifts</h4>
+                    <p>Personalize your gifts with custom engravings, colors, and designs for that special touch.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Categories -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Explore Our Collections</h2>
+            <p class="lead text-muted mx-auto" style="max-width: 600px;">Discover our carefully curated categories of handcrafted items, each telling a unique story of artistry and passion.</p>
+        </div>
+
+        <div class="row">
+            {% for category in categories %}
+            <div class="col-md-4 col-sm-6 mb-4">
+                <a href="{{ category.get_absolute_url }}" class="text-decoration-none">
+                    <div class="category-card">
+                        {% if category.image %}
+                        <img src="{{ category.image.url }}" alt="{{ category.name }}" class="w-100">
+                        {% else %}
+                        <div class="bg-light text-center py-5 h-100">
+                            <i class="fas fa-box fa-3x text-muted"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold mb-0">{{ category.name }}</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <div class="py-5">
+                    <i class="fas fa-box-open fa-4x text-muted mb-3"></i>
+                    <h4>No categories available yet</h4>
+                    <p class="text-muted">We're working on adding exciting new categories soon!</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Category Highlights -->
+        <div class="row mt-5">
+            <div class="col-md-6 mb-4">
+                <div class="card bg-dark text-white overflow-hidden" style="border-radius: 15px; height: 300px;">
+                    <img src="https://images.unsplash.com/photo-1579762593175-20226054cad0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1236&q=80" class="card-img" alt="Handmade Jewelry" style="object-fit: cover; height: 100%;">
+                    <div class="card-img-overlay d-flex flex-column justify-content-end" style="background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);">
+                        <h3 class="card-title fw-bold">Handmade Jewelry</h3>
+                        <p class="card-text">Unique pieces crafted with precision and love.</p>
+                        <a href="#" class="btn btn-outline-light mt-2 align-self-start">Explore Collection</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card bg-dark text-white overflow-hidden" style="border-radius: 15px; height: 300px;">
+                    <img src="https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" class="card-img" alt="Paintings & Art" style="object-fit: cover; height: 100%;">
+                    <div class="card-img-overlay d-flex flex-column justify-content-end" style="background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);">
+                        <h3 class="card-title fw-bold">Paintings & Art</h3>
+                        <p class="card-text">Expressive artworks to brighten your space.</p>
+                        <a href="#" class="btn btn-outline-light mt-2 align-self-start">Explore Collection</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Featured Creations</h2>
+            <p class="lead text-muted mx-auto" style="max-width: 600px;">Discover our most popular handcrafted items, each piece telling a unique story of creativity and craftsmanship.</p>
+        </div>
+
+        <div class="row">
+            {% for product_data in products_data %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="product-card h-100">
+                    <div class="position-relative">
+                        {% if product_data.product.discount_price %}
+                        <span class="position-absolute top-0 start-0 m-2 badge bg-danger">{{ product_data.discount_percentage }}% OFF</span>
+                        {% endif %}
+                        <a href="{{ product_data.product.get_absolute_url }}" class="position-absolute top-0 end-0 m-2 btn btn-sm btn-light rounded-circle">
+                            <i class="far fa-heart"></i>
+                        </a>
+                        {% if product_data.primary_image %}
+                        <img src="{{ product_data.primary_image }}" alt="{{ product_data.product.name }}" class="card-img-top">
+                        {% else %}
+                        <div class="bg-light text-center py-5">
+                            <i class="fas fa-image fa-3x text-muted"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted small mb-1">{{ product_data.product.category.name }}</p>
+                        <h5 class="card-title">{{ product_data.product.name }}</h5>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            {% if product_data.product.discount_price %}
+                            <div>
+                                <span class="text-decoration-line-through text-muted">${{ product_data.product.price }}</span>
+                                <span class="fw-bold text-danger ms-2">${{ product_data.product.discount_price }}</span>
+                            </div>
+                            {% else %}
+                            <span class="fw-bold">${{ product_data.product.price }}</span>
+                            {% endif %}
+                            <div class="d-flex">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star-half-alt text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="{{ product_data.product.get_absolute_url }}" class="btn btn-sm btn-outline-primary">View Details</a>
+                        <button class="btn btn-sm btn-primary add-to-cart" data-product-id="{{ product_data.product.id }}">
+                            <i class="fas fa-shopping-cart me-1"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-box-open fa-4x text-muted mb-3"></i>
+                <h4>No featured products available yet</h4>
+                <p class="text-muted">We're working on adding exciting new products soon!</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="{% url 'products:product_list' %}" class="btn btn-lg btn-primary hero-btn">
+                <i class="fas fa-th-large me-2"></i>View All Products
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">What Our Customers Say</h2>
+            <p class="lead text-muted mx-auto" style="max-width: 600px;">Don't just take our word for it - hear from our satisfied customers about their VarnikaKart experience.</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex mb-4">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text mb-4">"The handmade earrings I ordered are absolutely stunning! The craftsmanship is exceptional, and they arrived beautifully packaged. Will definitely be ordering more!"</p>
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                <span class="fw-bold">SM</span>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Sarah Mitchell</h6>
+                                <small class="text-muted">New York, USA</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex mb-4">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text mb-4">"I ordered a custom painting for my wife's birthday, and it exceeded all expectations. The artist captured exactly what I wanted, and the delivery was prompt. My wife loves it!"</p>
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                <span class="fw-bold">JP</span>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">James Peterson</h6>
+                                <small class="text-muted">London, UK</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex mb-4">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star-half-alt text-warning"></i>
+                        </div>
+                        <p class="card-text mb-4">"The personalized bracelet I ordered for my daughter was perfect! The quality is excellent, and the engraving was done beautifully. Customer service was also very helpful."</p>
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                <span class="fw-bold">AP</span>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Anita Patel</h6>
+                                <small class="text-muted">Toronto, Canada</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="newsletter-section">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="newsletter-title">Join Our Creative Community</h2>
+                    <p class="lead mb-4">Subscribe to our newsletter for exclusive offers, new product alerts, and artisan stories.</p>
+                    <form method="post" action="{% url 'home' %}" class="newsletter-form row g-3 justify-content-center">
+                        {% csrf_token %}
+                        <div class="col-md-8">
+                            {{ newsletter_form.email }}
+                            {% if newsletter_form.email.errors %}
+                            <div class="invalid-feedback d-block text-white">
+                                {{ newsletter_form.email.errors.0 }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-light w-100">
+                                <i class="fas fa-paper-plane me-2"></i>Subscribe
+                            </button>
+                        </div>
+                    </form>
+                    <div class="mt-4">
+                        <small class="text-white-50">By subscribing, you agree to receive marketing emails from VarnikaKart. Don't worry, we respect your privacy and you can unsubscribe at any time.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Instagram Feed Section -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Follow Our Journey</h2>
+            <p class="lead text-muted mx-auto" style="max-width: 600px;">Join us on Instagram for behind-the-scenes looks at our artisans at work and daily inspiration.</p>
+        </div>
+
+        <div class="row g-2">
+            <div class="col-2">
+                <a href="#" class="d-block overflow-hidden" style="height: 180px;">
+                    <img src="https://images.unsplash.com/photo-1531913764164-f85c52e6e654?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Instagram Post" class="img-fluid h-100 w-100" style="object-fit: cover;">
+                </a>
+            </div>
+            <div class="col-2">
+                <a href="#" class="d-block overflow-hidden" style="height: 180px;">
+                    <img src="https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Instagram Post" class="img-fluid h-100 w-100" style="object-fit: cover;">
+                </a>
+            </div>
+            <div class="col-2">
+                <a href="#" class="d-block overflow-hidden" style="height: 180px;">
+                    <img src="https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Instagram Post" class="img-fluid h-100 w-100" style="object-fit: cover;">
+                </a>
+            </div>
+            <div class="col-2">
+                <a href="#" class="d-block overflow-hidden" style="height: 180px;">
+                    <img src="https://images.unsplash.com/photo-1579762593175-20226054cad0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1236&q=80" alt="Instagram Post" class="img-fluid h-100 w-100" style="object-fit: cover;">
+                </a>
+            </div>
+            <div class="col-2">
+                <a href="#" class="d-block overflow-hidden" style="height: 180px;">
+                    <img src="https://images.unsplash.com/photo-1616876195047-522bd83c9cb2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Instagram Post" class="img-fluid h-100 w-100" style="object-fit: cover;">
+                </a>
+            </div>
+            <div class="col-2">
+                <a href="#" class="d-block overflow-hidden position-relative" style="height: 180px;">
+                    <img src="https://images.unsplash.com/photo-1616876195047-522bd83c9cb2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Instagram Post" class="img-fluid h-100 w-100" style="object-fit: cover; filter: brightness(0.5);">
+                    <div class="position-absolute top-0 left-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                        <span class="text-white fw-bold">View More</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="https://www.instagram.com/" target="_blank" class="btn btn-outline-primary">
+                <i class="fab fa-instagram me-2"></i>Follow @varnikakart
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add any custom JavaScript here
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle scroll progress bar
+        const scrollProgress = document.getElementById('scrollProgress');
+
+        window.addEventListener('scroll', function() {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollPercentage = (scrollTop / scrollHeight) * 100;
+
+            scrollProgress.style.width = scrollPercentage + '%';
+        });
+
+        // Add hover effects to hero cards
+        const heroCards = document.querySelectorAll('.hero-card');
+
+        heroCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                heroCards.forEach(c => {
+                    if (c !== card) {
+                        c.style.opacity = '0.7';
+                    }
+                });
+            });
+
+            card.addEventListener('mouseleave', function() {
+                heroCards.forEach(c => {
+                    c.style.opacity = '1';
+                });
+            });
+        });
+
+        // Add animation to stats numbers
+        const statsNumbers = document.querySelectorAll('.hero-content .fw-bold');
+
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Animate stats when they come into view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = entry.target;
+                    const finalValue = parseInt(target.textContent.replace(/\D/g, ''));
+                    animateValue(target, 0, finalValue, 2000);
+                    observer.unobserve(target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        statsNumbers.forEach(stat => {
+            observer.observe(stat);
+        });
+    });
+</script>
+{% endblock %}
