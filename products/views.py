@@ -103,6 +103,7 @@ def product_list(request, category_slug=None):
         'max_price': max_price,
         'sort_by': sort_by,
         'collection': collection,
+        'category_filter': category_filter,
         'page_title': page_title,
         'page_description': page_description,
     }

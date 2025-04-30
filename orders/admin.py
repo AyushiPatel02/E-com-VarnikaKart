@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Cart, CartItem, Order, OrderItem, Payment
+from core.admin_site import admin_site
 
 class CartItemInline(admin.TabularInline):
     model = CartItem
@@ -19,7 +20,6 @@ class OrderItemInline(admin.TabularInline):
         return obj.get_cost()
     get_cost.short_description = 'Cost'
 
-@admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'session_id', 'get_total_items', 'get_total_price', 'created_at')
     list_filter = ('created_at',)
@@ -34,7 +34,6 @@ class CartAdmin(admin.ModelAdmin):
         return obj.get_total_price()
     get_total_price.short_description = 'Total Price'
 
-@admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('order_number', 'user', 'full_name', 'order_total', 'status', 'payment_status', 'created_at')
     list_filter = ('status', 'payment_status', 'payment_method', 'created_at')
@@ -61,10 +60,19 @@ class OrderAdmin(admin.ModelAdmin):
         }),
     )
 
-@admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
     list_display = ('payment_id', 'order', 'payment_method', 'amount_paid', 'status', 'created_at')
     list_filter = ('status', 'payment_method', 'created_at')
     search_fields = ('payment_id', 'order__order_number')
     readonly_fields = ('payment_id', 'order', 'payment_method', 'amount_paid', 'status', 'created_at')
     list_per_page = 20
+
+# Register with custom admin site
+admin_site.register(Cart, CartAdmin)
+admin_site.register(Order, OrderAdmin)
+admin_site.register(Payment, PaymentAdmin)
+
+# Also register with default admin site for backwards compatibility
+admin.site.register(Cart, CartAdmin)
+admin.site.register(Order, OrderAdmin)
+admin.site.register(Payment, PaymentAdmin)

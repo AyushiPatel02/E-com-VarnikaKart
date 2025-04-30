@@ -223,20 +223,43 @@
 
                         <!-- User Menu Dropdown -->
                         <div class="user-menu">
+                            {% if user.is_authenticated %}
                             <div class="user-header">
-                                <div class="user-avatar">JD</div>
+                                <div class="user-avatar">
+                                    {% if user.profile.profile_picture %}
+                                    <img src="{{ user.profile.profile_picture.url }}" alt="{{ user.username }}" class="img-fluid rounded-circle" style="width: 100%; height: 100%; object-fit: cover;">
+                                    {% else %}
+                                    {{ user.username|slice:":2"|upper }}
+                                    {% endif %}
+                                </div>
                                 <div class="user-info">
-                                    <h6>John Doe</h6>
-                                    <p>john.doe@example.com</p>
+                                    <h6>{{ user.get_full_name|default:user.username }}</h6>
+                                    <p>{{ user.email }}</p>
                                 </div>
                             </div>
                             <ul class="mega-menu-list">
-                                <li><a href="#"><i class="fas fa-user-circle"></i> My Profile</a></li>
-                                <li><a href="#"><i class="fas fa-shopping-bag"></i> My Orders</a></li>
-                                <li><a href="#"><i class="fas fa-heart"></i> Wishlist</a></li>
-                                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
-                                <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                                <li><a href="{% url 'users:profile' %}"><i class="fas fa-user-circle"></i> My Profile</a></li>
+                                <li><a href="{% url 'orders:order_history' %}"><i class="fas fa-shopping-bag"></i> My Orders</a></li>
+                                <li><a href="{% url 'users:address_list' %}"><i class="fas fa-map-marker-alt"></i> My Addresses</a></li>
+                                <li><a href="{% url 'users:wishlist' %}"><i class="fas fa-heart"></i> Wishlist</a></li>
+                                <li><a href="{% url 'account_change_password' %}"><i class="fas fa-lock"></i> Change Password</a></li>
+                                <li><a href="{% url 'account_logout' %}" class="text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                             </ul>
+                            {% else %}
+                            <div class="user-header guest-header">
+                                <div class="user-avatar guest-avatar">
+                                    <i class="fas fa-user-circle fa-2x"></i>
+                                </div>
+                                <div class="user-info">
+                                    <h6>Welcome, Guest</h6>
+                                    <p>Sign in to access your account</p>
+                                </div>
+                            </div>
+                            <ul class="mega-menu-list">
+                                <li><a href="{% url 'account_login' %}" class="login-btn"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                                <li><a href="{% url 'account_signup' %}" class="register-btn"><i class="fas fa-user-plus"></i> Register</a></li>
+                            </ul>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -404,10 +427,15 @@
                 </div>
             </div>
 
-            <!-- Payment Methods -->
+            <!-- Payment Methods and Footer Links -->
             <div class="row mt-4 pt-4 border-top">
                 <div class="col-md-6 mb-3 mb-md-0">
-                    <p class="mb-0 text-muted">&copy; {% now "Y" %} VarnikaKart. All rights reserved.</p>
+                    <p class="mb-0 text-muted">
+                        &copy; {% now "Y" %} VarnikaKart. All rights reserved.
+                        <a href="{% url 'superadmin_login' %}" class="super-admin-link ms-2" title="Super Admin Login">
+                            <i class="fas fa-shield-alt"></i>
+                        </a>
+                    </p>
                 </div>
                 <div class="col-md-6 text-md-end">
                     <img src="https://cdn.pixabay.com/photo/2021/12/06/13/48/visa-6850402_1280.png" alt="Payment Methods" height="30" class="me-2">
@@ -424,6 +452,9 @@
 
     <!-- Theme Switcher JS -->
     <script src="{% static 'js/simple-theme-switcher.js' %}"></script>
+
+    <!-- User Menu JS -->
+    <script src="{% static 'js/user-menu.js' %}"></script>
 
     <!-- Custom JS -->
     <script src="{% static 'js/main.js' %}"></script>

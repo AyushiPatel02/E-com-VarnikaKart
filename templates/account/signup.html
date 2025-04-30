@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Sign Up" %} - VarnikaKart{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="auth-card">
+        <div class="card-header bg-primary text-white text-center py-4">
+          <h3 class="mb-0 fw-bold">{% trans "Create Your Account" %}</h3>
+        </div>
+        <div class="card-body p-4 p-md-5">
+          <div class="text-center mb-4">
+            <p>{% blocktrans %}Join VarnikaKart to discover unique handcrafted products from talented artisans.{% endblocktrans %}</p>
+            <div class="auth-divider">
+              <span>{% trans 'Fill in your details' %}</span>
+            </div>
+          </div>
+
+          <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+              {% for error in form.non_field_errors %}
+                {{ error }}
+              {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="auth-form-floating">
+              <input type="text" name="username" placeholder=" "
+                     class="form-control {% if form.username.errors %}is-invalid{% endif %}"
+                     id="id_username" autocomplete="username" required>
+              <label for="id_username">{% trans "Username" %}</label>
+              {% if form.username.errors %}
+              <div class="invalid-feedback">
+                {% for error in form.username.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+              {% endif %}
+              <div class="form-text">
+                {% blocktrans %}Choose a unique username. This will be used to log in.{% endblocktrans %}
+              </div>
+            </div>
+
+            <div class="auth-form-floating">
+              <input type="email" name="email" placeholder=" "
+                     class="form-control {% if form.email.errors %}is-invalid{% endif %}"
+                     id="id_email" autocomplete="email" required>
+              <label for="id_email">{% trans "E-mail address" %}</label>
+              {% if form.email.errors %}
+              <div class="invalid-feedback">
+                {% for error in form.email.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+              {% endif %}
+            </div>
+
+            <div class="auth-form-floating">
+              <input type="password" name="password1" placeholder=" "
+                     class="form-control {% if form.password1.errors %}is-invalid{% endif %}"
+                     id="id_password1" autocomplete="new-password" required>
+              <label for="id_password1">{% trans "Password" %}</label>
+              {% if form.password1.errors %}
+              <div class="invalid-feedback">
+                {% for error in form.password1.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+              {% endif %}
+              <div class="form-text">
+                {% blocktrans %}Password must be at least 8 characters long and contain letters and numbers.{% endblocktrans %}
+              </div>
+            </div>
+
+            <div class="auth-form-floating">
+              <input type="password" name="password2" placeholder=" "
+                     class="form-control {% if form.password2.errors %}is-invalid{% endif %}"
+                     id="id_password2" autocomplete="new-password" required>
+              <label for="id_password2">{% trans "Password (again)" %}</label>
+              {% if form.password2.errors %}
+              <div class="invalid-feedback">
+                {% for error in form.password2.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+              {% endif %}
+            </div>
+
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+
+            <div class="form-check mb-4 mt-3">
+              <input class="form-check-input" type="checkbox" id="terms-check" required>
+              <label class="form-check-label" for="terms-check">
+                {% blocktrans %}I agree to the <a href="#" class="auth-footer-link">Terms of Service</a> and <a href="#" class="auth-footer-link">Privacy Policy</a>{% endblocktrans %}
+              </label>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button class="btn btn-primary btn-lg auth-btn" type="submit">{% trans "Create Account" %}</button>
+            </div>
+
+            <div class="text-center mt-4">
+              <p class="mb-0">
+                {% trans "Already have an account?" %} <a href="{{ login_url }}" class="auth-footer-link fw-bold">{% trans "Sign in" %}</a>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

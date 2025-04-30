@@ -1,0 +1,97 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | VarnikaKart Admin{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    :root {
+        --primary-color: #4e73df;
+        --secondary-color: #224abe;
+        --success-color: #1cc88a;
+        --info-color: #36b9cc;
+        --warning-color: #f6c23e;
+        --danger-color: #e74a3b;
+        --light-color: #f8f9fc;
+        --dark-color: #5a5c69;
+    }
+
+    #header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+    }
+
+    #branding h1 {
+        font-weight: 800;
+    }
+
+    #branding h1, #branding h1 a:link, #branding h1 a:visited {
+        color: white;
+    }
+
+    .module h2, .module caption, .inline-group h2 {
+        background: var(--primary-color);
+    }
+
+    div.breadcrumbs {
+        background: var(--secondary-color);
+    }
+
+    a:link, a:visited {
+        color: var(--primary-color);
+    }
+
+    .button, input[type=submit], input[type=button], .submit-row input, a.button {
+        background: var(--primary-color);
+    }
+
+    .button:hover, input[type=submit]:hover, input[type=button]:hover, .submit-row input:hover {
+        background: var(--secondary-color);
+    }
+
+    .button.default, input[type=submit].default, .submit-row input.default {
+        background: var(--success-color);
+    }
+
+    .button.default:hover, input[type=submit].default:hover, .submit-row input.default:hover {
+        background: #169a6b;
+    }
+
+    .object-tools a:link, .object-tools a:visited {
+        background: var(--primary-color);
+    }
+
+    .object-tools a:hover {
+        background: var(--secondary-color);
+    }
+
+    #user-tools {
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+    }
+
+    .admin-interface-title {
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .admin-interface-subtitle {
+        font-size: 0.75rem;
+        opacity: 0.8;
+        margin-left: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'admin:index' %}">
+        <span class="admin-interface-title">VarnikaKart</span>
+        <span class="admin-interface-subtitle">Super Admin</span>
+    </a>
+</h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

@@ -73,6 +73,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'core.middleware.SuperuserRequiredMiddleware',  # Custom middleware to protect admin pages
 ]
 
 ROOT_URLCONF = 'varnikakart.urls'

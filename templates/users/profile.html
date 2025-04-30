@@ -2,139 +2,297 @@
 
 {% block title %}My Profile - VarnikaKart{% endblock %}
 
+{% block extra_css %}
+<style>
+    .profile-header {
+        background-color: var(--bs-primary);
+        color: white;
+        border-radius: 0.5rem 0.5rem 0 0;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .profile-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aW5kaWFuJTIwYXJ0fGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60') center/cover no-repeat;
+        opacity: 0.15;
+        z-index: 0;
+    }
+
+    .profile-header-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .profile-avatar {
+        width: 150px;
+        height: 150px;
+        border: 5px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+    }
+
+    .profile-avatar:hover {
+        transform: scale(1.05);
+    }
+
+    .profile-stats {
+        background: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        transition: all 0.3s ease;
+    }
+
+    .profile-stats:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+    .profile-stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--bs-primary);
+    }
+
+    .profile-nav .nav-link {
+        color: #495057;
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.5rem;
+        transition: all 0.2s ease;
+    }
+
+    .profile-nav .nav-link:hover {
+        background-color: rgba(var(--bs-primary-rgb), 0.1);
+    }
+
+    .profile-nav .nav-link.active {
+        background-color: var(--bs-primary);
+        color: white;
+    }
+
+    .profile-info-card {
+        border: none;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        transition: all 0.3s ease;
+    }
+
+    .profile-info-card:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+    .profile-info-item {
+        padding: 1rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .profile-info-item:last-child {
+        border-bottom: none;
+    }
+
+    .profile-info-label {
+        color: #6c757d;
+        font-weight: 600;
+    }
+
+    .profile-info-value {
+        font-weight: 500;
+    }
+
+    .btn-floating {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container py-4">
-    <div class="row">
-        <div class="col-lg-3 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">My Account</h5>
+    <!-- Profile Header -->
+    <div class="profile-header mb-4">
+        <div class="profile-header-content text-center">
+            <div class="mb-3">
+                {% if profile.profile_picture %}
+                <img src="{{ profile.profile_picture.url }}" alt="{{ user.username }}" class="profile-avatar rounded-circle">
+                {% else %}
+                <div class="profile-avatar rounded-circle bg-light d-inline-flex align-items-center justify-content-center">
+                    <i class="fas fa-user fa-4x text-primary"></i>
                 </div>
-                <div class="list-group list-group-flush">
-                    <a href="{% url 'users:profile' %}" class="list-group-item list-group-item-action active">
-                        <i class="fas fa-user me-2"></i>Profile
-                    </a>
-                    <a href="{% url 'orders:order_history' %}" class="list-group-item list-group-item-action">
-                        <i class="fas fa-shopping-bag me-2"></i>Orders
-                    </a>
-                    <a href="{% url 'users:address_list' %}" class="list-group-item list-group-item-action">
-                        <i class="fas fa-map-marker-alt me-2"></i>Addresses
-                    </a>
-                    <a href="{% url 'users:wishlist' %}" class="list-group-item list-group-item-action">
-                        <i class="fas fa-heart me-2"></i>Wishlist
-                    </a>
-                    <a href="{% url 'account_change_password' %}" class="list-group-item list-group-item-action">
-                        <i class="fas fa-lock me-2"></i>Change Password
-                    </a>
-                    <a href="{% url 'account_logout' %}" class="list-group-item list-group-item-action text-danger">
-                        <i class="fas fa-sign-out-alt me-2"></i>Logout
-                    </a>
-                </div>
+                {% endif %}
+            </div>
+            <h2 class="fw-bold mb-1">{{ user.get_full_name|default:user.username }}</h2>
+            <p class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Member since {{ user.date_joined|date:"F Y" }}</p>
+        </div>
+    </div>
+
+    <!-- Profile Stats -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3 mb-md-0">
+            <div class="profile-stats p-3 text-center">
+                <div class="profile-stat-value">{{ orders.count }}</div>
+                <div class="text-muted">Orders</div>
             </div>
         </div>
-        
+        <div class="col-md-4 mb-3 mb-md-0">
+            <div class="profile-stats p-3 text-center">
+                <div class="profile-stat-value">{{ addresses.count }}</div>
+                <div class="text-muted">Addresses</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="profile-stats p-3 text-center">
+                <div class="profile-stat-value">{{ wishlist_products.count|default:"0" }}</div>
+                <div class="text-muted">Wishlist Items</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Profile Navigation -->
+        <div class="col-lg-3 mb-4">
+            <div class="profile-nav">
+                <a href="{% url 'users:profile' %}" class="nav-link active">
+                    <i class="fas fa-user me-2"></i>Profile
+                </a>
+                <a href="{% url 'orders:order_history' %}" class="nav-link">
+                    <i class="fas fa-shopping-bag me-2"></i>Orders
+                </a>
+                <a href="{% url 'users:address_list' %}" class="nav-link">
+                    <i class="fas fa-map-marker-alt me-2"></i>Addresses
+                </a>
+                <a href="{% url 'users:wishlist' %}" class="nav-link">
+                    <i class="fas fa-heart me-2"></i>Wishlist
+                </a>
+                <a href="{% url 'account_change_password' %}" class="nav-link">
+                    <i class="fas fa-lock me-2"></i>Change Password
+                </a>
+                <a href="{% url 'account_logout' %}" class="nav-link text-danger">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+            </div>
+        </div>
+
+        <!-- Profile Content -->
         <div class="col-lg-9">
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <div class="card profile-info-card mb-4">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
                     <h5 class="mb-0">Profile Information</h5>
-                    <a href="{% url 'users:edit_profile' %}" class="btn btn-sm btn-primary">
+                    <a href="{% url 'users:edit_profile' %}" class="btn btn-primary btn-sm">
                         <i class="fas fa-edit me-1"></i>Edit Profile
                     </a>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-4 text-center mb-4 mb-md-0">
-                            {% if profile.profile_picture %}
-                            <img src="{{ profile.profile_picture.url }}" alt="{{ user.username }}" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
-                            {% else %}
-                            <div class="bg-light rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 150px; height: 150px;">
-                                <i class="fas fa-user fa-5x text-muted"></i>
+                <div class="card-body p-0">
+                    <div class="profile-info-item">
+                        <div class="row align-items-center">
+                            <div class="col-sm-4">
+                                <div class="profile-info-label">Username</div>
                             </div>
-                            {% endif %}
-                            <h5>{{ user.get_full_name|default:user.username }}</h5>
-                            <p class="text-muted">Member since {{ user.date_joined|date:"F Y" }}</p>
+                            <div class="col-sm-8">
+                                <div class="profile-info-value">{{ user.username }}</div>
+                            </div>
                         </div>
-                        <div class="col-md-8">
-                            <div class="row mb-3">
-                                <div class="col-sm-4">
-                                    <p class="mb-0 fw-bold">Username:</p>
-                                </div>
-                                <div class="col-sm-8">
-                                    <p class="text-muted mb-0">{{ user.username }}</p>
-                                </div>
+                    </div>
+                    <div class="profile-info-item">
+                        <div class="row align-items-center">
+                            <div class="col-sm-4">
+                                <div class="profile-info-label">Full Name</div>
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-sm-4">
-                                    <p class="mb-0 fw-bold">Full Name:</p>
-                                </div>
-                                <div class="col-sm-8">
-                                    <p class="text-muted mb-0">{{ user.get_full_name|default:"Not provided" }}</p>
-                                </div>
+                            <div class="col-sm-8">
+                                <div class="profile-info-value">{{ user.get_full_name|default:"Not provided" }}</div>
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-sm-4">
-                                    <p class="mb-0 fw-bold">Email:</p>
-                                </div>
-                                <div class="col-sm-8">
-                                    <p class="text-muted mb-0">{{ user.email }}</p>
-                                </div>
+                        </div>
+                    </div>
+                    <div class="profile-info-item">
+                        <div class="row align-items-center">
+                            <div class="col-sm-4">
+                                <div class="profile-info-label">Email</div>
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-sm-4">
-                                    <p class="mb-0 fw-bold">Phone Number:</p>
-                                </div>
-                                <div class="col-sm-8">
-                                    <p class="text-muted mb-0">{{ profile.phone_number|default:"Not provided" }}</p>
-                                </div>
+                            <div class="col-sm-8">
+                                <div class="profile-info-value">{{ user.email }}</div>
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-sm-4">
-                                    <p class="mb-0 fw-bold">Date of Birth:</p>
-                                </div>
-                                <div class="col-sm-8">
-                                    <p class="text-muted mb-0">{{ profile.date_of_birth|date:"F d, Y"|default:"Not provided" }}</p>
-                                </div>
+                        </div>
+                    </div>
+                    <div class="profile-info-item">
+                        <div class="row align-items-center">
+                            <div class="col-sm-4">
+                                <div class="profile-info-label">Phone Number</div>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="profile-info-value">{{ profile.phone_number|default:"Not provided" }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-info-item">
+                        <div class="row align-items-center">
+                            <div class="col-sm-4">
+                                <div class="profile-info-label">Date of Birth</div>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="profile-info-value">{{ profile.date_of_birth|date:"F d, Y"|default:"Not provided" }}</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+
+            <div class="card profile-info-card mb-4">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
                     <h5 class="mb-0">Default Address</h5>
-                    <a href="{% url 'users:address_list' %}" class="btn btn-sm btn-outline-primary">
-                        View All Addresses
+                    <a href="{% url 'users:address_list' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-list me-1"></i>View All
                     </a>
                 </div>
                 <div class="card-body">
                     {% if addresses.exists %}
                         {% with default_address=addresses|first %}
                         <div class="row">
-                            <div class="col-md-6">
-                                <p class="mb-1"><strong>{{ default_address.get_address_type_display }} Address</strong></p>
-                                <p class="mb-1">{{ default_address.full_name }}</p>
-                                <p class="mb-1">{{ default_address.street_address }}</p>
-                                {% if default_address.apartment_address %}
-                                <p class="mb-1">{{ default_address.apartment_address }}</p>
-                                {% endif %}
-                                <p class="mb-1">{{ default_address.city }}, {{ default_address.state }} {{ default_address.postal_code }}</p>
-                                <p class="mb-0">{{ default_address.phone_number }}</p>
+                            <div class="col-md-7">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="btn-floating bg-primary text-white me-3">
+                                        <i class="fas fa-home"></i>
+                                    </div>
+                                    <h6 class="mb-0 fw-bold">{{ default_address.get_address_type_display }} Address</h6>
+                                </div>
+                                <div class="ps-4 border-start border-primary border-3">
+                                    <p class="mb-1 fw-medium">{{ default_address.full_name }}</p>
+                                    <p class="mb-1 text-muted">{{ default_address.street_address }}</p>
+                                    {% if default_address.apartment_address %}
+                                    <p class="mb-1 text-muted">{{ default_address.apartment_address }}</p>
+                                    {% endif %}
+                                    <p class="mb-1 text-muted">{{ default_address.city }}, {{ default_address.state }} {{ default_address.postal_code }}</p>
+                                    <p class="mb-0 text-muted"><i class="fas fa-phone-alt me-2"></i>{{ default_address.phone_number }}</p>
+                                </div>
                             </div>
-                            <div class="col-md-6 d-flex align-items-center justify-content-end">
-                                <a href="{% url 'users:edit_address' default_address.id %}" class="btn btn-sm btn-outline-primary me-2">
-                                    <i class="fas fa-edit"></i> Edit
+                            <div class="col-md-5 d-flex align-items-center justify-content-md-end mt-3 mt-md-0">
+                                <a href="{% url 'users:edit_address' default_address.id %}" class="btn btn-outline-primary me-2">
+                                    <i class="fas fa-edit me-1"></i>Edit
                                 </a>
-                                <a href="{% url 'users:delete_address' default_address.id %}" class="btn btn-sm btn-outline-danger">
-                                    <i class="fas fa-trash-alt"></i> Delete
+                                <a href="{% url 'users:delete_address' default_address.id %}" class="btn btn-outline-danger">
+                                    <i class="fas fa-trash-alt me-1"></i>Delete
                                 </a>
                             </div>
                         </div>
                         {% endwith %}
                     {% else %}
                         <div class="text-center py-4">
-                            <i class="fas fa-map-marker-alt fa-3x text-muted mb-3"></i>
-                            <p class="mb-3">You don't have any saved addresses yet.</p>
+                            <div class="mb-3">
+                                <i class="fas fa-map-marker-alt fa-3x text-primary opacity-50"></i>
+                            </div>
+                            <h5 class="mb-2">No Addresses Found</h5>
+                            <p class="text-muted mb-3">You don't have any saved addresses yet.</p>
                             <a href="{% url 'users:add_address' %}" class="btn btn-primary">
                                 <i class="fas fa-plus me-1"></i>Add New Address
                             </a>
@@ -142,36 +300,36 @@
                     {% endif %}
                 </div>
             </div>
-            
-            <div class="card shadow-sm">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+
+            <div class="card profile-info-card">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
                     <h5 class="mb-0">Recent Orders</h5>
-                    <a href="{% url 'orders:order_history' %}" class="btn btn-sm btn-outline-primary">
-                        View All Orders
+                    <a href="{% url 'orders:order_history' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-history me-1"></i>View All
                     </a>
                 </div>
                 <div class="card-body p-0">
                     {% if orders %}
                         <div class="table-responsive">
-                            <table class="table table-hover mb-0">
+                            <table class="table table-hover align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Order #</th>
+                                        <th class="ps-3">Order #</th>
                                         <th>Date</th>
                                         <th>Total</th>
                                         <th>Status</th>
-                                        <th>Action</th>
+                                        <th class="text-end pe-3">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for order in orders %}
                                     <tr>
-                                        <td>{{ order.order_number }}</td>
+                                        <td class="ps-3 fw-medium">{{ order.order_number }}</td>
                                         <td>{{ order.created_at|date:"M d, Y" }}</td>
-                                        <td>${{ order.order_total }}</td>
+                                        <td class="fw-bold">${{ order.order_total }}</td>
                                         <td>
                                             {% if order.status == 'P' %}
-                                            <span class="badge bg-warning">Pending</span>
+                                            <span class="badge bg-warning text-dark">Pending</span>
                                             {% elif order.status == 'C' %}
                                             <span class="badge bg-info">Confirmed</span>
                                             {% elif order.status == 'S' %}
@@ -182,9 +340,9 @@
                                             <span class="badge bg-danger">Cancelled</span>
                                             {% endif %}
                                         </td>
-                                        <td>
-                                            <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-sm btn-outline-primary">
-                                                View
+                                        <td class="text-end pe-3">
+                                            <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-sm btn-primary">
+                                                <i class="fas fa-eye me-1"></i>View
                                             </a>
                                         </td>
                                     </tr>
@@ -193,11 +351,14 @@
                             </table>
                         </div>
                     {% else %}
-                        <div class="text-center py-4">
-                            <i class="fas fa-shopping-bag fa-3x text-muted mb-3"></i>
-                            <p class="mb-3">You haven't placed any orders yet.</p>
+                        <div class="text-center py-5">
+                            <div class="mb-3">
+                                <i class="fas fa-shopping-bag fa-3x text-primary opacity-50"></i>
+                            </div>
+                            <h5 class="mb-2">No Orders Yet</h5>
+                            <p class="text-muted mb-3">You haven't placed any orders yet.</p>
                             <a href="{% url 'products:product_list' %}" class="btn btn-primary">
-                                Start Shopping
+                                <i class="fas fa-shopping-cart me-1"></i>Start Shopping
                             </a>
                         </div>
                     {% endif %}

@@ -431,3 +431,41 @@
     font-size: 0.8rem;
     color: rgba(var(--text-color-rgb), 0.6);
 }
+
+/* Guest user styles */
+.guest-header {
+    background-color: rgba(var(--primary-color-rgb), 0.05);
+    border-radius: 8px;
+}
+
+.guest-avatar {
+    background: transparent;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-btn, .register-btn {
+    padding: 0.8rem 1rem !important;
+    transition: all 0.3s ease;
+}
+
+.login-btn {
+    color: var(--primary-color) !important;
+    font-weight: 500;
+}
+
+.register-btn {
+    background-color: var(--primary-color);
+    color: white !important;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.register-btn:hover {
+    background-color: var(--primary-color) !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 4px 10px rgba(var(--primary-color-rgb), 0.3);
+    color: white !important;
+}

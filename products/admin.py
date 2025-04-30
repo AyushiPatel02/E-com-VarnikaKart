@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Category, Product, ProductImage, ProductVariation, Review
+from core.admin_site import admin_site
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
@@ -16,7 +17,6 @@ class ReviewInline(admin.TabularInline):
     can_delete = False
     max_num = 0  # Don't allow adding new reviews in admin
 
-@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug', 'is_active', 'created_at')
     list_filter = ('is_active', 'created_at')
@@ -24,7 +24,6 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     list_per_page = 20
 
-@admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'price', 'discount_price', 'stock', 'is_available', 'is_featured', 'created_at')
     list_filter = ('category', 'is_available', 'is_featured', 'created_at')
@@ -46,10 +45,19 @@ class ProductAdmin(admin.ModelAdmin):
         }),
     )
 
-@admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ('product', 'user', 'rating', 'title', 'created_at')
     list_filter = ('rating', 'created_at')
     search_fields = ('title', 'comment', 'user__username', 'product__name')
     readonly_fields = ('product', 'user', 'rating', 'title', 'comment', 'created_at')
     list_per_page = 20
+
+# Register with custom admin site
+admin_site.register(Category, CategoryAdmin)
+admin_site.register(Product, ProductAdmin)
+admin_site.register(Review, ReviewAdmin)
+
+# Also register with default admin site for backwards compatibility
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(Product, ProductAdmin)
+admin.site.register(Review, ReviewAdmin)

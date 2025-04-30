@@ -478,6 +478,19 @@ body {
     color: var(--primary-color);
 }
 
+/* Super Admin Link */
+.super-admin-link {
+    color: #6c757d;
+    opacity: 0.5;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+
+.super-admin-link:hover {
+    color: var(--primary-color);
+    opacity: 1;
+}
+
 /* Navbar Buttons */
 .nav-btn {
     padding: 0.5rem 1rem;

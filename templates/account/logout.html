@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Sign Out" %} - VarnikaKart{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card shadow-lg border-0 rounded-lg">
+        <div class="card-header bg-primary text-white text-center py-4">
+          <h3 class="mb-0 fw-bold">{% trans "Sign Out" %}</h3>
+        </div>
+        <div class="card-body p-4 p-md-5 text-center">
+          <div class="mb-4">
+            <i class="fas fa-sign-out-alt fa-4x text-primary mb-3"></i>
+          </div>
+          
+          <p>{% trans 'Are you sure you want to sign out?' %}</p>
+          
+          <form method="post" action="{% url 'account_logout' %}">
+            {% csrf_token %}
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+            {% endif %}
+            <div class="d-flex justify-content-center gap-3 mt-4">
+              <a href="{% url 'home' %}" class="btn btn-outline-secondary">{% trans "Cancel" %}</a>
+              <button type="submit" class="btn btn-primary">{% trans "Sign Out" %}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
