@@ -1101,6 +1101,92 @@ body {
     border-radius: 0.5rem;
 }
 
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 0.25rem;
+    text-transform: uppercase;
+}
+
+.status-badge.pending {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    border: 1px solid #dee2e6;
+}
+
+.status-badge.confirmed {
+    background-color: #cfe2ff;
+    color: #0d6efd;
+    border: 1px solid #9ec5fe;
+}
+
+.status-badge.shipped {
+    background-color: #fff3cd;
+    color: #ffc107;
+    border: 1px solid #ffe69c;
+}
+
+.status-badge.delivered {
+    background-color: #d1e7dd;
+    color: #198754;
+    border: 1px solid #a3cfbb;
+}
+
+.status-badge.cancelled {
+    background-color: #f8d7da;
+    color: #dc3545;
+    border: 1px solid #f5c2c7;
+}
+
+/* User Admin Styles */
+.avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.avatar-placeholder-large {
+    width: 150px;
+    height: 150px;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 3rem;
+    margin: 0 auto;
+}
+
+.user-info {
+    margin-bottom: 1.5rem;
+}
+
+.user-stats {
+    margin: 1.5rem 0;
+}
+
+.user-stats .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.user-stats .stat-label {
+    font-size: 0.875rem;
+    color: var(--secondary-color);
+}
+
 /* Dark Mode */
 .dark-mode {
     --body-bg: #1a1c23;

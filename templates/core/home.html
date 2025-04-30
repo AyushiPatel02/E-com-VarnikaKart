@@ -394,6 +394,159 @@
         transform: scale(1.1);
     }
 
+    /* Best Sellers Section Styles */
+    .best-seller-card {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border: none;
+    }
+
+    .best-seller-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .best-seller-card .card-img-top {
+        height: 280px;
+        object-fit: cover;
+        transition: all 0.5s ease;
+    }
+
+    .best-seller-card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+
+    .best-seller-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: var(--primary-color);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        z-index: 10;
+    }
+
+    .best-seller-price {
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: var(--primary-color);
+    }
+
+    .best-seller-original-price {
+        text-decoration: line-through;
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-right: 8px;
+    }
+
+    /* Material Cards */
+    .material-card {
+        transition: all 0.3s ease;
+    }
+
+    .material-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .material-card .card-img-top {
+        transition: all 0.5s ease;
+    }
+
+    .material-card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+
+    /* Artisan Section */
+    .artisan-card {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        border: none;
+    }
+
+    .artisan-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .artisan-img {
+        height: 300px;
+        object-fit: cover;
+        transition: all 0.5s ease;
+    }
+
+    .artisan-card:hover .artisan-img {
+        transform: scale(1.05);
+    }
+
+    .artisan-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: rgba(var(--primary-color-rgb), 0.9);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        z-index: 10;
+    }
+
+    /* Trust Badges */
+    .trust-badge {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    .trust-badge:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .trust-badge i {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        color: var(--primary-color);
+    }
+
+    /* Blog Cards */
+    .blog-card {
+        transition: all 0.3s ease;
+    }
+
+    .blog-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .blog-card .card-img-top {
+        transition: all 0.5s ease;
+    }
+
+    .blog-card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+
+    .blog-card .btn-link {
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .blog-card .btn-link:hover {
+        transform: translateX(5px);
+    }
+
     /* Newsletter Section */
     .newsletter-section {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -785,35 +938,82 @@
     </div>
 </section>
 
-<!-- Features Section -->
+<!-- Why Choose Us Section -->
 <section class="py-5 bg-light">
     <div class="container">
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
+        <div class="text-center mb-5">
+            <div class="d-inline-block position-relative mb-3">
+                <h2 class="display-5 fw-bold mb-0">Why Choose VarnikaKart</h2>
+                <div class="position-absolute w-100" style="height: 8px; background-color: rgba(var(--primary-color-rgb), 0.2); bottom: -4px; left: 0; border-radius: 4px;"></div>
+            </div>
+            <p class="lead text-muted mx-auto" style="max-width: 700px;">We're committed to bringing authentic handcrafted artistry directly from skilled artisans to your doorstep.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-3 mb-4">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mx-auto">
                         <i class="fas fa-hand-holding-heart"></i>
                     </div>
-                    <h4 class="feature-title">Handcrafted with Love</h4>
+                    <h4 class="feature-title">Handcrafted Excellence</h4>
                     <p>Each product is carefully crafted by skilled artisans, ensuring quality and uniqueness in every piece.</p>
                 </div>
             </div>
-            <div class="col-md-4 mb-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
+            <div class="col-md-3 mb-4">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mx-auto">
                         <i class="fas fa-truck"></i>
                     </div>
                     <h4 class="feature-title">Fast & Free Shipping</h4>
                     <p>Enjoy free shipping on all orders over $50 with delivery within 3-5 business days.</p>
                 </div>
             </div>
-            <div class="col-md-4 mb-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
+            <div class="col-md-3 mb-4">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mx-auto">
                         <i class="fas fa-gift"></i>
                     </div>
                     <h4 class="feature-title">Customizable Gifts</h4>
                     <p>Personalize your gifts with custom engravings, colors, and designs for that special touch.</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mx-auto" style="background: linear-gradient(135deg, #6cdfcb 0%, #4ecdc4 100%);">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4 class="feature-title">Artisan Support</h4>
+                    <p>Every purchase directly supports the livelihood of our network of skilled artisans across the country.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mx-auto" style="background: linear-gradient(135deg, #f7b733 0%, #fc4a1a 100%);">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h4 class="feature-title">Quality Guaranteed</h4>
+                    <p>We stand behind the quality of our products with a 100% satisfaction guarantee.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mx-auto" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h4 class="feature-title">Eco-Friendly</h4>
+                    <p>Our products and packaging are designed with sustainability in mind, minimizing environmental impact.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon mx-auto" style="background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h4 class="feature-title">Dedicated Support</h4>
+                    <p>Our customer service team is available 7 days a week to assist with any questions or concerns.</p>
                 </div>
             </div>
         </div>
@@ -879,6 +1079,269 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</section>
+
+<!-- Best Sellers Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="d-inline-block position-relative mb-3">
+                <h2 class="display-5 fw-bold mb-0">Best-Sellers</h2>
+                <div class="position-absolute w-100" style="height: 8px; background-color: rgba(var(--primary-color-rgb), 0.2); bottom: -4px; left: 0; border-radius: 4px;"></div>
+            </div>
+            <p class="lead text-muted mx-auto" style="max-width: 600px;">Shop our most popular handcrafted items loved by customers worldwide.</p>
+        </div>
+
+        <div class="row g-4">
+            {% for product_data in products_data %}
+            {% if forloop.counter <= 5 %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm best-seller-card">
+                    <div class="position-relative">
+                        <span class="best-seller-badge">
+                            <i class="fas fa-award me-1"></i> Best Seller
+                        </span>
+                        {% if product_data.product.discount_price %}
+                        <span class="position-absolute top-0 start-0 m-2 ms-5 ps-4 badge bg-danger">{{ product_data.discount_percentage }}% OFF</span>
+                        {% endif %}
+                        <a href="{{ product_data.product.get_absolute_url }}" class="position-absolute top-0 end-0 m-2 btn btn-sm btn-light rounded-circle">
+                            <i class="far fa-heart"></i>
+                        </a>
+                        {% if product_data.primary_image %}
+                        <img src="{{ product_data.primary_image }}" alt="{{ product_data.product.name }}" class="card-img-top">
+                        {% else %}
+                        <div class="bg-light text-center py-5" style="height: 280px;">
+                            <i class="fas fa-image fa-3x text-muted"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted small mb-1">{{ product_data.product.category.name }}</p>
+                        <h5 class="card-title">{{ product_data.product.name }}</h5>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            {% if product_data.product.discount_price %}
+                            <div>
+                                <span class="best-seller-original-price">${{ product_data.product.price }}</span>
+                                <span class="best-seller-price">${{ product_data.product.discount_price }}</span>
+                            </div>
+                            {% else %}
+                            <span class="best-seller-price">${{ product_data.product.price }}</span>
+                            {% endif %}
+                            <div class="d-flex">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star-half-alt text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-white border-top-0">
+                        <a href="{{ product_data.product.get_absolute_url }}" class="btn btn-sm btn-outline-primary">View Details</a>
+                        <button class="btn btn-sm btn-primary add-to-cart" data-product-id="{{ product_data.product.id }}">
+                            <i class="fas fa-shopping-cart me-1"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% empty %}
+            <!-- Sample Best Seller Cards (will show if no products in database) -->
+            <!-- Card 1 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm best-seller-card">
+                    <div class="position-relative">
+                        <span class="best-seller-badge">
+                            <i class="fas fa-award me-1"></i> Best Seller
+                        </span>
+                        <span class="position-absolute top-0 start-0 m-2 ms-5 ps-4 badge bg-danger">25% OFF</span>
+                        <a href="#" class="position-absolute top-0 end-0 m-2 btn btn-sm btn-light rounded-circle">
+                            <i class="far fa-heart"></i>
+                        </a>
+                        <img src="https://images.unsplash.com/photo-1579762593175-20226054cad0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1236&q=80" alt="Handcrafted Silver Earrings" class="card-img-top">
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted small mb-1">Jewelry</p>
+                        <h5 class="card-title">Handcrafted Silver Earrings</h5>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>
+                                <span class="best-seller-original-price">$59.99</span>
+                                <span class="best-seller-price">$44.99</span>
+                            </div>
+                            <div class="d-flex">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star-half-alt text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-white border-top-0">
+                        <a href="#" class="btn btn-sm btn-outline-primary">View Details</a>
+                        <button class="btn btn-sm btn-primary add-to-cart">
+                            <i class="fas fa-shopping-cart me-1"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm best-seller-card">
+                    <div class="position-relative">
+                        <span class="best-seller-badge">
+                            <i class="fas fa-award me-1"></i> Best Seller
+                        </span>
+                        <a href="#" class="position-absolute top-0 end-0 m-2 btn btn-sm btn-light rounded-circle">
+                            <i class="far fa-heart"></i>
+                        </a>
+                        <img src="https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Abstract Canvas Painting" class="card-img-top">
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted small mb-1">Paintings</p>
+                        <h5 class="card-title">Abstract Canvas Painting</h5>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="best-seller-price">$129.99</span>
+                            <div class="d-flex">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-white border-top-0">
+                        <a href="#" class="btn btn-sm btn-outline-primary">View Details</a>
+                        <button class="btn btn-sm btn-primary add-to-cart">
+                            <i class="fas fa-shopping-cart me-1"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm best-seller-card">
+                    <div class="position-relative">
+                        <span class="best-seller-badge">
+                            <i class="fas fa-award me-1"></i> Best Seller
+                        </span>
+                        <span class="position-absolute top-0 start-0 m-2 ms-5 ps-4 badge bg-danger">20% OFF</span>
+                        <a href="#" class="position-absolute top-0 end-0 m-2 btn btn-sm btn-light rounded-circle">
+                            <i class="far fa-heart"></i>
+                        </a>
+                        <img src="https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Personalized Name Bracelet" class="card-img-top">
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted small mb-1">Personalized Gifts</p>
+                        <h5 class="card-title">Personalized Name Bracelet</h5>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>
+                                <span class="best-seller-original-price">$49.99</span>
+                                <span class="best-seller-price">$39.99</span>
+                            </div>
+                            <div class="d-flex">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star-half-alt text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-white border-top-0">
+                        <a href="#" class="btn btn-sm btn-outline-primary">View Details</a>
+                        <button class="btn btn-sm btn-primary add-to-cart">
+                            <i class="fas fa-shopping-cart me-1"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm best-seller-card">
+                    <div class="position-relative">
+                        <span class="best-seller-badge">
+                            <i class="fas fa-award me-1"></i> Best Seller
+                        </span>
+                        <a href="#" class="position-absolute top-0 end-0 m-2 btn btn-sm btn-light rounded-circle">
+                            <i class="far fa-heart"></i>
+                        </a>
+                        <img src="https://images.unsplash.com/photo-1616876195047-522bd83c9cb2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Handmade Ceramic Vase" class="card-img-top">
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted small mb-1">Home Decor</p>
+                        <h5 class="card-title">Handmade Ceramic Vase</h5>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="best-seller-price">$79.99</span>
+                            <div class="d-flex">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-white border-top-0">
+                        <a href="#" class="btn btn-sm btn-outline-primary">View Details</a>
+                        <button class="btn btn-sm btn-primary add-to-cart">
+                            <i class="fas fa-shopping-cart me-1"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm best-seller-card">
+                    <div class="position-relative">
+                        <span class="best-seller-badge">
+                            <i class="fas fa-award me-1"></i> Best Seller
+                        </span>
+                        <span class="position-absolute top-0 start-0 m-2 ms-5 ps-4 badge bg-danger">30% OFF</span>
+                        <a href="#" class="position-absolute top-0 end-0 m-2 btn btn-sm btn-light rounded-circle">
+                            <i class="far fa-heart"></i>
+                        </a>
+                        <img src="https://images.unsplash.com/photo-1531913764164-f85c52e6e654?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Wooden Wall Art" class="card-img-top">
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted small mb-1">Wall Decor</p>
+                        <h5 class="card-title">Wooden Wall Art</h5>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>
+                                <span class="best-seller-original-price">$89.99</span>
+                                <span class="best-seller-price">$62.99</span>
+                            </div>
+                            <div class="d-flex">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star-half-alt text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-white border-top-0">
+                        <a href="#" class="btn btn-sm btn-outline-primary">View Details</a>
+                        <button class="btn btn-sm btn-primary add-to-cart">
+                            <i class="fas fa-shopping-cart me-1"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="{% url 'products:product_list' %}?collection=best_sellers" class="btn btn-lg btn-primary hero-btn">
+                <i class="fas fa-th-large me-2"></i>View All Best-Sellers
+            </a>
         </div>
     </div>
 </section>
@@ -956,11 +1419,89 @@
     </div>
 </section>
 
+<!-- Artisan Stories Section -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="d-inline-block position-relative mb-3">
+                <h2 class="display-5 fw-bold mb-0">Meet Our Artisans</h2>
+                <div class="position-absolute w-100" style="height: 8px; background-color: rgba(var(--primary-color-rgb), 0.2); bottom: -4px; left: 0; border-radius: 4px;"></div>
+            </div>
+            <p class="lead text-muted mx-auto" style="max-width: 700px;">Discover the skilled craftspeople behind our handcrafted products and their inspiring stories.</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Artisan 1 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card border-0 shadow-sm artisan-card h-100">
+                    <div class="position-relative">
+                        <span class="artisan-badge">Master Craftsman</span>
+                        <img src="https://images.unsplash.com/photo-1531913764164-f85c52e6e654?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Rajesh Kumar" class="artisan-img">
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title fw-bold">Rajesh Kumar</h4>
+                        <p class="text-muted mb-3">Wood Carving • 25 years experience</p>
+                        <p class="card-text">Rajesh comes from a family of wood carvers in Rajasthan. His intricate designs have been featured in exhibitions across the country.</p>
+                    </div>
+                    <div class="card-footer bg-white border-top-0">
+                        <a href="#" class="btn btn-outline-primary rounded-pill">View Artisan Profile</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Artisan 2 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card border-0 shadow-sm artisan-card h-100">
+                    <div class="position-relative">
+                        <span class="artisan-badge">Ceramic Artist</span>
+                        <img src="https://images.unsplash.com/photo-1616876195047-522bd83c9cb2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Priya Sharma" class="artisan-img">
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title fw-bold">Priya Sharma</h4>
+                        <p class="text-muted mb-3">Pottery • 15 years experience</p>
+                        <p class="card-text">Priya's ceramic creations blend traditional techniques with contemporary designs, making each piece a unique work of art.</p>
+                    </div>
+                    <div class="card-footer bg-white border-top-0">
+                        <a href="#" class="btn btn-outline-primary rounded-pill">View Artisan Profile</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Artisan 3 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card border-0 shadow-sm artisan-card h-100">
+                    <div class="position-relative">
+                        <span class="artisan-badge">Textile Expert</span>
+                        <img src="https://images.unsplash.com/photo-1579762593175-20226054cad0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1236&q=80" alt="Anwar Khan" class="artisan-img">
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title fw-bold">Anwar Khan</h4>
+                        <p class="text-muted mb-3">Textile Weaving • 20 years experience</p>
+                        <p class="card-text">Anwar's family has been weaving textiles for generations. His intricate patterns tell stories of his cultural heritage.</p>
+                    </div>
+                    <div class="card-footer bg-white border-top-0">
+                        <a href="#" class="btn btn-outline-primary rounded-pill">View Artisan Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="#" class="btn btn-lg btn-primary hero-btn">
+                <i class="fas fa-users me-2"></i>Meet All Artisans
+            </a>
+        </div>
+    </div>
+</section>
+
 <!-- Testimonials Section -->
 <section class="py-5 bg-light">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3">What Our Customers Say</h2>
+            <div class="d-inline-block position-relative mb-3">
+                <h2 class="display-5 fw-bold mb-0">What Our Customers Say</h2>
+                <div class="position-absolute w-100" style="height: 8px; background-color: rgba(var(--primary-color-rgb), 0.2); bottom: -4px; left: 0; border-radius: 4px;"></div>
+            </div>
             <p class="lead text-muted mx-auto" style="max-width: 600px;">Don't just take our word for it - hear from our satisfied customers about their VarnikaKart experience.</p>
         </div>
 
@@ -1038,6 +1579,140 @@
     </div>
 </section>
 
+<!-- Recent Blog Posts Section -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="d-inline-block position-relative mb-3">
+                <h2 class="display-5 fw-bold mb-0">From Our Blog</h2>
+                <div class="position-absolute w-100" style="height: 8px; background-color: rgba(var(--primary-color-rgb), 0.2); bottom: -4px; left: 0; border-radius: 4px;"></div>
+            </div>
+            <p class="lead text-muted mx-auto" style="max-width: 700px;">Discover stories about artisans, crafting techniques, and tips for decorating your space with handcrafted items.</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Blog Post 1 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card border-0 rounded-4 overflow-hidden shadow-sm h-100 blog-card">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1531913764164-f85c52e6e654?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="The Art of Wood Carving" class="card-img-top" style="height: 220px; object-fit: cover;">
+                        <div class="position-absolute top-0 start-0 m-3">
+                            <span class="badge bg-primary">Crafting Techniques</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <small class="text-muted"><i class="far fa-calendar-alt me-1"></i> June 15, 2023</small>
+                            <small class="text-muted"><i class="far fa-comment me-1"></i> 24 Comments</small>
+                        </div>
+                        <h4 class="card-title fw-bold">The Art of Wood Carving: Traditions and Techniques</h4>
+                        <p class="card-text">Explore the ancient art of wood carving and how our artisans are keeping these traditions alive while innovating with modern designs.</p>
+                    </div>
+                    <div class="card-footer bg-white border-top-0">
+                        <a href="#" class="btn btn-link text-primary p-0">Read More <i class="fas fa-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog Post 2 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card border-0 rounded-4 overflow-hidden shadow-sm h-100 blog-card">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1616876195047-522bd83c9cb2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Styling Your Home" class="card-img-top" style="height: 220px; object-fit: cover;">
+                        <div class="position-absolute top-0 start-0 m-3">
+                            <span class="badge bg-success">Home Decor</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <small class="text-muted"><i class="far fa-calendar-alt me-1"></i> May 28, 2023</small>
+                            <small class="text-muted"><i class="far fa-comment me-1"></i> 18 Comments</small>
+                        </div>
+                        <h4 class="card-title fw-bold">5 Ways to Style Your Home with Handcrafted Ceramics</h4>
+                        <p class="card-text">Learn how to incorporate handcrafted ceramic pieces into your home decor to add character, color, and a personal touch.</p>
+                    </div>
+                    <div class="card-footer bg-white border-top-0">
+                        <a href="#" class="btn btn-link text-primary p-0">Read More <i class="fas fa-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog Post 3 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card border-0 rounded-4 overflow-hidden shadow-sm h-100 blog-card">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1579762593175-20226054cad0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1236&q=80" alt="Artisan Stories" class="card-img-top" style="height: 220px; object-fit: cover;">
+                        <div class="position-absolute top-0 start-0 m-3">
+                            <span class="badge bg-danger">Artisan Stories</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <small class="text-muted"><i class="far fa-calendar-alt me-1"></i> April 10, 2023</small>
+                            <small class="text-muted"><i class="far fa-comment me-1"></i> 32 Comments</small>
+                        </div>
+                        <h4 class="card-title fw-bold">Meet the Master Jewelers Behind Our Handcrafted Collection</h4>
+                        <p class="card-text">Discover the stories of the skilled artisans who create our stunning jewelry pieces, preserving traditional techniques.</p>
+                    </div>
+                    <div class="card-footer bg-white border-top-0">
+                        <a href="#" class="btn btn-link text-primary p-0">Read More <i class="fas fa-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="#" class="btn btn-lg btn-primary hero-btn">
+                <i class="fas fa-book-open me-2"></i>Visit Our Blog
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Trust Badges Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="d-inline-block position-relative mb-3">
+                <h2 class="display-5 fw-bold mb-0">Why Trust Us</h2>
+                <div class="position-absolute w-100" style="height: 8px; background-color: rgba(var(--primary-color-rgb), 0.2); bottom: -4px; left: 0; border-radius: 4px;"></div>
+            </div>
+            <p class="lead text-muted mx-auto" style="max-width: 700px;">We're committed to providing you with the highest quality handcrafted products and exceptional service.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="trust-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4 class="fw-bold">Secure Payments</h4>
+                    <p class="mb-0">Your payment information is processed securely. We do not store credit card details.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="trust-badge">
+                    <i class="fas fa-truck"></i>
+                    <h4 class="fw-bold">Free Shipping</h4>
+                    <p class="mb-0">Free shipping on all orders over $50. Quick delivery within 3-5 business days.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="trust-badge">
+                    <i class="fas fa-undo"></i>
+                    <h4 class="fw-bold">Easy Returns</h4>
+                    <p class="mb-0">Simple returns within 30 days of delivery. No questions asked refund policy.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="trust-badge">
+                    <i class="fas fa-headset"></i>
+                    <h4 class="fw-bold">24/7 Support</h4>
+                    <p class="mb-0">Our customer support team is available round the clock to assist you.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Newsletter Section -->
 <section class="py-5">
     <div class="container">
@@ -1071,42 +1746,156 @@
     </div>
 </section>
 
-<!-- Instagram Feed Section -->
+<!-- Shop by Material Section -->
 <section class="py-5 bg-white">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3">Follow Our Journey</h2>
+            <div class="d-inline-block position-relative mb-3">
+                <h2 class="display-5 fw-bold mb-0">Shop by Material</h2>
+                <div class="position-absolute w-100" style="height: 8px; background-color: rgba(var(--primary-color-rgb), 0.2); bottom: -4px; left: 0; border-radius: 4px;"></div>
+            </div>
+            <p class="lead text-muted mx-auto" style="max-width: 700px;">Explore our collection of handcrafted products made from premium materials by skilled artisans.</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Material 1: Ceramic -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card border-0 rounded-4 overflow-hidden shadow-sm h-100 material-card">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1616876195047-522bd83c9cb2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Ceramic" class="card-img-top" style="height: 250px; object-fit: cover;">
+                        <div class="position-absolute bottom-0 start-0 w-100 p-3" style="background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);">
+                            <h3 class="text-white mb-0 fw-bold">Ceramic</h3>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Handcrafted ceramic pieces featuring intricate designs and vibrant glazes, perfect for adding elegance to your home.</p>
+                        <a href="#" class="btn btn-outline-primary rounded-pill">Explore Ceramic</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Material 2: Wood -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card border-0 rounded-4 overflow-hidden shadow-sm h-100 material-card">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1531913764164-f85c52e6e654?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Wood" class="card-img-top" style="height: 250px; object-fit: cover;">
+                        <div class="position-absolute bottom-0 start-0 w-100 p-3" style="background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);">
+                            <h3 class="text-white mb-0 fw-bold">Wood</h3>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Beautifully carved wooden artifacts showcasing traditional craftsmanship with modern designs for your living space.</p>
+                        <a href="#" class="btn btn-outline-primary rounded-pill">Explore Wood</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Material 3: Metal -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card border-0 rounded-4 overflow-hidden shadow-sm h-100 material-card">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Metal" class="card-img-top" style="height: 250px; object-fit: cover;">
+                        <div class="position-absolute bottom-0 start-0 w-100 p-3" style="background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);">
+                            <h3 class="text-white mb-0 fw-bold">Metal</h3>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Exquisite metalwork featuring brass, copper, and silver crafted into stunning decorative pieces and jewelry.</p>
+                        <a href="#" class="btn btn-outline-primary rounded-pill">Explore Metal</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Material 4: Textile -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card border-0 rounded-4 overflow-hidden shadow-sm h-100 material-card">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1579762593175-20226054cad0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1236&q=80" alt="Textile" class="card-img-top" style="height: 250px; object-fit: cover;">
+                        <div class="position-absolute bottom-0 start-0 w-100 p-3" style="background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);">
+                            <h3 class="text-white mb-0 fw-bold">Textile</h3>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Handwoven textiles with traditional patterns and techniques, transformed into beautiful home decor and accessories.</p>
+                        <a href="#" class="btn btn-outline-primary rounded-pill">Explore Textile</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Material 5: Terracotta -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card border-0 rounded-4 overflow-hidden shadow-sm h-100 material-card">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Terracotta" class="card-img-top" style="height: 250px; object-fit: cover;">
+                        <div class="position-absolute bottom-0 start-0 w-100 p-3" style="background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);">
+                            <h3 class="text-white mb-0 fw-bold">Terracotta</h3>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Earth-toned terracotta creations that bring warmth and rustic charm to your space, from planters to decorative items.</p>
+                        <a href="#" class="btn btn-outline-primary rounded-pill">Explore Terracotta</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Material 6: Stone -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card border-0 rounded-4 overflow-hidden shadow-sm h-100 material-card">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1616876195047-522bd83c9cb2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Stone" class="card-img-top" style="height: 250px; object-fit: cover;">
+                        <div class="position-absolute bottom-0 start-0 w-100 p-3" style="background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);">
+                            <h3 class="text-white mb-0 fw-bold">Stone</h3>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Intricately carved stone pieces that showcase the timeless beauty of marble, soapstone, and other natural materials.</p>
+                        <a href="#" class="btn btn-outline-primary rounded-pill">Explore Stone</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Instagram Feed Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="d-inline-block position-relative mb-3">
+                <h2 class="display-5 fw-bold mb-0">Follow Our Journey</h2>
+                <div class="position-absolute w-100" style="height: 8px; background-color: rgba(var(--primary-color-rgb), 0.2); bottom: -4px; left: 0; border-radius: 4px;"></div>
+            </div>
             <p class="lead text-muted mx-auto" style="max-width: 600px;">Join us on Instagram for behind-the-scenes looks at our artisans at work and daily inspiration.</p>
         </div>
 
         <div class="row g-2">
             <div class="col-2">
-                <a href="#" class="d-block overflow-hidden" style="height: 180px;">
+                <a href="#" class="d-block overflow-hidden rounded-3" style="height: 180px;">
                     <img src="https://images.unsplash.com/photo-1531913764164-f85c52e6e654?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Instagram Post" class="img-fluid h-100 w-100" style="object-fit: cover;">
                 </a>
             </div>
             <div class="col-2">
-                <a href="#" class="d-block overflow-hidden" style="height: 180px;">
+                <a href="#" class="d-block overflow-hidden rounded-3" style="height: 180px;">
                     <img src="https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Instagram Post" class="img-fluid h-100 w-100" style="object-fit: cover;">
                 </a>
             </div>
             <div class="col-2">
-                <a href="#" class="d-block overflow-hidden" style="height: 180px;">
+                <a href="#" class="d-block overflow-hidden rounded-3" style="height: 180px;">
                     <img src="https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Instagram Post" class="img-fluid h-100 w-100" style="object-fit: cover;">
                 </a>
             </div>
             <div class="col-2">
-                <a href="#" class="d-block overflow-hidden" style="height: 180px;">
+                <a href="#" class="d-block overflow-hidden rounded-3" style="height: 180px;">
                     <img src="https://images.unsplash.com/photo-1579762593175-20226054cad0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1236&q=80" alt="Instagram Post" class="img-fluid h-100 w-100" style="object-fit: cover;">
                 </a>
             </div>
             <div class="col-2">
-                <a href="#" class="d-block overflow-hidden" style="height: 180px;">
+                <a href="#" class="d-block overflow-hidden rounded-3" style="height: 180px;">
                     <img src="https://images.unsplash.com/photo-1616876195047-522bd83c9cb2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Instagram Post" class="img-fluid h-100 w-100" style="object-fit: cover;">
                 </a>
             </div>
             <div class="col-2">
-                <a href="#" class="d-block overflow-hidden position-relative" style="height: 180px;">
+                <a href="#" class="d-block overflow-hidden position-relative rounded-3" style="height: 180px;">
                     <img src="https://images.unsplash.com/photo-1616876195047-522bd83c9cb2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Instagram Post" class="img-fluid h-100 w-100" style="object-fit: cover; filter: brightness(0.5);">
                     <div class="position-absolute top-0 left-0 w-100 h-100 d-flex align-items-center justify-content-center">
                         <span class="text-white fw-bold">View More</span>

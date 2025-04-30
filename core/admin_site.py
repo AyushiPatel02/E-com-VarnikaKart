@@ -1,6 +1,7 @@
 from django.contrib.admin import AdminSite
 from django.contrib.auth.models import User, Group
-from django.contrib.auth.admin import UserAdmin, GroupAdmin
+from django.contrib.auth.admin import GroupAdmin
+from users.admin_extensions import UserAdmin
 from django.db.models import Sum, Count, Q, F, ExpressionWrapper, FloatField
 from django.db.models.functions import TruncMonth, TruncDay
 from django.utils import timezone
