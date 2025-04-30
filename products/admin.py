@@ -24,6 +24,27 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     list_per_page = 20
 
+    def changelist_view(self, request, extra_context=None):
+        # Get active categories count
+        active_categories = Category.objects.filter(is_active=True).count()
+        total_categories = Category.objects.count()
+        active_percentage = int((active_categories / total_categories * 100) if total_categories > 0 else 0)
+
+        # Get total products count
+        total_products = Product.objects.count()
+
+        # Create context
+        context = {
+            'active_categories': active_categories,
+            'active_percentage': active_percentage,
+            'total_products': total_products,
+        }
+
+        if extra_context:
+            context.update(extra_context)
+
+        return super().changelist_view(request, context)
+
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'price', 'discount_price', 'stock', 'is_available', 'is_featured', 'created_at')
     list_filter = ('category', 'is_available', 'is_featured', 'created_at')

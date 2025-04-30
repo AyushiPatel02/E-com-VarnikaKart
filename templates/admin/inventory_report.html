@@ -1,0 +1,422 @@
+{% extends "admin/super_base.html" %}
+{% load i18n static %}
+
+{% block title %}Inventory Report | VarnikaKart Super Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Inventory Report</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Inventory Report</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-download me-1"></i> Export
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="?export=csv{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.stock_status %}&stock_status={{ request.GET.stock_status }}{% endif %}"><i class="fas fa-file-csv me-2"></i>CSV</a></li>
+            <li><a class="dropdown-item" href="?export=excel{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.stock_status %}&stock_status={{ request.GET.stock_status }}{% endif %}"><i class="fas fa-file-excel me-2"></i>Excel</a></li>
+            <li><a class="dropdown-item" href="?export=pdf{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.stock_status %}&stock_status={{ request.GET.stock_status }}{% endif %}"><i class="fas fa-file-pdf me-2"></i>PDF</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card primary">
+            <div class="card-body">
+                <div class="stat-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-title">Total Products</div>
+                    <div class="stat-value">{{ total_products }}</div>
+                    <div class="stat-progress">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {{ active_percentage }}%;" aria-valuenow="{{ active_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span>{{ active_percentage }}% Active</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card success">
+            <div class="card-body">
+                <div class="stat-icon">
+                    <i class="fas fa-warehouse"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-title">Total Stock</div>
+                    <div class="stat-value">{{ total_stock }}</div>
+                    <div class="stat-progress">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {{ stock_value_percentage }}%;" aria-valuenow="{{ stock_value_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span>₹{{ total_stock_value }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card warning">
+            <div class="card-body">
+                <div class="stat-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-title">Low Stock</div>
+                    <div class="stat-value">{{ low_stock_count }}</div>
+                    <div class="stat-progress">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {{ low_stock_percentage }}%;" aria-valuenow="{{ low_stock_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span>{{ low_stock_percentage }}% of Products</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card danger">
+            <div class="card-body">
+                <div class="stat-icon">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-title">Out of Stock</div>
+                    <div class="stat-value">{{ out_of_stock_count }}</div>
+                    <div class="stat-progress">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {{ out_of_stock_percentage }}%;" aria-valuenow="{{ out_of_stock_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span>{{ out_of_stock_percentage }}% of Products</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Stock Distribution by Category</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="categoryStockChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Stock Status</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="stockStatusChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Filters</h5>
+            </div>
+            <div class="card-body">
+                <form action="" method="get" id="inventoryFilterForm">
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select name="category" id="category" class="form-select select2">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"i" %}selected{% endif %}>{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="stock_status" class="form-label">Stock Status</label>
+                        <select name="stock_status" id="stock_status" class="form-select">
+                            <option value="">All</option>
+                            <option value="in_stock" {% if request.GET.stock_status == "in_stock" %}selected{% endif %}>In Stock</option>
+                            <option value="low_stock" {% if request.GET.stock_status == "low_stock" %}selected{% endif %}>Low Stock</option>
+                            <option value="out_of_stock" {% if request.GET.stock_status == "out_of_stock" %}selected{% endif %}>Out of Stock</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="availability" class="form-label">Availability</label>
+                        <select name="availability" id="availability" class="form-select">
+                            <option value="">All</option>
+                            <option value="available" {% if request.GET.availability == "available" %}selected{% endif %}>Available</option>
+                            <option value="unavailable" {% if request.GET.availability == "unavailable" %}selected{% endif %}>Unavailable</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="sort_by" class="form-label">Sort By</label>
+                        <select name="sort_by" id="sort_by" class="form-select">
+                            <option value="name" {% if request.GET.sort_by == "name" %}selected{% endif %}>Name</option>
+                            <option value="stock_asc" {% if request.GET.sort_by == "stock_asc" %}selected{% endif %}>Stock (Low to High)</option>
+                            <option value="stock_desc" {% if request.GET.sort_by == "stock_desc" %}selected{% endif %}>Stock (High to Low)</option>
+                            <option value="price_asc" {% if request.GET.sort_by == "price_asc" %}selected{% endif %}>Price (Low to High)</option>
+                            <option value="price_desc" {% if request.GET.sort_by == "price_desc" %}selected{% endif %}>Price (High to Low)</option>
+                        </select>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-filter me-1"></i> Apply Filters
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h5 class="mb-0">Low Stock Products</h5>
+                    </div>
+                    <div class="col-auto">
+                        <a href="{% url 'admin:products_product_changelist' %}?stock__lte=10" class="btn btn-sm btn-primary">
+                            <i class="fas fa-list me-1"></i> View All
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in low_stock_products %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'admin:products_product_change' product.id %}">{{ product.name }}</a>
+                                    </td>
+                                    <td>{{ product.category.name }}</td>
+                                    <td>₹{{ product.price }}</td>
+                                    <td>
+                                        <span class="badge bg-{% if product.stock == 0 %}danger{% elif product.stock <= 5 %}warning{% else %}info{% endif %}">
+                                            {{ product.stock }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{% if product.is_available %}success{% else %}secondary{% endif %}">
+                                            {% if product.is_available %}Available{% else %}Unavailable{% endif %}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'admin:products_product_change' product.id %}" class="action-btn edit" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">No low stock products found.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Inventory List</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover datatable">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Discount</th>
+                                <th>Stock</th>
+                                <th>Value</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'admin:products_product_change' product.id %}">{{ product.name }}</a>
+                                    </td>
+                                    <td>{{ product.category.name }}</td>
+                                    <td>₹{{ product.price }}</td>
+                                    <td>
+                                        {% if product.discount_price %}
+                                            <span class="text-success">{{ product.get_discount_percentage }}%</span>
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{% if product.stock == 0 %}danger{% elif product.stock <= 5 %}warning{% elif product.stock <= 10 %}info{% else %}success{% endif %}">
+                                            {{ product.stock }}
+                                        </span>
+                                    </td>
+                                    <td>₹{{ product.stock_value }}</td>
+                                    <td>
+                                        <span class="badge bg-{% if product.is_available %}success{% else %}secondary{% endif %}">
+                                            {% if product.is_available %}Available{% else %}Unavailable{% endif %}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'admin:products_product_change' product.id %}" class="action-btn view" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{% url 'admin:products_product_change' product.id %}" class="action-btn edit" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="8" class="text-center">No products found.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Category Stock Chart
+        const categoryStockCtx = document.getElementById('categoryStockChart').getContext('2d');
+        const categoryStockChart = new Chart(categoryStockCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ category_labels|safe }},
+                datasets: [{
+                    label: 'Stock Count',
+                    data: {{ category_stock_data|safe }},
+                    backgroundColor: 'rgba(78, 115, 223, 0.8)',
+                    borderColor: 'rgba(78, 115, 223, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'Stock Value (₹)',
+                    data: {{ category_value_data|safe }},
+                    backgroundColor: 'rgba(28, 200, 138, 0.8)',
+                    borderColor: 'rgba(28, 200, 138, 1)',
+                    borderWidth: 1,
+                    yAxisID: 'y1'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Stock Count'
+                        }
+                    },
+                    y1: {
+                        beginAtZero: true,
+                        position: 'right',
+                        grid: {
+                            drawOnChartArea: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Stock Value (₹)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + value;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Stock Status Chart
+        const stockStatusCtx = document.getElementById('stockStatusChart').getContext('2d');
+        const stockStatusChart = new Chart(stockStatusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['In Stock', 'Low Stock', 'Out of Stock'],
+                datasets: [{
+                    data: [
+                        {{ in_stock_count }},
+                        {{ low_stock_count }},
+                        {{ out_of_stock_count }}
+                    ],
+                    backgroundColor: [
+                        'rgba(28, 200, 138, 0.8)',
+                        'rgba(246, 194, 62, 0.8)',
+                        'rgba(231, 74, 59, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(28, 200, 138, 1)',
+                        'rgba(246, 194, 62, 1)',
+                        'rgba(231, 74, 59, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                },
+                cutout: '70%'
+            }
+        });
+    });
+</script>
+{% endblock %}

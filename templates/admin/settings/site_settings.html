@@ -1,0 +1,295 @@
+{% extends "admin/custom_base.html" %}
+{% load i18n static %}
+
+{% block title %}Site Settings | VarnikaKart Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Site Settings</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Site Settings</li>
+            </ol>
+        </nav>
+    </div>
+    <div>
+        <button type="submit" form="site-settings-form" class="btn btn-primary">
+            <i class="fas fa-save me-1"></i> Save Changes
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-3 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Settings Navigation</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="settings-nav">
+                    <a href="{% url 'admin:site_settings' %}" class="settings-nav-item active">
+                        <i class="fas fa-globe me-2"></i> General
+                    </a>
+                    <a href="{% url 'admin:payment_settings' %}" class="settings-nav-item">
+                        <i class="fas fa-credit-card me-2"></i> Payment
+                    </a>
+                    <a href="{% url 'admin:shipping_settings' %}" class="settings-nav-item">
+                        <i class="fas fa-truck me-2"></i> Shipping
+                    </a>
+                    <a href="#" class="settings-nav-item">
+                        <i class="fas fa-envelope me-2"></i> Email
+                    </a>
+                    <a href="#" class="settings-nav-item">
+                        <i class="fas fa-palette me-2"></i> Appearance
+                    </a>
+                    <a href="#" class="settings-nav-item">
+                        <i class="fas fa-shield-alt me-2"></i> Security
+                    </a>
+                    <a href="#" class="settings-nav-item">
+                        <i class="fas fa-users-cog me-2"></i> User Roles
+                    </a>
+                    <a href="#" class="settings-nav-item">
+                        <i class="fas fa-bell me-2"></i> Notifications
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-9">
+        <form id="site-settings-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- General Settings -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">General Settings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <label for="site_name" class="col-sm-3 col-form-label">Site Name</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="site_name" name="site_name" value="VarnikaKart">
+                            <div class="form-text">The name of your e-commerce store.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="site_description" class="col-sm-3 col-form-label">Site Description</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" id="site_description" name="site_description" rows="3">Your one-stop shop for handcrafted Indian art and decor.</textarea>
+                            <div class="form-text">A short description of your store for SEO purposes.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="site_logo" class="col-sm-3 col-form-label">Site Logo</label>
+                        <div class="col-sm-9">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <img src="{% static 'img/logo.png' %}" alt="Current Logo" class="img-thumbnail" style="max-height: 60px;">
+                                </div>
+                                <div class="flex-grow-1">
+                                    <input type="file" class="form-control" id="site_logo" name="site_logo">
+                                    <div class="form-text">Recommended size: 200x60 pixels. Max file size: 2MB.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="favicon" class="col-sm-3 col-form-label">Favicon</label>
+                        <div class="col-sm-9">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <img src="{% static 'img/favicon.ico' %}" alt="Current Favicon" class="img-thumbnail" style="max-height: 32px;">
+                                </div>
+                                <div class="flex-grow-1">
+                                    <input type="file" class="form-control" id="favicon" name="favicon">
+                                    <div class="form-text">Recommended size: 32x32 pixels. Max file size: 1MB.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="contact_email" class="col-sm-3 col-form-label">Contact Email</label>
+                        <div class="col-sm-9">
+                            <input type="email" class="form-control" id="contact_email" name="contact_email" value="info@varnikakart.com">
+                            <div class="form-text">This email will be displayed on your website and used for contact forms.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="contact_phone" class="col-sm-3 col-form-label">Contact Phone</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="contact_phone" name="contact_phone" value="+91 9876543210">
+                            <div class="form-text">This phone number will be displayed on your website.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="address" class="col-sm-3 col-form-label">Business Address</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" id="address" name="address" rows="3">123 Main Street, Bangalore, Karnataka, India - 560001</textarea>
+                            <div class="form-text">Your business address for contact and legal purposes.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Social Media Settings -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Social Media Settings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <label for="facebook_url" class="col-sm-3 col-form-label">Facebook</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fab fa-facebook-f"></i></span>
+                                <input type="url" class="form-control" id="facebook_url" name="facebook_url" value="https://facebook.com/varnikakart">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="instagram_url" class="col-sm-3 col-form-label">Instagram</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fab fa-instagram"></i></span>
+                                <input type="url" class="form-control" id="instagram_url" name="instagram_url" value="https://instagram.com/varnikakart">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="twitter_url" class="col-sm-3 col-form-label">Twitter</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fab fa-twitter"></i></span>
+                                <input type="url" class="form-control" id="twitter_url" name="twitter_url" value="https://twitter.com/varnikakart">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="youtube_url" class="col-sm-3 col-form-label">YouTube</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fab fa-youtube"></i></span>
+                                <input type="url" class="form-control" id="youtube_url" name="youtube_url" value="https://youtube.com/varnikakart">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="pinterest_url" class="col-sm-3 col-form-label">Pinterest</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fab fa-pinterest-p"></i></span>
+                                <input type="url" class="form-control" id="pinterest_url" name="pinterest_url" value="https://pinterest.com/varnikakart">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SEO Settings -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">SEO Settings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <label for="meta_title" class="col-sm-3 col-form-label">Meta Title</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="meta_title" name="meta_title" value="VarnikaKart - Handcrafted Indian Art & Decor">
+                            <div class="form-text">The title that appears in search engine results. Recommended length: 50-60 characters.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="meta_description" class="col-sm-3 col-form-label">Meta Description</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" id="meta_description" name="meta_description" rows="3">Discover authentic handcrafted Indian art, jewelry, home decor, and personalized gifts at VarnikaKart. Free shipping on orders over ₹1000.</textarea>
+                            <div class="form-text">The description that appears in search engine results. Recommended length: 150-160 characters.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="meta_keywords" class="col-sm-3 col-form-label">Meta Keywords</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="meta_keywords" name="meta_keywords" value="handcrafted, indian art, home decor, jewelry, personalized gifts">
+                            <div class="form-text">Comma-separated keywords for search engines.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="google_analytics" class="col-sm-3 col-form-label">Google Analytics ID</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="google_analytics" name="google_analytics" value="UA-XXXXXXXXX-X">
+                            <div class="form-text">Your Google Analytics tracking ID.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Legal Settings -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Legal Settings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <label for="privacy_policy" class="col-sm-3 col-form-label">Privacy Policy</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control rich-text-editor" id="privacy_policy" name="privacy_policy" rows="5">Your privacy policy content here...</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="terms_conditions" class="col-sm-3 col-form-label">Terms & Conditions</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control rich-text-editor" id="terms_conditions" name="terms_conditions" rows="5">Your terms and conditions content here...</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="return_policy" class="col-sm-3 col-form-label">Return Policy</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control rich-text-editor" id="return_policy" name="return_policy" rows="5">Your return policy content here...</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i> Save Changes
+                </button>
+                <button type="reset" class="btn btn-secondary ms-2">
+                    <i class="fas fa-undo me-1"></i> Reset
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize rich text editors
+        const richTextEditors = document.querySelectorAll('.rich-text-editor');
+        richTextEditors.forEach(editor => {
+            if (CKEDITOR) {
+                CKEDITOR.replace(editor.id);
+            }
+        });
+    });
+</script>
+{% endblock %}

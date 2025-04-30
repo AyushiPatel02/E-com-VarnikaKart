@@ -1,0 +1,579 @@
+{% extends "admin/custom_base.html" %}
+{% load i18n static %}
+
+{% block title %}Sales Report | VarnikaKart Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Sales Report</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Sales Report</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-download me-1"></i> Export
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="{% url 'admin:export_sales' %}?format=csv"><i class="fas fa-file-csv me-2"></i> CSV</a></li>
+            <li><a class="dropdown-item" href="{% url 'admin:export_sales' %}?format=excel"><i class="fas fa-file-excel me-2"></i> Excel</a></li>
+            <li><a class="dropdown-item" href="{% url 'admin:export_sales' %}?format=pdf"><i class="fas fa-file-pdf me-2"></i> PDF</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- Filter Card -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Filters</h5>
+    </div>
+    <div class="card-body">
+        <form id="sales-filter-form" method="get">
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <label for="date_range" class="form-label">Date Range</label>
+                    <select class="form-select" id="date_range" name="date_range">
+                        <option value="today" {% if date_range == 'today' %}selected{% endif %}>Today</option>
+                        <option value="yesterday" {% if date_range == 'yesterday' %}selected{% endif %}>Yesterday</option>
+                        <option value="this_week" {% if date_range == 'this_week' %}selected{% endif %}>This Week</option>
+                        <option value="last_week" {% if date_range == 'last_week' %}selected{% endif %}>Last Week</option>
+                        <option value="this_month" {% if date_range == 'this_month' %}selected{% endif %}>This Month</option>
+                        <option value="last_month" {% if date_range == 'last_month' %}selected{% endif %}>Last Month</option>
+                        <option value="this_year" {% if date_range == 'this_year' %}selected{% endif %}>This Year</option>
+                        <option value="last_year" {% if date_range == 'last_year' %}selected{% endif %}>Last Year</option>
+                        <option value="custom" {% if date_range == 'custom' %}selected{% endif %}>Custom Range</option>
+                    </select>
+                </div>
+                
+                <div class="col-md-3 mb-3 custom-date-range {% if date_range != 'custom' %}d-none{% endif %}">
+                    <label for="start_date" class="form-label">Start Date</label>
+                    <input type="date" class="form-control" id="start_date" name="start_date" value="{{ start_date|default:'' }}">
+                </div>
+                
+                <div class="col-md-3 mb-3 custom-date-range {% if date_range != 'custom' %}d-none{% endif %}">
+                    <label for="end_date" class="form-label">End Date</label>
+                    <input type="date" class="form-control" id="end_date" name="end_date" value="{{ end_date|default:'' }}">
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <label for="category" class="form-label">Category</label>
+                    <select class="form-select" id="category" name="category">
+                        <option value="">All Categories</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}" {% if category == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <label for="payment_method" class="form-label">Payment Method</label>
+                    <select class="form-select" id="payment_method" name="payment_method">
+                        <option value="">All Payment Methods</option>
+                        <option value="razorpay" {% if payment_method == 'razorpay' %}selected{% endif %}>Razorpay</option>
+                        <option value="paypal" {% if payment_method == 'paypal' %}selected{% endif %}>PayPal</option>
+                        <option value="cod" {% if payment_method == 'cod' %}selected{% endif %}>Cash on Delivery</option>
+                    </select>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <label for="order_status" class="form-label">Order Status</label>
+                    <select class="form-select" id="order_status" name="order_status">
+                        <option value="">All Statuses</option>
+                        <option value="P" {% if order_status == 'P' %}selected{% endif %}>Pending</option>
+                        <option value="C" {% if order_status == 'C' %}selected{% endif %}>Confirmed</option>
+                        <option value="S" {% if order_status == 'S' %}selected{% endif %}>Shipped</option>
+                        <option value="D" {% if order_status == 'D' %}selected{% endif %}>Delivered</option>
+                        <option value="X" {% if order_status == 'X' %}selected{% endif %}>Cancelled</option>
+                    </select>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <label for="min_amount" class="form-label">Min Amount</label>
+                    <div class="input-group">
+                        <span class="input-group-text">₹</span>
+                        <input type="number" class="form-control" id="min_amount" name="min_amount" value="{{ min_amount|default:'' }}" min="0" step="1">
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <label for="max_amount" class="form-label">Max Amount</label>
+                    <div class="input-group">
+                        <span class="input-group-text">₹</span>
+                        <input type="number" class="form-control" id="max_amount" name="max_amount" value="{{ max_amount|default:'' }}" min="0" step="1">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-filter me-1"></i> Apply Filters
+                </button>
+                <a href="{% url 'admin:sales_report' %}" class="btn btn-secondary ms-2">
+                    <i class="fas fa-undo me-1"></i> Reset
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Total Sales</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">₹{{ total_sales|floatformat:2 }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-rupee-sign fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Orders</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ order_count }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Average Order Value</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">₹{{ avg_order_value|floatformat:2 }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calculator fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Items Sold</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ items_sold }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-box fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sales Chart -->
+<div class="row">
+    <div class="col-xl-8 col-lg-7">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Sales Trend</h5>
+                <div class="btn-group btn-group-sm">
+                    <button type="button" class="btn btn-outline-primary active" data-chart-view="daily">Daily</button>
+                    <button type="button" class="btn btn-outline-primary" data-chart-view="weekly">Weekly</button>
+                    <button type="button" class="btn btn-outline-primary" data-chart-view="monthly">Monthly</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height:300px;">
+                    <canvas id="salesTrendChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-4 col-lg-5">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Sales by Category</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height:300px;">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sales by Payment Method and Order Status -->
+<div class="row">
+    <div class="col-xl-6 col-lg-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Sales by Payment Method</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height:300px;">
+                    <canvas id="paymentMethodChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-6 col-lg-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Orders by Status</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height:300px;">
+                    <canvas id="orderStatusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Top Products Table -->
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Top Selling Products</h5>
+        <a href="{% url 'admin:export_sales' %}?format=excel&report=top_products" class="btn btn-sm btn-primary">
+            <i class="fas fa-download me-1"></i> Export
+        </a>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Quantity Sold</th>
+                        <th>Revenue</th>
+                        <th>Average Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in top_products %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="product-img me-3">
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" width="40" height="40" class="rounded">
+                                </div>
+                                <div>
+                                    <a href="{% url 'admin:products_product_change' product.id %}">{{ product.name }}</a>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ product.category.name }}</td>
+                        <td>{{ product.quantity_sold }}</td>
+                        <td>₹{{ product.revenue|floatformat:2 }}</td>
+                        <td>₹{{ product.avg_price|floatformat:2 }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">No products found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Orders Table -->
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Recent Orders</h5>
+        <a href="{% url 'admin:orders_order_changelist' %}" class="btn btn-sm btn-primary">
+            <i class="fas fa-list me-1"></i> View All
+        </a>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Payment Method</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in recent_orders %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'admin:orders_order_change' order.id %}">#{{ order.id }}</a>
+                        </td>
+                        <td>{{ order.user.get_full_name|default:order.user.username }}</td>
+                        <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
+                        <td>₹{{ order.order_total|floatformat:2 }}</td>
+                        <td>
+                            <span class="badge bg-{% if order.status == 'P' %}warning{% elif order.status == 'C' %}info{% elif order.status == 'S' %}primary{% elif order.status == 'D' %}success{% elif order.status == 'X' %}danger{% endif %}">
+                                {{ order.get_status_display }}
+                            </span>
+                        </td>
+                        <td>{{ order.payment.payment_method|default:"-" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">No orders found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Toggle custom date range fields
+        const dateRangeSelect = document.getElementById('date_range');
+        const customDateRangeFields = document.querySelectorAll('.custom-date-range');
+        
+        dateRangeSelect.addEventListener('change', function() {
+            if (this.value === 'custom') {
+                customDateRangeFields.forEach(field => field.classList.remove('d-none'));
+            } else {
+                customDateRangeFields.forEach(field => field.classList.add('d-none'));
+            }
+        });
+        
+        // Sales Trend Chart
+        const salesTrendCtx = document.getElementById('salesTrendChart').getContext('2d');
+        const salesTrendChart = new Chart(salesTrendCtx, {
+            type: 'line',
+            data: {
+                labels: {{ sales_trend_labels|safe }},
+                datasets: [{
+                    label: 'Sales',
+                    data: {{ sales_trend_data|safe }},
+                    backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                    borderColor: 'rgba(78, 115, 223, 1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgba(78, 115, 223, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(78, 115, 223, 1)',
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + value.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Sales: ₹' + context.parsed.y.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Category Chart
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        const categoryChart = new Chart(categoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: {{ category_labels|safe }},
+                datasets: [{
+                    data: {{ category_data|safe }},
+                    backgroundColor: [
+                        'rgba(78, 115, 223, 0.8)',
+                        'rgba(28, 200, 138, 0.8)',
+                        'rgba(54, 185, 204, 0.8)',
+                        'rgba(246, 194, 62, 0.8)',
+                        'rgba(231, 74, 59, 0.8)',
+                        'rgba(133, 135, 150, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(78, 115, 223, 1)',
+                        'rgba(28, 200, 138, 1)',
+                        'rgba(54, 185, 204, 1)',
+                        'rgba(246, 194, 62, 1)',
+                        'rgba(231, 74, 59, 1)',
+                        'rgba(133, 135, 150, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                const total = context.dataset.data.reduce((acc, data) => acc + data, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return label + ': ₹' + value.toLocaleString() + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Payment Method Chart
+        const paymentMethodCtx = document.getElementById('paymentMethodChart').getContext('2d');
+        const paymentMethodChart = new Chart(paymentMethodCtx, {
+            type: 'pie',
+            data: {
+                labels: {{ payment_method_labels|safe }},
+                datasets: [{
+                    data: {{ payment_method_data|safe }},
+                    backgroundColor: [
+                        'rgba(78, 115, 223, 0.8)',
+                        'rgba(28, 200, 138, 0.8)',
+                        'rgba(54, 185, 204, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(78, 115, 223, 1)',
+                        'rgba(28, 200, 138, 1)',
+                        'rgba(54, 185, 204, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                const total = context.dataset.data.reduce((acc, data) => acc + data, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return label + ': ₹' + value.toLocaleString() + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Order Status Chart
+        const orderStatusCtx = document.getElementById('orderStatusChart').getContext('2d');
+        const orderStatusChart = new Chart(orderStatusCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ order_status_labels|safe }},
+                datasets: [{
+                    label: 'Orders',
+                    data: {{ order_status_data|safe }},
+                    backgroundColor: [
+                        'rgba(246, 194, 62, 0.8)',
+                        'rgba(54, 185, 204, 0.8)',
+                        'rgba(78, 115, 223, 0.8)',
+                        'rgba(28, 200, 138, 0.8)',
+                        'rgba(231, 74, 59, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(246, 194, 62, 1)',
+                        'rgba(54, 185, 204, 1)',
+                        'rgba(78, 115, 223, 1)',
+                        'rgba(28, 200, 138, 1)',
+                        'rgba(231, 74, 59, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Chart view toggle
+        const chartViewButtons = document.querySelectorAll('[data-chart-view]');
+        chartViewButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                chartViewButtons.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Update chart data based on selected view
+                const view = this.getAttribute('data-chart-view');
+                let labels, data;
+                
+                if (view === 'daily') {
+                    labels = {{ daily_sales_labels|safe }};
+                    data = {{ daily_sales_data|safe }};
+                } else if (view === 'weekly') {
+                    labels = {{ weekly_sales_labels|safe }};
+                    data = {{ weekly_sales_data|safe }};
+                } else if (view === 'monthly') {
+                    labels = {{ monthly_sales_labels|safe }};
+                    data = {{ monthly_sales_data|safe }};
+                }
+                
+                salesTrendChart.data.labels = labels;
+                salesTrendChart.data.datasets[0].data = data;
+                salesTrendChart.update();
+            });
+        });
+    });
+</script>
+{% endblock %}

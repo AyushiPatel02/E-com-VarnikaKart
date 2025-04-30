@@ -1,0 +1,471 @@
+{% extends "admin/custom_base.html" %}
+{% load i18n static admin_urls %}
+
+{% block title %}Order #{{ original.order_number }} | VarnikaKart Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Order #{{ original.order_number }}</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'admin:orders_order_changelist' %}">Orders</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Order #{{ original.order_number }}</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="btn-group">
+        <a href="{% url 'admin:print_invoice' original.id %}" class="btn btn-primary" target="_blank">
+            <i class="fas fa-print me-1"></i> Print Invoice
+        </a>
+        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="{% url 'admin:send_order_email' original.id %}?type=confirmation"><i class="fas fa-envelope me-2"></i>Send Confirmation Email</a></li>
+            <li><a class="dropdown-item" href="{% url 'admin:send_order_email' original.id %}?type=shipping"><i class="fas fa-truck me-2"></i>Send Shipping Email</a></li>
+            <li><a class="dropdown-item" href="{% url 'admin:send_order_email' original.id %}?type=delivery"><i class="fas fa-check-circle me-2"></i>Send Delivery Email</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger delete-confirm" href="{% url 'admin:orders_order_delete' original.id %}"><i class="fas fa-trash me-2"></i>Delete Order</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Order Information -->
+    <div class="col-xl-8 mb-4">
+        <div class="card slide-in-left">
+            <div class="card-header">
+                <h5>Order Information</h5>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-bs-toggle="collapse" data-bs-target="#orderInfoCollapse" aria-expanded="true" aria-controls="orderInfoCollapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="collapse show" id="orderInfoCollapse">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Order Number</label>
+                                <div class="fw-bold">{{ original.order_number }}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Order Date</label>
+                                <div class="fw-bold">{{ original.created_at|date:"F d, Y" }} at {{ original.created_at|time:"H:i" }}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Customer</label>
+                                <div class="fw-bold">
+                                    {% if original.user %}
+                                        <a href="{% url 'admin:auth_user_change' original.user.id %}">{{ original.full_name }}</a>
+                                    {% else %}
+                                        {{ original.full_name }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Email</label>
+                                <div class="fw-bold">{{ original.email }}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Phone</label>
+                                <div class="fw-bold">{{ original.phone_number }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Order Status</label>
+                                <div>
+                                    <form method="post" action="{% url 'admin:update_order_status' %}" class="d-inline-block">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="order_id" value="{{ original.id }}">
+                                        <select name="status" class="form-select" onchange="this.form.submit()">
+                                            <option value="P" {% if original.status == 'P' %}selected{% endif %}>Pending</option>
+                                            <option value="C" {% if original.status == 'C' %}selected{% endif %}>Confirmed</option>
+                                            <option value="S" {% if original.status == 'S' %}selected{% endif %}>Shipped</option>
+                                            <option value="D" {% if original.status == 'D' %}selected{% endif %}>Delivered</option>
+                                            <option value="X" {% if original.status == 'X' %}selected{% endif %}>Cancelled</option>
+                                        </select>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Payment Method</label>
+                                <div class="fw-bold">{{ original.get_payment_method_display }}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Payment Status</label>
+                                <div>
+                                    <form method="post" action="{% url 'admin:update_payment_status' %}" class="d-inline-block">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="order_id" value="{{ original.id }}">
+                                        <select name="payment_status" class="form-select" onchange="this.form.submit()">
+                                            <option value="P" {% if original.payment_status == 'P' %}selected{% endif %}>Pending</option>
+                                            <option value="C" {% if original.payment_status == 'C' %}selected{% endif %}>Completed</option>
+                                            <option value="F" {% if original.payment_status == 'F' %}selected{% endif %}>Failed</option>
+                                            <option value="R" {% if original.payment_status == 'R' %}selected{% endif %}>Refunded</option>
+                                        </select>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted">IP Address</label>
+                                <div class="fw-bold">{{ original.ip_address|default:"N/A" }}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Tracking Number</label>
+                                <div>
+                                    <form method="post" action="{% url 'admin:update_tracking_number' %}" class="d-flex">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="order_id" value="{{ original.id }}">
+                                        <input type="text" name="tracking_number" class="form-control me-2" value="{{ original.tracking_number|default:'' }}" placeholder="Enter tracking number">
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Order Items -->
+        <div class="card mb-4 slide-in-left">
+            <div class="card-header">
+                <h5>Order Items</h5>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-bs-toggle="collapse" data-bs-target="#orderItemsCollapse" aria-expanded="true" aria-controls="orderItemsCollapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="collapse show" id="orderItemsCollapse">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th width="60">Image</th>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in original.items.all %}
+                                    <tr>
+                                        <td>
+                                            {% with item.product.images.all|first as image %}
+                                                {% if image %}
+                                                    <img src="{{ image.image.url }}" alt="{{ item.product.name }}" class="img-thumbnail" width="50">
+                                                {% else %}
+                                                    <div class="no-image">
+                                                        <i class="fas fa-image"></i>
+                                                    </div>
+                                                {% endif %}
+                                            {% endwith %}
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'admin:products_product_change' item.product.id %}">{{ item.product.name }}</a>
+                                        </td>
+                                        <td>₹{{ item.price }}</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td>₹{{ item.get_cost }}</td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="text-center">No items found.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4" class="text-end fw-bold">Subtotal:</td>
+                                    <td>₹{{ original.order_total|floatformat:2 }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="text-end fw-bold">Tax:</td>
+                                    <td>₹{{ original.tax|floatformat:2 }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="text-end fw-bold">Grand Total:</td>
+                                    <td class="fw-bold">₹{{ original.order_total|floatformat:2 }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Order Notes -->
+        <div class="card mb-4 slide-in-left">
+            <div class="card-header">
+                <h5>Order Notes</h5>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-bs-toggle="collapse" data-bs-target="#orderNotesCollapse" aria-expanded="true" aria-controls="orderNotesCollapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="collapse show" id="orderNotesCollapse">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Customer Notes</label>
+                        <div class="p-3 bg-light rounded">
+                            {{ original.order_note|default:"No notes provided by the customer." }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Admin Notes</label>
+                        <form method="post" action="{% url 'admin:update_admin_notes' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="order_id" value="{{ original.id }}">
+                            <textarea name="admin_notes" class="form-control" rows="3" placeholder="Add admin notes here...">{{ original.admin_notes|default:"" }}</textarea>
+                            <button type="submit" class="btn btn-primary mt-2">Save Notes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="col-xl-4 mb-4">
+        <!-- Customer Information -->
+        <div class="card mb-4 slide-in-right">
+            <div class="card-header">
+                <h5>Customer Information</h5>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-bs-toggle="collapse" data-bs-target="#customerInfoCollapse" aria-expanded="true" aria-controls="customerInfoCollapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="collapse show" id="customerInfoCollapse">
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <img src="{% if original.user.profile.profile_picture %}{{ original.user.profile.profile_picture.url }}{% else %}{% static 'img/default-avatar.png' %}{% endif %}" alt="{{ original.full_name }}" class="img-fluid rounded-circle mb-2" width="80">
+                        <h5 class="mb-0">{{ original.full_name }}</h5>
+                        {% if original.user %}
+                            <div class="text-muted">Customer since {{ original.user.date_joined|date:"M d, Y" }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Email</label>
+                        <div class="fw-bold">{{ original.email }}</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Phone</label>
+                        <div class="fw-bold">{{ original.phone_number }}</div>
+                    </div>
+                    
+                    {% if original.user %}
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Total Orders</label>
+                            <div class="fw-bold">{{ original.user.orders.count }}</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Total Spent</label>
+                            <div class="fw-bold">₹{{ total_spent|floatformat:2 }}</div>
+                        </div>
+                        
+                        <div class="text-center mt-3">
+                            <a href="{% url 'admin:auth_user_change' original.user.id %}" class="btn btn-primary">
+                                <i class="fas fa-user me-1"></i> View Customer Profile
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Shipping Address -->
+        <div class="card mb-4 slide-in-right">
+            <div class="card-header">
+                <h5>Shipping Address</h5>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-bs-toggle="collapse" data-bs-target="#shippingAddressCollapse" aria-expanded="true" aria-controls="shippingAddressCollapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="collapse show" id="shippingAddressCollapse">
+                <div class="card-body">
+                    <address>
+                        <strong>{{ original.full_name }}</strong><br>
+                        {{ original.address_line_1 }}<br>
+                        {% if original.address_line_2 %}{{ original.address_line_2 }}<br>{% endif %}
+                        {{ original.city }}, {{ original.state }} {{ original.postal_code }}<br>
+                        <abbr title="Phone">P:</abbr> {{ original.phone_number }}
+                    </address>
+                    
+                    <div class="mt-3">
+                        <a href="https://www.google.com/maps/search/?api=1&query={{ original.address_line_1|urlencode }}+{{ original.city|urlencode }}+{{ original.state|urlencode }}+{{ original.postal_code|urlencode }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                            <i class="fas fa-map-marker-alt me-1"></i> View on Map
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Payment Information -->
+        <div class="card mb-4 slide-in-right">
+            <div class="card-header">
+                <h5>Payment Information</h5>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-bs-toggle="collapse" data-bs-target="#paymentInfoCollapse" aria-expanded="true" aria-controls="paymentInfoCollapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="collapse show" id="paymentInfoCollapse">
+                <div class="card-body">
+                    {% if original.payment %}
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Payment ID</label>
+                            <div class="fw-bold">{{ original.payment.payment_id }}</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Payment Method</label>
+                            <div class="fw-bold">{{ original.payment.payment_method }}</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Amount Paid</label>
+                            <div class="fw-bold">₹{{ original.payment.amount_paid|floatformat:2 }}</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Payment Status</label>
+                            <div class="fw-bold">{{ original.payment.status }}</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Payment Date</label>
+                            <div class="fw-bold">{{ original.payment.created_at|date:"F d, Y" }} at {{ original.payment.created_at|time:"H:i" }}</div>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning mb-0">
+                            <i class="fas fa-exclamation-triangle me-2"></i> No payment information available.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Order Timeline -->
+        <div class="card mb-4 slide-in-right">
+            <div class="card-header">
+                <h5>Order Timeline</h5>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-bs-toggle="collapse" data-bs-target="#orderTimelineCollapse" aria-expanded="true" aria-controls="orderTimelineCollapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="collapse show" id="orderTimelineCollapse">
+                <div class="card-body">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-primary">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-heading">
+                                    <span class="badge bg-primary">Order Placed</span>
+                                    <span class="timeline-title">Order #{{ original.order_number }}</span>
+                                </div>
+                                <div class="timeline-body">
+                                    <small class="text-muted">{{ original.created_at|date:"F d, Y" }} at {{ original.created_at|time:"H:i" }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% if original.status != 'P' %}
+                            <div class="timeline-item">
+                                <div class="timeline-marker bg-info">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="timeline-heading">
+                                        <span class="badge bg-info">Order Confirmed</span>
+                                        <span class="timeline-title">Order confirmed by admin</span>
+                                    </div>
+                                    <div class="timeline-body">
+                                        <small class="text-muted">{{ original.confirmed_at|date:"F d, Y" }} at {{ original.confirmed_at|time:"H:i" }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if original.status == 'S' or original.status == 'D' %}
+                            <div class="timeline-item">
+                                <div class="timeline-marker bg-primary">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="timeline-heading">
+                                        <span class="badge bg-primary">Shipped</span>
+                                        <span class="timeline-title">Order shipped</span>
+                                    </div>
+                                    <div class="timeline-body">
+                                        <small class="text-muted">{{ original.shipped_at|date:"F d, Y" }} at {{ original.shipped_at|time:"H:i" }}</small>
+                                        {% if original.tracking_number %}
+                                            <div class="mt-1">
+                                                <strong>Tracking #:</strong> {{ original.tracking_number }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if original.status == 'D' %}
+                            <div class="timeline-item">
+                                <div class="timeline-marker bg-success">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="timeline-heading">
+                                        <span class="badge bg-success">Delivered</span>
+                                        <span class="timeline-title">Order delivered</span>
+                                    </div>
+                                    <div class="timeline-body">
+                                        <small class="text-muted">{{ original.delivered_at|date:"F d, Y" }} at {{ original.delivered_at|time:"H:i" }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if original.status == 'X' %}
+                            <div class="timeline-item">
+                                <div class="timeline-marker bg-danger">
+                                    <i class="fas fa-times-circle"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="timeline-heading">
+                                        <span class="badge bg-danger">Cancelled</span>
+                                        <span class="timeline-title">Order cancelled</span>
+                                    </div>
+                                    <div class="timeline-body">
+                                        <small class="text-muted">{{ original.cancelled_at|date:"F d, Y" }} at {{ original.cancelled_at|time:"H:i" }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,512 @@
+{% extends "admin/custom_base.html" %}
+{% load i18n static %}
+
+{% block title %}Dashboard | VarnikaKart Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Dashboard</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-download me-1"></i> Export
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="{% url 'admin:export_sales' %}?format=csv"><i class="fas fa-file-csv me-2"></i>CSV</a></li>
+            <li><a class="dropdown-item" href="{% url 'admin:export_sales' %}?format=excel"><i class="fas fa-file-excel me-2"></i>Excel</a></li>
+            <li><a class="dropdown-item" href="{% url 'admin:export_sales' %}?format=pdf"><i class="fas fa-file-pdf me-2"></i>PDF</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- Welcome Message -->
+<div class="card mb-4 fade-in">
+    <div class="card-body">
+        <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+                <img src="{% if request.user.profile.profile_picture %}{{ request.user.profile.profile_picture.url }}{% else %}{% static 'img/default-avatar.png' %}{% endif %}" alt="Admin" class="rounded-circle" width="60">
+            </div>
+            <div class="flex-grow-1 ms-3">
+                <h4 class="mb-1">Welcome back, {{ request.user.get_full_name|default:request.user.username }}!</h4>
+                <p class="text-muted mb-0">Here's what's happening with your store today.</p>
+            </div>
+            <div class="flex-shrink-0">
+                <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="timeRangeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        Today
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="timeRangeDropdown">
+                        <li><a class="dropdown-item" href="?time_range=today">Today</a></li>
+                        <li><a class="dropdown-item" href="?time_range=yesterday">Yesterday</a></li>
+                        <li><a class="dropdown-item" href="?time_range=week">This Week</a></li>
+                        <li><a class="dropdown-item" href="?time_range=month">This Month</a></li>
+                        <li><a class="dropdown-item" href="?time_range=year">This Year</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row slide-in-up">
+    <!-- Total Revenue -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card primary h-100">
+            <div class="card-body">
+                <div class="stat-icon">
+                    <i class="fas fa-rupee-sign"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-title">Total Revenue</div>
+                    <div class="stat-value">₹{{ revenue }}</div>
+                    <div class="stat-progress">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span class="ms-2 {% if revenue_growth >= 0 %}text-success{% else %}text-danger{% endif %}">
+                            <i class="fas fa-{% if revenue_growth >= 0 %}arrow-up{% else %}arrow-down{% endif %}"></i> {{ revenue_growth|default:"0" }}%
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Total Orders -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card info h-100">
+            <div class="card-body">
+                <div class="stat-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-title">Total Orders</div>
+                    <div class="stat-value">{{ order_count }}</div>
+                    <div class="stat-progress">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span class="ms-2 {% if order_growth >= 0 %}text-success{% else %}text-danger{% endif %}">
+                            <i class="fas fa-{% if order_growth >= 0 %}arrow-up{% else %}arrow-down{% endif %}"></i> {{ order_growth|default:"0" }}%
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Total Products -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card success h-100">
+            <div class="card-body">
+                <div class="stat-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-title">Total Products</div>
+                    <div class="stat-value">{{ product_count }}</div>
+                    <div class="stat-progress">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: 85%" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span class="ms-2 text-success">
+                            <i class="fas fa-check"></i> {{ active_products_percentage|default:"0" }}% Active
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Total Customers -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card warning h-100">
+            <div class="card-body">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-title">Total Customers</div>
+                    <div class="stat-value">{{ user_count }}</div>
+                    <div class="stat-progress">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span class="ms-2 {% if user_growth >= 0 %}text-success{% else %}text-danger{% endif %}">
+                            <i class="fas fa-{% if user_growth >= 0 %}arrow-up{% else %}arrow-down{% endif %}"></i> {{ user_growth|default:"0" }}%
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts -->
+<div class="row">
+    <!-- Sales Chart -->
+    <div class="col-xl-8 col-lg-7 mb-4">
+        <div class="card slide-in-left">
+            <div class="card-header">
+                <h5>Sales Overview</h5>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" href="{% url 'admin:sales_report' %}">View Full Report</a>
+                        <a class="dropdown-item" href="{% url 'admin:export_sales' %}?format=csv">Export CSV</a>
+                        <a class="dropdown-item" href="{% url 'admin:export_sales' %}?format=excel">Export Excel</a>
+                        <a class="dropdown-item" href="{% url 'admin:export_sales' %}?format=pdf">Export PDF</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height:300px;">
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Today's Sales</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">₹{{ today_sales|default:"0.00" }}</div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Weekly Sales</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">₹{{ weekly_sales|default:"0.00" }}</div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Monthly Sales</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">₹{{ monthly_sales|default:"0.00" }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Pie Chart -->
+    <div class="col-xl-4 col-lg-5 mb-4">
+        <div class="card slide-in-right">
+            <div class="card-header">
+                <h5>Revenue Sources</h5>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" href="{% url 'admin:sales_report' %}">View Full Report</a>
+                        <a class="dropdown-item" href="{% url 'admin:export_sales' %}?format=csv">Export CSV</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height:300px;">
+                    <canvas id="revenueSources"></canvas>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <a href="{% url 'admin:sales_report' %}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-chart-pie me-1"></i> View Details
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Orders and Order Status -->
+<div class="row">
+    <!-- Recent Orders -->
+    <div class="col-xl-8 col-lg-7 mb-4">
+        <div class="card slide-in-left">
+            <div class="card-header">
+                <h5>Recent Orders</h5>
+                <div class="card-tools">
+                    <a href="{% url 'admin:orders_order_changelist' %}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-list me-1"></i> View All
+                    </a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in recent_orders %}
+                                <tr>
+                                    <td>{{ order.order_number }}</td>
+                                    <td>{{ order.full_name }}</td>
+                                    <td>{{ order.created_at|date:"M d, Y" }}</td>
+                                    <td>₹{{ order.order_total }}</td>
+                                    <td>
+                                        <span class="status-badge {% if order.status == 'P' %}pending{% elif order.status == 'C' %}confirmed{% elif order.status == 'S' %}shipped{% elif order.status == 'D' %}delivered{% elif order.status == 'X' %}cancelled{% endif %}">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'admin:orders_order_change' order.id %}" class="action-btn view" data-toggle="tooltip" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{% url 'admin:orders_order_change' order.id %}" class="action-btn edit" data-toggle="tooltip" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">No recent orders found.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Order Status -->
+    <div class="col-xl-4 col-lg-5 mb-4">
+        <div class="card slide-in-right">
+            <div class="card-header">
+                <h5>Order Status</h5>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" href="{% url 'admin:orders_order_changelist' %}">View All Orders</a>
+                        <a class="dropdown-item" href="{% url 'admin:export_orders' %}?format=csv">Export CSV</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height:300px;">
+                    <canvas id="ordersStatus"></canvas>
+                </div>
+            </div>
+            <div class="card-footer p-0">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-circle text-warning me-2"></i> Pending</span>
+                        <span class="badge bg-warning rounded-pill">{{ pending_orders_count }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-circle text-info me-2"></i> Confirmed</span>
+                        <span class="badge bg-info rounded-pill">{{ confirmed_orders_count }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-circle text-primary me-2"></i> Shipped</span>
+                        <span class="badge bg-primary rounded-pill">{{ shipped_orders_count }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-circle text-success me-2"></i> Delivered</span>
+                        <span class="badge bg-success rounded-pill">{{ delivered_orders_count }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-circle text-danger me-2"></i> Cancelled</span>
+                        <span class="badge bg-danger rounded-pill">{{ cancelled_orders_count }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Low Stock Products and Recent Reviews -->
+<div class="row">
+    <!-- Low Stock Products -->
+    <div class="col-xl-6 mb-4">
+        <div class="card slide-in-left">
+            <div class="card-header">
+                <h5>Low Stock Products</h5>
+                <div class="card-tools">
+                    <a href="{% url 'admin:products_product_changelist' %}?stock__lte=10" class="btn btn-sm btn-primary">
+                        <i class="fas fa-list me-1"></i> View All
+                    </a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in low_stock_products %}
+                                <tr>
+                                    <td>{{ product.name }}</td>
+                                    <td>{{ product.category.name }}</td>
+                                    <td>₹{{ product.price }}</td>
+                                    <td>
+                                        <span class="badge bg-{% if product.stock <= 5 %}danger{% elif product.stock <= 10 %}warning{% else %}success{% endif %}">
+                                            {{ product.stock }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'admin:products_product_change' product.id %}" class="action-btn edit" data-toggle="tooltip" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">No low stock products found.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Reviews -->
+    <div class="col-xl-6 mb-4">
+        <div class="card slide-in-right">
+            <div class="card-header">
+                <h5>Recent Reviews</h5>
+                <div class="card-tools">
+                    <a href="{% url 'admin:products_review_changelist' %}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-list me-1"></i> View All
+                    </a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Customer</th>
+                                <th>Rating</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for review in recent_reviews %}
+                                <tr>
+                                    <td>{{ review.product.name }}</td>
+                                    <td>{{ review.user.username }}</td>
+                                    <td>
+                                        <div class="rating">
+                                            {% for i in "12345" %}
+                                                <i class="fas fa-star {% if forloop.counter <= review.rating %}text-warning{% else %}text-muted{% endif %}"></i>
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                    <td>{{ review.created_at|date:"M d, Y" }}</td>
+                                    <td>
+                                        <a href="{% url 'admin:products_review_change' review.id %}" class="action-btn view" data-toggle="tooltip" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">No recent reviews found.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activities -->
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card slide-in-up">
+            <div class="card-header">
+                <h5>Recent Activities</h5>
+                <div class="card-tools">
+                    <a href="{% url 'admin:activity_log' %}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-list me-1"></i> View All
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    {% for entry in admin_log %}
+                        <div class="timeline-item">
+                            <div class="timeline-marker {% if entry.is_addition %}bg-success{% elif entry.is_change %}bg-warning{% elif entry.is_deletion %}bg-danger{% endif %}">
+                                <i class="fas fa-{% if entry.is_addition %}plus{% elif entry.is_change %}edit{% elif entry.is_deletion %}trash{% endif %}"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-heading">
+                                    <span class="badge bg-{% if entry.is_addition %}success{% elif entry.is_change %}warning{% elif entry.is_deletion %}danger{% endif %}">
+                                        {% if entry.is_addition %}Added{% elif entry.is_change %}Changed{% elif entry.is_deletion %}Deleted{% endif %}
+                                    </span>
+                                    <span class="timeline-title">
+                                        {% if entry.is_deletion or not entry.get_admin_url %}
+                                            {{ entry.object_repr }}
+                                        {% else %}
+                                            <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <div class="timeline-body">
+                                    <small class="text-muted">
+                                        {% if entry.content_type %}
+                                            {{ entry.content_type.name|capfirst }}
+                                        {% else %}
+                                            Unknown content
+                                        {% endif %}
+                                        by {{ entry.user.username }} - {{ entry.action_time|timesince }} ago
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="text-center">No recent activities found.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Sales data for chart
+    const salesData = {{ monthly_sales_data|safe }};
+    
+    // Revenue sources data for chart
+    const revenueSourcesData = {{ revenue_sources_data|safe }};
+    
+    // Orders status data for chart
+    const ordersStatusData = [
+        {{ pending_orders_count }},
+        {{ confirmed_orders_count }},
+        {{ shipped_orders_count }},
+        {{ delivered_orders_count }},
+        {{ cancelled_orders_count }}
+    ];
+</script>
+{% endblock %}

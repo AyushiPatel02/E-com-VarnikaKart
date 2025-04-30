@@ -1,8 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import user_passes_test
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from products.models import Product, Category
 from .models import Contact, Newsletter
-from .forms import ContactForm, NewsletterForm
+from .forms import ContactForm, NewsletterForm, SuperAdminLoginForm
 
 def home(request):
     """View for the home page"""
@@ -131,3 +135,45 @@ def deals(request):
         'products': discounted_products
     }
     return render(request, 'core/deals.html', context)
+
+def superadmin_login(request):
+    """View for super admin login"""
+    if request.user.is_authenticated and request.user.is_superuser:
+        return HttpResponseRedirect(reverse('admin:index'))
+
+    if request.method == 'POST':
+        form = SuperAdminLoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            remember_me = form.cleaned_data.get('remember_me', False)
+
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None and user.is_superuser:
+                login(request, user)
+
+                if not remember_me:
+                    request.session.set_expiry(0)
+
+                next_url = request.POST.get('next', reverse('admin:index'))
+                return HttpResponseRedirect(next_url)
+            else:
+                if user is not None and not user.is_superuser:
+                    messages.error(request, 'You do not have permission to access the super admin panel.')
+                else:
+                    messages.error(request, 'Invalid username or password.')
+    else:
+        form = SuperAdminLoginForm()
+
+    context = {
+        'form': form,
+        'next': request.GET.get('next', '')
+    }
+    return render(request, 'admin/superadmin_login.html', context)
+
+def superadmin_logout(request):
+    """View for super admin logout"""
+    logout(request)
+    messages.success(request, 'You have been successfully logged out.')
+    return redirect('superadmin_login')

@@ -1,0 +1,521 @@
+{% extends "admin/custom_base.html" %}
+{% load i18n static admin_urls %}
+
+{% block title %}Products | VarnikaKart Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Products</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Products</li>
+            </ol>
+        </nav>
+    </div>
+    <div>
+        <a href="{% url 'admin:products_product_add' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i> Add Product
+        </a>
+    </div>
+</div>
+
+<!-- Product Stats -->
+<div class="row slide-in-up">
+    <!-- Total Products -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card primary h-100">
+            <div class="card-body">
+                <div class="stat-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-title">Total Products</div>
+                    <div class="stat-value">{{ total_products }}</div>
+                    <div class="stat-progress">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Products -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card success h-100">
+            <div class="card-body">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-title">Active Products</div>
+                    <div class="stat-value">{{ active_products }}</div>
+                    <div class="stat-progress">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {{ active_percentage }}%" aria-valuenow="{{ active_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span class="ms-2">{{ active_percentage }}%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Products -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card info h-100">
+            <div class="card-body">
+                <div class="stat-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-title">Featured Products</div>
+                    <div class="stat-value">{{ featured_products }}</div>
+                    <div class="stat-progress">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {{ featured_percentage }}%" aria-valuenow="{{ featured_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span class="ms-2">{{ featured_percentage }}%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Low Stock Products -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card warning h-100">
+            <div class="card-body">
+                <div class="stat-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-title">Low Stock</div>
+                    <div class="stat-value">{{ low_stock_products }}</div>
+                    <div class="stat-progress">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {{ low_stock_percentage }}%" aria-valuenow="{{ low_stock_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span class="ms-2">{{ low_stock_percentage }}%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filters and Search -->
+<div class="card mb-4 slide-in-left">
+    <div class="card-header">
+        <h5>Filters</h5>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-bs-toggle="collapse" data-bs-target="#filtersCollapse" aria-expanded="true" aria-controls="filtersCollapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="collapse show" id="filtersCollapse">
+        <div class="card-body">
+            <form method="get" id="product-filter-form">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select name="category" id="category" class="form-select select2">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"i" %}selected{% endif %}>{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="is_available" class="form-label">Status</label>
+                        <select name="is_available" id="is_available" class="form-select">
+                            <option value="">All Status</option>
+                            <option value="1" {% if request.GET.is_available == '1' %}selected{% endif %}>Active</option>
+                            <option value="0" {% if request.GET.is_available == '0' %}selected{% endif %}>Inactive</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="is_featured" class="form-label">Featured</label>
+                        <select name="is_featured" id="is_featured" class="form-select">
+                            <option value="">All</option>
+                            <option value="1" {% if request.GET.is_featured == '1' %}selected{% endif %}>Featured</option>
+                            <option value="0" {% if request.GET.is_featured == '0' %}selected{% endif %}>Not Featured</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="stock" class="form-label">Stock</label>
+                        <select name="stock" id="stock" class="form-select">
+                            <option value="">All</option>
+                            <option value="low" {% if request.GET.stock == 'low' %}selected{% endif %}>Low Stock (≤ 10)</option>
+                            <option value="out" {% if request.GET.stock == 'out' %}selected{% endif %}>Out of Stock (0)</option>
+                            <option value="in" {% if request.GET.stock == 'in' %}selected{% endif %}>In Stock (> 0)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="search" class="form-label">Search</label>
+                        <div class="input-group">
+                            <input type="text" name="search" id="search" class="form-control" placeholder="Search products..." value="{{ request.GET.search|default:'' }}">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="price_min" class="form-label">Min Price</label>
+                        <input type="number" name="price_min" id="price_min" class="form-control" placeholder="Min Price" value="{{ request.GET.price_min|default:'' }}">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="price_max" class="form-label">Max Price</label>
+                        <input type="number" name="price_max" id="price_max" class="form-control" placeholder="Max Price" value="{{ request.GET.price_max|default:'' }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-filter me-1"></i> Apply Filters
+                        </button>
+                        <a href="{% url 'admin:products_product_changelist' %}" class="btn btn-secondary">
+                            <i class="fas fa-times me-1"></i> Clear Filters
+                        </a>
+                        <div class="float-end">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-download me-1"></i> Export
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#"><i class="fas fa-file-csv me-2"></i>CSV</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="fas fa-file-excel me-2"></i>Excel</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="fas fa-file-pdf me-2"></i>PDF</a></li>
+                                </ul>
+                            </div>
+                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#bulkDeleteModal">
+                                <i class="fas fa-trash me-1"></i> Bulk Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Products Table -->
+<div class="card mb-4 slide-in-right">
+    <div class="card-header">
+        <h5>Products List</h5>
+        <div class="card-tools">
+            <span class="text-muted">Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ paginator.count }} products</span>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <form id="bulk-action-form" method="post" action="#">
+                {% csrf_token %}
+                <input type="hidden" name="model" value="products.product">
+                <input type="hidden" name="action" value="">
+
+                <table class="table table-hover datatable">
+                    <thead>
+                        <tr>
+                            <th width="30">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="selectAll">
+                                </div>
+                            </th>
+                            <th width="60">Image</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Status</th>
+                            <th>Featured</th>
+                            <th>Created</th>
+                            <th width="120">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in product_list %}
+                            <tr>
+                                <td>
+                                    <div class="form-check">
+                                        <input class="form-check-input bulk-select-checkbox" type="checkbox" name="selected_ids" value="{{ product.id }}">
+                                    </div>
+                                </td>
+                                <td>
+                                    {% with product.images.all|first as image %}
+                                        {% if image %}
+                                            <img src="{{ image.image.url }}" alt="{{ product.name }}" class="img-thumbnail" width="50">
+                                        {% else %}
+                                            <div class="no-image">
+                                                <i class="fas fa-image"></i>
+                                            </div>
+                                        {% endif %}
+                                    {% endwith %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'admin:products_product_change' product.id %}">{{ product.name }}</a>
+                                    <div class="small text-muted">SKU: {{ product.id }}</div>
+                                </td>
+                                <td>{{ product.category.name }}</td>
+                                <td>
+                                    <div>₹{{ product.price }}</div>
+                                    {% if product.discount_price %}
+                                        <div class="small text-success">₹{{ product.discount_price }} ({{ product.get_discount_percentage }}% off)</div>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-{% if product.stock <= 0 %}danger{% elif product.stock <= 10 %}warning{% else %}success{% endif %}">
+                                        {{ product.stock }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input status-toggle" type="checkbox" role="switch" data-product-id="{{ product.id }}" {% if product.is_available %}checked{% endif %}>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input featured-toggle" type="checkbox" role="switch" data-product-id="{{ product.id }}" {% if product.is_featured %}checked{% endif %}>
+                                    </div>
+                                </td>
+                                <td>{{ product.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <a href="{% url 'admin:products_product_change' product.id %}" class="action-btn edit" data-toggle="tooltip" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'products:product_detail' product.slug %}" class="action-btn view" data-toggle="tooltip" title="View" target="_blank">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'admin:products_product_delete' product.id %}" class="action-btn delete delete-confirm" data-toggle="tooltip" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="10" class="text-center">No products found.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="bulk-actions">
+                    <select class="form-select d-inline-block w-auto me-2" id="bulk-action-select">
+                        <option value="">Bulk Actions</option>
+                        <option value="activate">Activate</option>
+                        <option value="deactivate">Deactivate</option>
+                        <option value="feature">Mark as Featured</option>
+                        <option value="unfeature">Remove from Featured</option>
+                        <option value="delete">Delete</option>
+                    </select>
+                    <button type="button" class="btn btn-primary" id="bulk-action-apply">Apply</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-end mb-0">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="First">
+                                    <span aria-hidden="true">&laquo;&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" aria-label="First">
+                                    <span aria-hidden="true">&laquo;&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% for i in paginator.page_range %}
+                            {% if page_obj.number == i %}
+                                <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                            {% elif i > page_obj.number|add:"-3" and i < page_obj.number|add:"3" %}
+                                <li class="page-item"><a class="page-link" href="?page={{ i }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Last">
+                                    <span aria-hidden="true">&raquo;&raquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" aria-label="Last">
+                                    <span aria-hidden="true">&raquo;&raquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bulk Delete Modal -->
+<div class="modal fade" id="bulkDeleteModal" tabindex="-1" aria-labelledby="bulkDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bulkDeleteModalLabel">Confirm Bulk Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the selected products? This action cannot be undone.</p>
+                <p class="text-danger"><strong>Warning:</strong> This will permanently delete the selected products and all associated data including images, variations, and reviews.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirm-bulk-delete">Delete Products</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Status toggle
+        const statusToggles = document.querySelectorAll('.status-toggle');
+        statusToggles.forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const productId = this.dataset.productId;
+                const isAvailable = this.checked;
+
+                fetch('#', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        is_available: isAvailable
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showNotification(`Product status ${isAvailable ? 'activated' : 'deactivated'} successfully.`, 'success');
+                    } else {
+                        showNotification('Failed to update product status.', 'error');
+                        toggle.checked = !isAvailable;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification('An error occurred while updating product status.', 'error');
+                    toggle.checked = !isAvailable;
+                });
+            });
+        });
+
+        // Featured toggle
+        const featuredToggles = document.querySelectorAll('.featured-toggle');
+        featuredToggles.forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const productId = this.dataset.productId;
+                const isFeatured = this.checked;
+
+                fetch('#', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        is_featured: isFeatured
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showNotification(`Product ${isFeatured ? 'added to' : 'removed from'} featured successfully.`, 'success');
+                    } else {
+                        showNotification('Failed to update product featured status.', 'error');
+                        toggle.checked = !isFeatured;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification('An error occurred while updating product featured status.', 'error');
+                    toggle.checked = !isFeatured;
+                });
+            });
+        });
+
+        // Bulk actions
+        const bulkActionApply = document.getElementById('bulk-action-apply');
+        const bulkActionSelect = document.getElementById('bulk-action-select');
+        const bulkActionForm = document.getElementById('bulk-action-form');
+
+        bulkActionApply.addEventListener('click', function() {
+            const action = bulkActionSelect.value;
+            if (!action) {
+                showNotification('Please select an action.', 'warning');
+                return;
+            }
+
+            const selectedCheckboxes = document.querySelectorAll('.bulk-select-checkbox:checked');
+            if (selectedCheckboxes.length === 0) {
+                showNotification('Please select at least one product.', 'warning');
+                return;
+            }
+
+            if (action === 'delete') {
+                $('#bulkDeleteModal').modal('show');
+                return;
+            }
+
+            // Set the action and submit the form
+            document.querySelector('input[name="action"]').value = action;
+            bulkActionForm.submit();
+        });
+
+        // Confirm bulk delete
+        const confirmBulkDelete = document.getElementById('confirm-bulk-delete');
+        confirmBulkDelete.addEventListener('click', function() {
+            document.querySelector('input[name="action"]').value = 'delete';
+            bulkActionForm.submit();
+            $('#bulkDeleteModal').modal('hide');
+        });
+    });
+</script>
+{% endblock %}

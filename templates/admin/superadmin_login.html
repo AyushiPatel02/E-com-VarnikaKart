@@ -17,16 +17,28 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 
+    <!-- Custom Admin CSS -->
+    <link rel="stylesheet" href="{% static 'admin/css/custom_admin.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/css/super_admin.css' %}">
+
     <style>
         :root {
             --primary-color: #4e73df;
-            --secondary-color: #224abe;
+            --primary-dark: #224abe;
+            --secondary-color: #6c757d;
             --success-color: #1cc88a;
             --info-color: #36b9cc;
             --warning-color: #f6c23e;
             --danger-color: #e74a3b;
             --light-color: #f8f9fc;
             --dark-color: #5a5c69;
+            --white-color: #ffffff;
+            --body-bg: #f8f9fc;
+            --card-border-radius: 0.75rem;
+            --transition-speed: 0.3s;
+            --box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            --box-shadow-sm: 0 0.125rem 0.25rem 0 rgba(58, 59, 69, 0.1);
+            --box-shadow-hover: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.2);
         }
 
         body {
@@ -36,24 +48,111 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('{% static "img/login-bg.jpg" %}') center/cover no-repeat;
+            opacity: 0.05;
+            z-index: -1;
         }
 
         .login-container {
             width: 100%;
-            max-width: 450px;
+            max-width: 900px;
             padding: 1rem;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .login-image {
+            flex: 1;
+            background: url('{% static "img/login-side.jpg" %}') center/cover no-repeat;
+            border-radius: 0.75rem 0 0 0.75rem;
+            position: relative;
+            display: none;
+        }
+
+        .login-image::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(78, 115, 223, 0.8) 0%, rgba(34, 74, 190, 0.8) 100%);
+            border-radius: 0.75rem 0 0 0.75rem;
+            opacity: 0.8;
+        }
+
+        .login-image-content {
+            position: relative;
+            z-index: 1;
+            color: white;
+            padding: 3rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-image-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .login-image-subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .login-features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .login-features li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .login-features li i {
+            margin-right: 1rem;
+            width: 24px;
+            height: 24px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
         }
 
         .login-card {
             background: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.15);
+            border-radius: 0.75rem;
+            box-shadow: var(--box-shadow);
             overflow: hidden;
             animation: fadeInUp 0.5s ease-out;
+            flex: 1;
+            max-width: 450px;
+            margin: 0 auto;
         }
 
         .login-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
             color: white;
             padding: 2rem 1.5rem;
             text-align: center;
@@ -68,8 +167,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aW5kaWFuJTIwYXJ0fGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60') center/cover no-repeat;
-            opacity: 0.15;
+            background: url('{% static "img/pattern.png" %}') center/cover repeat;
+            opacity: 0.1;
             z-index: 0;
         }
 
@@ -81,6 +180,13 @@
         .login-brand-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
         }
 
         .login-brand-text {
@@ -121,6 +227,11 @@
             margin-bottom: 1.5rem;
         }
 
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
         .login-btn {
             padding: 0.75rem 1rem;
             font-weight: 600;
@@ -132,7 +243,7 @@
         }
 
         .login-btn:hover {
-            background-color: var(--secondary-color);
+            background-color: var(--primary-dark);
             transform: translateY(-3px);
             box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
         }
@@ -150,13 +261,14 @@
         }
 
         .login-footer a:hover {
-            color: var(--secondary-color);
+            color: var(--primary-dark);
             text-decoration: underline;
         }
 
         .alert {
             border-radius: 0.5rem;
             margin-bottom: 1.5rem;
+            padding: 1rem;
         }
 
         .alert-danger {
@@ -200,6 +312,19 @@
             color: var(--primary-color);
         }
 
+        .invalid-feedback {
+            color: var(--danger-color);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -208,6 +333,40 @@
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (min-width: 992px) {
+            .login-image {
+                display: block;
+                animation: fadeInLeft 0.5s ease-out;
+            }
+
+            .login-card {
+                animation: fadeInRight 0.5s ease-out;
+                border-radius: 0 0.75rem 0.75rem 0;
             }
         }
 
@@ -220,6 +379,21 @@
 </head>
 <body>
     <div class="login-container">
+        <div class="login-image">
+            <div class="login-image-content">
+                <div class="login-image-title">VarnikaKart</div>
+                <div class="login-image-subtitle">Manage your e-commerce platform with our powerful admin panel</div>
+
+                <ul class="login-features">
+                    <li><i class="fas fa-check"></i> Comprehensive Dashboard</li>
+                    <li><i class="fas fa-check"></i> Real-time Analytics</li>
+                    <li><i class="fas fa-check"></i> Order Management</li>
+                    <li><i class="fas fa-check"></i> Inventory Control</li>
+                    <li><i class="fas fa-check"></i> Customer Insights</li>
+                </ul>
+            </div>
+        </div>
+
         <div class="login-card">
             <div class="login-header">
                 <div class="login-header-content">

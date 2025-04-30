@@ -1,0 +1,556 @@
+{% extends "admin/custom_base.html" %}
+{% load i18n static %}
+
+{% block title %}Shipping Settings | VarnikaKart Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Shipping Settings</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Shipping Settings</li>
+            </ol>
+        </nav>
+    </div>
+    <div>
+        <button type="submit" form="shipping-settings-form" class="btn btn-primary">
+            <i class="fas fa-save me-1"></i> Save Changes
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-3 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Settings Navigation</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="settings-nav">
+                    <a href="{% url 'admin:site_settings' %}" class="settings-nav-item">
+                        <i class="fas fa-globe me-2"></i> General
+                    </a>
+                    <a href="{% url 'admin:payment_settings' %}" class="settings-nav-item">
+                        <i class="fas fa-credit-card me-2"></i> Payment
+                    </a>
+                    <a href="{% url 'admin:shipping_settings' %}" class="settings-nav-item active">
+                        <i class="fas fa-truck me-2"></i> Shipping
+                    </a>
+                    <a href="#" class="settings-nav-item">
+                        <i class="fas fa-envelope me-2"></i> Email
+                    </a>
+                    <a href="#" class="settings-nav-item">
+                        <i class="fas fa-palette me-2"></i> Appearance
+                    </a>
+                    <a href="#" class="settings-nav-item">
+                        <i class="fas fa-shield-alt me-2"></i> Security
+                    </a>
+                    <a href="#" class="settings-nav-item">
+                        <i class="fas fa-users-cog me-2"></i> User Roles
+                    </a>
+                    <a href="#" class="settings-nav-item">
+                        <i class="fas fa-bell me-2"></i> Notifications
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-9">
+        <form id="shipping-settings-form" method="post">
+            {% csrf_token %}
+            
+            <!-- General Shipping Settings -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">General Shipping Settings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <label class="col-sm-3 col-form-label">Shipping Calculation</label>
+                        <div class="col-sm-9">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="shipping_calculation" id="shipping_flat_rate" value="flat_rate" checked>
+                                <label class="form-check-label" for="shipping_flat_rate">
+                                    Flat Rate
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="shipping_calculation" id="shipping_weight_based" value="weight_based">
+                                <label class="form-check-label" for="shipping_weight_based">
+                                    Weight Based
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="shipping_calculation" id="shipping_price_based" value="price_based">
+                                <label class="form-check-label" for="shipping_price_based">
+                                    Price Based
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="shipping_flat_rate" class="col-sm-3 col-form-label">Flat Rate Amount</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <span class="input-group-text">₹</span>
+                                <input type="number" class="form-control" id="shipping_flat_rate_amount" name="shipping_flat_rate_amount" value="100" min="0" step="1">
+                            </div>
+                            <div class="form-text">The flat rate shipping amount.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="free_shipping_min" class="col-sm-3 col-form-label">Free Shipping Minimum</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <span class="input-group-text">₹</span>
+                                <input type="number" class="form-control" id="free_shipping_min" name="free_shipping_min" value="1000" min="0" step="1">
+                            </div>
+                            <div class="form-text">Minimum order amount for free shipping. Set to 0 to disable free shipping.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label class="col-sm-3 col-form-label">Shipping Options</label>
+                        <div class="col-sm-9">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="enable_standard_shipping" name="enable_standard_shipping" checked>
+                                <label class="form-check-label" for="enable_standard_shipping">
+                                    Enable Standard Shipping
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="enable_express_shipping" name="enable_express_shipping" checked>
+                                <label class="form-check-label" for="enable_express_shipping">
+                                    Enable Express Shipping
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="enable_international_shipping" name="enable_international_shipping">
+                                <label class="form-check-label" for="enable_international_shipping">
+                                    Enable International Shipping
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Standard Shipping Settings -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Standard Shipping</h5>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="standard_shipping_enabled" name="standard_shipping_enabled" checked>
+                        <label class="form-check-label" for="standard_shipping_enabled">Enable</label>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <label for="standard_shipping_title" class="col-sm-3 col-form-label">Title</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="standard_shipping_title" name="standard_shipping_title" value="Standard Shipping">
+                            <div class="form-text">The title displayed to customers.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="standard_shipping_description" class="col-sm-3 col-form-label">Description</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" id="standard_shipping_description" name="standard_shipping_description" rows="2">Delivery within 5-7 business days.</textarea>
+                            <div class="form-text">The description displayed to customers.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="standard_shipping_cost" class="col-sm-3 col-form-label">Cost</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <span class="input-group-text">₹</span>
+                                <input type="number" class="form-control" id="standard_shipping_cost" name="standard_shipping_cost" value="100" min="0" step="1">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="standard_shipping_delivery_time" class="col-sm-3 col-form-label">Delivery Time (days)</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="standard_shipping_delivery_time_min" name="standard_shipping_delivery_time_min" value="5" min="1" step="1">
+                                <span class="input-group-text">to</span>
+                                <input type="number" class="form-control" id="standard_shipping_delivery_time_max" name="standard_shipping_delivery_time_max" value="7" min="1" step="1">
+                                <span class="input-group-text">days</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Express Shipping Settings -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Express Shipping</h5>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="express_shipping_enabled" name="express_shipping_enabled" checked>
+                        <label class="form-check-label" for="express_shipping_enabled">Enable</label>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <label for="express_shipping_title" class="col-sm-3 col-form-label">Title</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="express_shipping_title" name="express_shipping_title" value="Express Shipping">
+                            <div class="form-text">The title displayed to customers.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="express_shipping_description" class="col-sm-3 col-form-label">Description</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" id="express_shipping_description" name="express_shipping_description" rows="2">Delivery within 1-3 business days.</textarea>
+                            <div class="form-text">The description displayed to customers.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="express_shipping_cost" class="col-sm-3 col-form-label">Cost</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <span class="input-group-text">₹</span>
+                                <input type="number" class="form-control" id="express_shipping_cost" name="express_shipping_cost" value="250" min="0" step="1">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="express_shipping_delivery_time" class="col-sm-3 col-form-label">Delivery Time (days)</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="express_shipping_delivery_time_min" name="express_shipping_delivery_time_min" value="1" min="1" step="1">
+                                <span class="input-group-text">to</span>
+                                <input type="number" class="form-control" id="express_shipping_delivery_time_max" name="express_shipping_delivery_time_max" value="3" min="1" step="1">
+                                <span class="input-group-text">days</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Shipping Zones -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Shipping Zones</h5>
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addZoneModal">
+                        <i class="fas fa-plus me-1"></i> Add Zone
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Zone Name</th>
+                                    <th>Regions</th>
+                                    <th>Shipping Methods</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>North India</td>
+                                    <td>Delhi, Haryana, Punjab, Uttar Pradesh, Uttarakhand, Himachal Pradesh, Jammu & Kashmir</td>
+                                    <td>Standard, Express</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>South India</td>
+                                    <td>Tamil Nadu, Kerala, Karnataka, Andhra Pradesh, Telangana</td>
+                                    <td>Standard, Express</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>East India</td>
+                                    <td>West Bengal, Bihar, Jharkhand, Odisha, Assam, Sikkim</td>
+                                    <td>Standard, Express</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>West India</td>
+                                    <td>Maharashtra, Gujarat, Rajasthan, Goa</td>
+                                    <td>Standard, Express</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Central India</td>
+                                    <td>Madhya Pradesh, Chhattisgarh</td>
+                                    <td>Standard, Express</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Northeast India</td>
+                                    <td>Arunachal Pradesh, Manipur, Meghalaya, Mizoram, Nagaland, Tripura</td>
+                                    <td>Standard</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i> Save Changes
+                </button>
+                <button type="reset" class="btn btn-secondary ms-2">
+                    <i class="fas fa-undo me-1"></i> Reset
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Add Zone Modal -->
+<div class="modal fade" id="addZoneModal" tabindex="-1" aria-labelledby="addZoneModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addZoneModalLabel">Add Shipping Zone</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="add-zone-form">
+                    <div class="mb-3">
+                        <label for="zone_name" class="form-label">Zone Name</label>
+                        <input type="text" class="form-control" id="zone_name" name="zone_name" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Regions</label>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="region_delhi" name="regions[]" value="Delhi">
+                                    <label class="form-check-label" for="region_delhi">Delhi</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="region_haryana" name="regions[]" value="Haryana">
+                                    <label class="form-check-label" for="region_haryana">Haryana</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="region_punjab" name="regions[]" value="Punjab">
+                                    <label class="form-check-label" for="region_punjab">Punjab</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="region_up" name="regions[]" value="Uttar Pradesh">
+                                    <label class="form-check-label" for="region_up">Uttar Pradesh</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="region_uk" name="regions[]" value="Uttarakhand">
+                                    <label class="form-check-label" for="region_uk">Uttarakhand</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="region_mh" name="regions[]" value="Maharashtra">
+                                    <label class="form-check-label" for="region_mh">Maharashtra</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="region_gj" name="regions[]" value="Gujarat">
+                                    <label class="form-check-label" for="region_gj">Gujarat</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="region_rj" name="regions[]" value="Rajasthan">
+                                    <label class="form-check-label" for="region_rj">Rajasthan</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="region_mp" name="regions[]" value="Madhya Pradesh">
+                                    <label class="form-check-label" for="region_mp">Madhya Pradesh</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="region_cg" name="regions[]" value="Chhattisgarh">
+                                    <label class="form-check-label" for="region_cg">Chhattisgarh</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="region_tn" name="regions[]" value="Tamil Nadu">
+                                    <label class="form-check-label" for="region_tn">Tamil Nadu</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="region_kl" name="regions[]" value="Kerala">
+                                    <label class="form-check-label" for="region_kl">Kerala</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="region_ka" name="regions[]" value="Karnataka">
+                                    <label class="form-check-label" for="region_ka">Karnataka</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="region_ap" name="regions[]" value="Andhra Pradesh">
+                                    <label class="form-check-label" for="region_ap">Andhra Pradesh</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="region_tg" name="regions[]" value="Telangana">
+                                    <label class="form-check-label" for="region_tg">Telangana</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Shipping Methods</label>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="method_standard" name="methods[]" value="standard" checked>
+                            <label class="form-check-label" for="method_standard">Standard Shipping</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="method_express" name="methods[]" value="express">
+                            <label class="form-check-label" for="method_express">Express Shipping</label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="zone_cost_adjustment" class="form-label">Cost Adjustment</label>
+                        <div class="input-group">
+                            <select class="form-select" id="zone_cost_adjustment_type" name="zone_cost_adjustment_type">
+                                <option value="none" selected>None</option>
+                                <option value="fixed">Fixed Amount</option>
+                                <option value="percentage">Percentage</option>
+                            </select>
+                            <input type="number" class="form-control" id="zone_cost_adjustment_value" name="zone_cost_adjustment_value" value="0" min="0" step="1">
+                            <span class="input-group-text">₹ / %</span>
+                        </div>
+                        <div class="form-text">Additional cost or percentage to add to the base shipping cost for this zone.</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" form="add-zone-form">Add Zone</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Show/hide shipping calculation specific fields
+        const shippingCalculationRadios = document.querySelectorAll('input[name="shipping_calculation"]');
+        shippingCalculationRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Here you would show/hide specific fields based on the selected calculation method
+                // For now, we'll just log the selected value
+                console.log('Selected shipping calculation:', this.value);
+            });
+        });
+        
+        // Toggle shipping method enabled/disabled
+        const standardShippingEnabled = document.getElementById('standard_shipping_enabled');
+        const expressShippingEnabled = document.getElementById('express_shipping_enabled');
+        
+        standardShippingEnabled.addEventListener('change', function() {
+            const standardShippingFields = document.querySelectorAll('#standard_shipping_title, #standard_shipping_description, #standard_shipping_cost, #standard_shipping_delivery_time_min, #standard_shipping_delivery_time_max');
+            standardShippingFields.forEach(field => {
+                field.disabled = !this.checked;
+            });
+        });
+        
+        expressShippingEnabled.addEventListener('change', function() {
+            const expressShippingFields = document.querySelectorAll('#express_shipping_title, #express_shipping_description, #express_shipping_cost, #express_shipping_delivery_time_min, #express_shipping_delivery_time_max');
+            expressShippingFields.forEach(field => {
+                field.disabled = !this.checked;
+            });
+        });
+        
+        // Add zone form handling
+        const addZoneForm = document.getElementById('add-zone-form');
+        const addZoneButton = document.querySelector('[form="add-zone-form"]');
+        
+        addZoneButton.addEventListener('click', function() {
+            // Here you would handle the form submission
+            // For now, we'll just log the form data
+            const formData = new FormData(addZoneForm);
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                if (data[key]) {
+                    if (!Array.isArray(data[key])) {
+                        data[key] = [data[key]];
+                    }
+                    data[key].push(value);
+                } else {
+                    data[key] = value;
+                }
+            }
+            
+            console.log('Zone data:', data);
+            
+            // Close the modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addZoneModal'));
+            modal.hide();
+            
+            // Show success message
+            alert('Zone added successfully!');
+        });
+    });
+</script>
+{% endblock %}

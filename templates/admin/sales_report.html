@@ -1,0 +1,451 @@
+{% extends "admin/super_base.html" %}
+{% load i18n static %}
+
+{% block title %}Sales Report | VarnikaKart Super Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Sales Report</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Sales Report</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-download me-1"></i> Export
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="?export=csv{% if request.GET.date_range %}&date_range={{ request.GET.date_range }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}"><i class="fas fa-file-csv me-2"></i>CSV</a></li>
+            <li><a class="dropdown-item" href="?export=excel{% if request.GET.date_range %}&date_range={{ request.GET.date_range }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}"><i class="fas fa-file-excel me-2"></i>Excel</a></li>
+            <li><a class="dropdown-item" href="?export=pdf{% if request.GET.date_range %}&date_range={{ request.GET.date_range }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}"><i class="fas fa-file-pdf me-2"></i>PDF</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card primary">
+            <div class="card-body">
+                <div class="stat-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-title">Total Orders</div>
+                    <div class="stat-value">{{ total_orders }}</div>
+                    <div class="stat-progress">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {{ order_growth }}%;" aria-valuenow="{{ order_growth }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span class="{% if order_growth >= 0 %}text-success{% else %}text-danger{% endif %}">
+                            <i class="fas fa-{% if order_growth >= 0 %}arrow-up{% else %}arrow-down{% endif %}"></i> {{ order_growth|floatformat:1 }}%
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card success">
+            <div class="card-body">
+                <div class="stat-icon">
+                    <i class="fas fa-rupee-sign"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-title">Total Revenue</div>
+                    <div class="stat-value">₹{{ total_revenue }}</div>
+                    <div class="stat-progress">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {{ revenue_growth }}%;" aria-valuenow="{{ revenue_growth }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span class="{% if revenue_growth >= 0 %}text-success{% else %}text-danger{% endif %}">
+                            <i class="fas fa-{% if revenue_growth >= 0 %}arrow-up{% else %}arrow-down{% endif %}"></i> {{ revenue_growth|floatformat:1 }}%
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card info">
+            <div class="card-body">
+                <div class="stat-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-title">Items Sold</div>
+                    <div class="stat-value">{{ total_items_sold }}</div>
+                    <div class="stat-progress">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {{ items_growth }}%;" aria-valuenow="{{ items_growth }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span class="{% if items_growth >= 0 %}text-success{% else %}text-danger{% endif %}">
+                            <i class="fas fa-{% if items_growth >= 0 %}arrow-up{% else %}arrow-down{% endif %}"></i> {{ items_growth|floatformat:1 }}%
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card warning">
+            <div class="card-body">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-title">Avg. Order Value</div>
+                    <div class="stat-value">₹{{ avg_order_value }}</div>
+                    <div class="stat-progress">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {{ aov_growth }}%;" aria-valuenow="{{ aov_growth }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <span class="{% if aov_growth >= 0 %}text-success{% else %}text-danger{% endif %}">
+                            <i class="fas fa-{% if aov_growth >= 0 %}arrow-up{% else %}arrow-down{% endif %}"></i> {{ aov_growth|floatformat:1 }}%
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Sales Trend</h5>
+                <div class="card-tools">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-outline-secondary active" id="viewDaily">Daily</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" id="viewWeekly">Weekly</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" id="viewMonthly">Monthly</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <canvas id="salesTrendChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Sales by Category</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="categoryChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Filters</h5>
+            </div>
+            <div class="card-body">
+                <form action="" method="get" id="salesFilterForm">
+                    <div class="mb-3">
+                        <label for="date_range" class="form-label">Date Range</label>
+                        <input type="text" name="date_range" id="date_range" class="form-control flatpickr" data-mode="range" value="{{ request.GET.date_range|default:'' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select name="category" id="category" class="form-select select2">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"i" %}selected{% endif %}>{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="payment_method" class="form-label">Payment Method</label>
+                        <select name="payment_method" id="payment_method" class="form-select">
+                            <option value="">All Methods</option>
+                            <option value="COD" {% if request.GET.payment_method == "COD" %}selected{% endif %}>Cash on Delivery</option>
+                            <option value="CC" {% if request.GET.payment_method == "CC" %}selected{% endif %}>Credit Card</option>
+                            <option value="DC" {% if request.GET.payment_method == "DC" %}selected{% endif %}>Debit Card</option>
+                            <option value="UPI" {% if request.GET.payment_method == "UPI" %}selected{% endif %}>UPI</option>
+                            <option value="NB" {% if request.GET.payment_method == "NB" %}selected{% endif %}>Net Banking</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Order Status</label>
+                        <select name="status" id="status" class="form-select">
+                            <option value="">All Statuses</option>
+                            <option value="P" {% if request.GET.status == "P" %}selected{% endif %}>Pending</option>
+                            <option value="C" {% if request.GET.status == "C" %}selected{% endif %}>Confirmed</option>
+                            <option value="S" {% if request.GET.status == "S" %}selected{% endif %}>Shipped</option>
+                            <option value="D" {% if request.GET.status == "D" %}selected{% endif %}>Delivered</option>
+                            <option value="X" {% if request.GET.status == "X" %}selected{% endif %}>Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-filter me-1"></i> Apply Filters
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Top Selling Products</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Quantity Sold</th>
+                                <th>Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in top_products %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'admin:products_product_change' product.id %}">{{ product.name }}</a>
+                                    </td>
+                                    <td>{{ product.category.name }}</td>
+                                    <td>₹{{ product.price }}</td>
+                                    <td>{{ product.quantity_sold }}</td>
+                                    <td>₹{{ product.revenue }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">No products found.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Recent Orders</h5>
+                <div class="card-tools">
+                    <a href="{% url 'admin:orders_order_changelist' %}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-list me-1"></i> View All
+                    </a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover datatable">
+                        <thead>
+                            <tr>
+                                <th>Order #</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Items</th>
+                                <th>Amount</th>
+                                <th>Payment Method</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in recent_orders %}
+                                <tr>
+                                    <td>{{ order.order_number }}</td>
+                                    <td>{{ order.full_name }}</td>
+                                    <td>{{ order.created_at|date:"M d, Y" }}</td>
+                                    <td>{{ order.items.count }}</td>
+                                    <td>₹{{ order.order_total }}</td>
+                                    <td>{{ order.get_payment_method_display }}</td>
+                                    <td>
+                                        <span class="badge bg-{% if order.status == 'P' %}warning{% elif order.status == 'C' %}info{% elif order.status == 'S' %}primary{% elif order.status == 'D' %}success{% elif order.status == 'X' %}danger{% endif %}">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'admin:orders_order_change' order.id %}" class="action-btn view" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{% url 'admin:orders_order_change' order.id %}" class="action-btn edit" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="8" class="text-center">No orders found.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Sales Trend Chart
+        const salesTrendCtx = document.getElementById('salesTrendChart').getContext('2d');
+        const salesTrendChart = new Chart(salesTrendCtx, {
+            type: 'line',
+            data: {
+                labels: {{ daily_sales_labels|safe }},
+                datasets: [{
+                    label: 'Sales',
+                    data: {{ daily_sales_data|safe }},
+                    backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                    borderColor: 'rgba(78, 115, 223, 1)',
+                    pointBackgroundColor: 'rgba(78, 115, 223, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(78, 115, 223, 1)',
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `₹${context.raw.toFixed(2)}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + value;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Category Chart
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        const categoryChart = new Chart(categoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: {{ category_labels|safe }},
+                datasets: [{
+                    data: {{ category_data|safe }},
+                    backgroundColor: [
+                        'rgba(78, 115, 223, 0.8)',
+                        'rgba(28, 200, 138, 0.8)',
+                        'rgba(54, 185, 204, 0.8)',
+                        'rgba(246, 194, 62, 0.8)',
+                        'rgba(231, 74, 59, 0.8)',
+                        'rgba(133, 135, 150, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(78, 115, 223, 1)',
+                        'rgba(28, 200, 138, 1)',
+                        'rgba(54, 185, 204, 1)',
+                        'rgba(246, 194, 62, 1)',
+                        'rgba(231, 74, 59, 1)',
+                        'rgba(133, 135, 150, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return `${label}: ₹${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                },
+                cutout: '70%'
+            }
+        });
+        
+        // Initialize date range picker
+        flatpickr("#date_range", {
+            mode: "range",
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "F j, Y",
+            allowInput: true
+        });
+        
+        // View toggle for sales trend chart
+        document.getElementById('viewDaily').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('viewWeekly').classList.remove('active');
+            document.getElementById('viewMonthly').classList.remove('active');
+            
+            salesTrendChart.data.labels = {{ daily_sales_labels|safe }};
+            salesTrendChart.data.datasets[0].data = {{ daily_sales_data|safe }};
+            salesTrendChart.update();
+        });
+        
+        document.getElementById('viewWeekly').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('viewDaily').classList.remove('active');
+            document.getElementById('viewMonthly').classList.remove('active');
+            
+            salesTrendChart.data.labels = {{ weekly_sales_labels|safe }};
+            salesTrendChart.data.datasets[0].data = {{ weekly_sales_data|safe }};
+            salesTrendChart.update();
+        });
+        
+        document.getElementById('viewMonthly').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('viewDaily').classList.remove('active');
+            document.getElementById('viewWeekly').classList.remove('active');
+            
+            salesTrendChart.data.labels = {{ monthly_sales_labels|safe }};
+            salesTrendChart.data.datasets[0].data = {{ monthly_sales_data|safe }};
+            salesTrendChart.update();
+        });
+    });
+</script>
+{% endblock %}

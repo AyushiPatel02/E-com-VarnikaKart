@@ -1,0 +1,385 @@
+{% extends "admin/custom_base.html" %}
+{% load i18n static %}
+
+{% block title %}Payment Settings | VarnikaKart Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Payment Settings</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Payment Settings</li>
+            </ol>
+        </nav>
+    </div>
+    <div>
+        <button type="submit" form="payment-settings-form" class="btn btn-primary">
+            <i class="fas fa-save me-1"></i> Save Changes
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-3 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Settings Navigation</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="settings-nav">
+                    <a href="{% url 'admin:site_settings' %}" class="settings-nav-item">
+                        <i class="fas fa-globe me-2"></i> General
+                    </a>
+                    <a href="{% url 'admin:payment_settings' %}" class="settings-nav-item active">
+                        <i class="fas fa-credit-card me-2"></i> Payment
+                    </a>
+                    <a href="{% url 'admin:shipping_settings' %}" class="settings-nav-item">
+                        <i class="fas fa-truck me-2"></i> Shipping
+                    </a>
+                    <a href="#" class="settings-nav-item">
+                        <i class="fas fa-envelope me-2"></i> Email
+                    </a>
+                    <a href="#" class="settings-nav-item">
+                        <i class="fas fa-palette me-2"></i> Appearance
+                    </a>
+                    <a href="#" class="settings-nav-item">
+                        <i class="fas fa-shield-alt me-2"></i> Security
+                    </a>
+                    <a href="#" class="settings-nav-item">
+                        <i class="fas fa-users-cog me-2"></i> User Roles
+                    </a>
+                    <a href="#" class="settings-nav-item">
+                        <i class="fas fa-bell me-2"></i> Notifications
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-9">
+        <form id="payment-settings-form" method="post">
+            {% csrf_token %}
+            
+            <!-- General Payment Settings -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">General Payment Settings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <label for="currency" class="col-sm-3 col-form-label">Currency</label>
+                        <div class="col-sm-9">
+                            <select class="form-select" id="currency" name="currency">
+                                <option value="INR" selected>Indian Rupee (₹)</option>
+                                <option value="USD">US Dollar ($)</option>
+                                <option value="EUR">Euro (€)</option>
+                                <option value="GBP">British Pound (£)</option>
+                            </select>
+                            <div class="form-text">The currency used for all transactions.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="currency_position" class="col-sm-3 col-form-label">Currency Position</label>
+                        <div class="col-sm-9">
+                            <select class="form-select" id="currency_position" name="currency_position">
+                                <option value="left" selected>Left (₹99.99)</option>
+                                <option value="right">Right (99.99₹)</option>
+                                <option value="left_space">Left with space (₹ 99.99)</option>
+                                <option value="right_space">Right with space (99.99 ₹)</option>
+                            </select>
+                            <div class="form-text">The position of the currency symbol.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="thousand_separator" class="col-sm-3 col-form-label">Thousand Separator</label>
+                        <div class="col-sm-9">
+                            <select class="form-select" id="thousand_separator" name="thousand_separator">
+                                <option value="," selected>Comma (,)</option>
+                                <option value=".">Dot (.)</option>
+                                <option value=" ">Space ( )</option>
+                                <option value="">None</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="decimal_separator" class="col-sm-3 col-form-label">Decimal Separator</label>
+                        <div class="col-sm-9">
+                            <select class="form-select" id="decimal_separator" name="decimal_separator">
+                                <option value="." selected>Dot (.)</option>
+                                <option value=",">Comma (,)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="decimal_places" class="col-sm-3 col-form-label">Decimal Places</label>
+                        <div class="col-sm-9">
+                            <select class="form-select" id="decimal_places" name="decimal_places">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2" selected>2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label class="col-sm-3 col-form-label">Enabled Payment Methods</label>
+                        <div class="col-sm-9">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="payment_cod" name="payment_methods[]" value="cod" checked>
+                                <label class="form-check-label" for="payment_cod">Cash on Delivery</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="payment_cc" name="payment_methods[]" value="cc" checked>
+                                <label class="form-check-label" for="payment_cc">Credit Card</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="payment_dc" name="payment_methods[]" value="dc" checked>
+                                <label class="form-check-label" for="payment_dc">Debit Card</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="payment_upi" name="payment_methods[]" value="upi" checked>
+                                <label class="form-check-label" for="payment_upi">UPI</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="payment_nb" name="payment_methods[]" value="nb" checked>
+                                <label class="form-check-label" for="payment_nb">Net Banking</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Razorpay Settings -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Razorpay</h5>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="razorpay_enabled" name="razorpay_enabled" checked>
+                        <label class="form-check-label" for="razorpay_enabled">Enable</label>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <label for="razorpay_key_id" class="col-sm-3 col-form-label">Key ID</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="razorpay_key_id" name="razorpay_key_id" value="rzp_test_1234567890abcdef">
+                            <div class="form-text">Your Razorpay Key ID.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="razorpay_key_secret" class="col-sm-3 col-form-label">Key Secret</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="razorpay_key_secret" name="razorpay_key_secret" value="1234567890abcdef1234567890abcdef">
+                                <button class="btn btn-outline-secondary toggle-password" type="button" data-target="razorpay_key_secret">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="form-text">Your Razorpay Key Secret.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="razorpay_webhook_secret" class="col-sm-3 col-form-label">Webhook Secret</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="razorpay_webhook_secret" name="razorpay_webhook_secret" value="whsec_1234567890abcdef1234567890abcdef">
+                                <button class="btn btn-outline-secondary toggle-password" type="button" data-target="razorpay_webhook_secret">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="form-text">Your Razorpay Webhook Secret.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="razorpay_mode" class="col-sm-3 col-form-label">Mode</label>
+                        <div class="col-sm-9">
+                            <select class="form-select" id="razorpay_mode" name="razorpay_mode">
+                                <option value="test" selected>Test Mode</option>
+                                <option value="live">Live Mode</option>
+                            </select>
+                            <div class="form-text">Select 'Test Mode' for testing and 'Live Mode' for production.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="razorpay_webhook_url" class="col-sm-3 col-form-label">Webhook URL</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="razorpay_webhook_url" value="https://www.varnikakart.com/webhook/razorpay" readonly>
+                                <button class="btn btn-outline-secondary copy-to-clipboard" type="button" data-clipboard-target="#razorpay_webhook_url">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <div class="form-text">Add this URL to your Razorpay dashboard to receive payment notifications.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- PayPal Settings -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">PayPal</h5>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="paypal_enabled" name="paypal_enabled">
+                        <label class="form-check-label" for="paypal_enabled">Enable</label>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <label for="paypal_client_id" class="col-sm-3 col-form-label">Client ID</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="paypal_client_id" name="paypal_client_id" value="">
+                            <div class="form-text">Your PayPal Client ID.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="paypal_client_secret" class="col-sm-3 col-form-label">Client Secret</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="paypal_client_secret" name="paypal_client_secret" value="">
+                                <button class="btn btn-outline-secondary toggle-password" type="button" data-target="paypal_client_secret">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="form-text">Your PayPal Client Secret.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="paypal_mode" class="col-sm-3 col-form-label">Mode</label>
+                        <div class="col-sm-9">
+                            <select class="form-select" id="paypal_mode" name="paypal_mode">
+                                <option value="sandbox" selected>Sandbox Mode</option>
+                                <option value="live">Live Mode</option>
+                            </select>
+                            <div class="form-text">Select 'Sandbox Mode' for testing and 'Live Mode' for production.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cash on Delivery Settings -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Cash on Delivery</h5>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="cod_enabled" name="cod_enabled" checked>
+                        <label class="form-check-label" for="cod_enabled">Enable</label>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <label for="cod_title" class="col-sm-3 col-form-label">Title</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="cod_title" name="cod_title" value="Cash on Delivery">
+                            <div class="form-text">The title displayed to customers.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="cod_description" class="col-sm-3 col-form-label">Description</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" id="cod_description" name="cod_description" rows="3">Pay with cash upon delivery. Please keep exact change ready.</textarea>
+                            <div class="form-text">The description displayed to customers.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="cod_min_amount" class="col-sm-3 col-form-label">Minimum Order Amount</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <span class="input-group-text">₹</span>
+                                <input type="number" class="form-control" id="cod_min_amount" name="cod_min_amount" value="0" min="0" step="1">
+                            </div>
+                            <div class="form-text">Minimum order amount required for COD. Set to 0 for no minimum.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="cod_max_amount" class="col-sm-3 col-form-label">Maximum Order Amount</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <span class="input-group-text">₹</span>
+                                <input type="number" class="form-control" id="cod_max_amount" name="cod_max_amount" value="10000" min="0" step="1">
+                            </div>
+                            <div class="form-text">Maximum order amount allowed for COD. Set to 0 for no maximum.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i> Save Changes
+                </button>
+                <button type="reset" class="btn btn-secondary ms-2">
+                    <i class="fas fa-undo me-1"></i> Reset
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Toggle password visibility
+        const togglePasswordButtons = document.querySelectorAll('.toggle-password');
+        togglePasswordButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const passwordInput = document.getElementById(targetId);
+                const icon = this.querySelector('i');
+                
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
+        
+        // Copy to clipboard
+        const copyButtons = document.querySelectorAll('.copy-to-clipboard');
+        copyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-clipboard-target');
+                const input = document.querySelector(targetId);
+                
+                input.select();
+                document.execCommand('copy');
+                
+                // Show tooltip
+                const originalTitle = this.getAttribute('title');
+                this.setAttribute('title', 'Copied!');
+                this.classList.add('btn-success');
+                this.classList.remove('btn-outline-secondary');
+                
+                setTimeout(() => {
+                    this.setAttribute('title', originalTitle || '');
+                    this.classList.remove('btn-success');
+                    this.classList.add('btn-outline-secondary');
+                }, 2000);
+            });
+        });
+    });
+</script>
+{% endblock %}

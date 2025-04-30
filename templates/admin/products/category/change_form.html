@@ -1,0 +1,228 @@
+{% extends "admin/custom_base.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{% block title %}{% if add %}Add Category{% else %}Edit Category: {{ original.name }}{% endif %} | VarnikaKart Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">{% if add %}Add Category{% else %}Edit Category: {{ original.name }}{% endif %}</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'admin:products_category_changelist' %}">Categories</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{% if add %}Add{% else %}Edit{% endif %} Category</li>
+            </ol>
+        </nav>
+    </div>
+    <div>
+        {% if not add %}
+        <a href="{% url 'admin:products_category_delete' original.pk %}" class="btn btn-danger delete-confirm">
+            <i class="fas fa-trash me-1"></i> Delete
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="{% if not add and original.image %}col-lg-8{% else %}col-12{% endif %}">
+        <div class="card mb-4 slide-in-left">
+            <div class="card-header">
+                <h5>{% if add %}Add New Category{% else %}Edit Category{% endif %}</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data" id="category_form" novalidate>
+                    {% csrf_token %}
+                    
+                    {% if errors %}
+                    <div class="alert alert-danger">
+                        <h4 class="alert-heading">Please correct the errors below:</h4>
+                        <ul class="mb-0">
+                            {% for field in adminform.form %}
+                                {% if field.errors %}
+                                    {% for error in field.errors %}
+                                        <li>{{ field.label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                            {% for error in adminform.form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="id_name" class="form-label">Name <span class="text-danger">*</span></label>
+                                {{ adminform.form.name.errors }}
+                                {{ adminform.form.name }}
+                                {% if adminform.form.name.help_text %}
+                                <div class="form-text">{{ adminform.form.name.help_text }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="id_slug" class="form-label">Slug <span class="text-danger">*</span></label>
+                                {{ adminform.form.slug.errors }}
+                                {{ adminform.form.slug }}
+                                {% if adminform.form.slug.help_text %}
+                                <div class="form-text">{{ adminform.form.slug.help_text }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-group">
+                            <label for="id_description" class="form-label">Description</label>
+                            {{ adminform.form.description.errors }}
+                            {{ adminform.form.description }}
+                            {% if adminform.form.description.help_text %}
+                            <div class="form-text">{{ adminform.form.description.help_text }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="id_image" class="form-label">Image</label>
+                                {{ adminform.form.image.errors }}
+                                {{ adminform.form.image }}
+                                {% if adminform.form.image.help_text %}
+                                <div class="form-text">{{ adminform.form.image.help_text }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="id_is_active" class="form-label">Status</label>
+                                <div class="form-check form-switch">
+                                    {{ adminform.form.is_active.errors }}
+                                    {{ adminform.form.is_active }}
+                                    <label class="form-check-label" for="id_is_active">Active</label>
+                                </div>
+                                {% if adminform.form.is_active.help_text %}
+                                <div class="form-text">{{ adminform.form.is_active.help_text }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if not add %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label class="form-label">Created At</label>
+                                <input type="text" class="form-control" value="{{ original.created_at|date:'F d, Y H:i' }}" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label class="form-label">Last Updated</label>
+                                <input type="text" class="form-control" value="{{ original.updated_at|date:'F d, Y H:i' }}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i> Save
+                        </button>
+                        <a href="{% url 'admin:products_category_changelist' %}" class="btn btn-secondary">
+                            <i class="fas fa-times me-1"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    {% if not add and original.image %}
+    <div class="col-lg-4">
+        <div class="card mb-4 slide-in-right">
+            <div class="card-header">
+                <h5>Category Image</h5>
+            </div>
+            <div class="card-body text-center">
+                <img src="{{ original.image.url }}" alt="{{ original.name }}" class="img-fluid rounded mb-3" style="max-height: 300px;">
+                <div class="text-muted">{{ original.image.name }}</div>
+            </div>
+        </div>
+        
+        <div class="card mb-4 slide-in-right">
+            <div class="card-header">
+                <h5>Category Products</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="flex-grow-1">
+                        <h6 class="mb-0">Total Products</h6>
+                    </div>
+                    <div>
+                        <span class="badge bg-primary">{{ original.products.count }}</span>
+                    </div>
+                </div>
+                
+                <a href="{% url 'admin:products_product_changelist' %}?category__id__exact={{ original.id }}" class="btn btn-sm btn-outline-primary w-100">
+                    <i class="fas fa-list me-1"></i> View All Products
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Auto-generate slug from name
+        const nameInput = document.getElementById('id_name');
+        const slugInput = document.getElementById('id_slug');
+        
+        if (nameInput && slugInput) {
+            nameInput.addEventListener('keyup', function() {
+                // Only auto-generate if slug is empty or hasn't been manually edited
+                if (!slugInput.dataset.manuallyEdited) {
+                    const slug = nameInput.value
+                        .toLowerCase()
+                        .replace(/[^\w\s-]/g, '')  // Remove special chars
+                        .replace(/\s+/g, '-')      // Replace spaces with hyphens
+                        .replace(/-+/g, '-');      // Replace multiple hyphens with single hyphen
+                    
+                    slugInput.value = slug;
+                }
+            });
+            
+            // Mark slug as manually edited if user changes it
+            slugInput.addEventListener('input', function() {
+                slugInput.dataset.manuallyEdited = 'true';
+            });
+        }
+        
+        // Delete confirmation
+        const deleteLink = document.querySelector('.delete-confirm');
+        if (deleteLink) {
+            deleteLink.addEventListener('click', function(e) {
+                if (!confirm('Are you sure you want to delete this category? This action cannot be undone.')) {
+                    e.preventDefault();
+                }
+            });
+        }
+        
+        // Make description field a rich text editor if available
+        if (typeof ClassicEditor !== 'undefined') {
+            ClassicEditor
+                .create(document.getElementById('id_description'))
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+    });
+</script>
+{% endblock %}
