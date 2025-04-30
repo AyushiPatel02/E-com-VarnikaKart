@@ -1,0 +1,620 @@
+{% extends 'base.html' %}
+{% load product_tags %}
+
+{% block title %}Trending Products - VarnikaKart{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Trending page specific styles */
+    .trending-header {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        color: white;
+        border-radius: 0.5rem;
+    }
+    
+    .trending-card {
+        transition: all 0.3s ease;
+        border: none;
+        overflow: hidden;
+    }
+    
+    .trending-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .trending-card .card-img-top {
+        height: 220px;
+        object-fit: cover;
+        transition: all 0.5s ease;
+    }
+    
+    .trending-card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+    
+    .trending-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 2rem;
+        font-weight: 600;
+        z-index: 2;
+    }
+    
+    .trending-search-tag {
+        display: inline-block;
+        background-color: #f8f9fa;
+        color: #495057;
+        padding: 0.5rem 1rem;
+        border-radius: 2rem;
+        margin: 0.25rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+    
+    .trending-search-tag:hover {
+        background-color: #6a11cb;
+        color: white;
+    }
+    
+    .trending-category-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0.5rem;
+        height: 150px;
+        margin-bottom: 1.5rem;
+    }
+    
+    .trending-category-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: all 0.5s ease;
+    }
+    
+    .trending-category-card:hover img {
+        transform: scale(1.1);
+    }
+    
+    .trending-category-card .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);
+        display: flex;
+        align-items: flex-end;
+        padding: 1rem;
+    }
+    
+    .trending-category-card .category-name {
+        color: white;
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .trending-category-card .product-count {
+        color: rgba(255,255,255,0.8);
+        font-size: 0.9rem;
+    }
+    
+    .section-title {
+        position: relative;
+        margin-bottom: 2rem;
+        font-weight: 700;
+        color: #333;
+    }
+    
+    .section-title::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -10px;
+        width: 50px;
+        height: 3px;
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    }
+    
+    .trending-stats {
+        background-color: #f8f9fa;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stat-item {
+        text-align: center;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #6a11cb;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .product-rating {
+        color: #ffc107;
+    }
+    
+    .wishlist-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: white;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        z-index: 2;
+        transition: all 0.3s ease;
+    }
+    
+    .wishlist-btn:hover {
+        background-color: #ff6b6b;
+        color: white;
+    }
+    
+    .product-price {
+        font-weight: 600;
+    }
+    
+    .discount-price {
+        color: #dc3545;
+    }
+    
+    .original-price {
+        text-decoration: line-through;
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+    
+    .add-to-cart-btn {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        border: none;
+        transition: all 0.3s ease;
+    }
+    
+    .add-to-cart-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    }
+    
+    /* Animation for trending items */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .animate-fadeInUp {
+        animation: fadeInUp 0.5s ease forwards;
+    }
+    
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Trending Header -->
+    <div class="trending-header text-center mb-5">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">Discover What's Trending</h1>
+            <p class="lead mb-4">Explore the most popular handcrafted items that are making waves in the artisan community</p>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <form class="d-flex">
+                        <input class="form-control form-control-lg me-2" type="search" placeholder="Search trending products..." aria-label="Search">
+                        <button class="btn btn-light btn-lg" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trending Stats -->
+    <div class="trending-stats mb-5">
+        <div class="row">
+            <div class="col-md-3 col-6 mb-3 mb-md-0">
+                <div class="stat-item">
+                    <div class="stat-number">1,200+</div>
+                    <div class="stat-label">Products Viewed Today</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3 mb-md-0">
+                <div class="stat-item">
+                    <div class="stat-number">85%</div>
+                    <div class="stat-label">Positive Reviews</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-item">
+                    <div class="stat-number">450+</div>
+                    <div class="stat-label">Items Sold This Week</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-item">
+                    <div class="stat-number">120+</div>
+                    <div class="stat-label">New Artisans Joined</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <!-- Trending Products -->
+            <h2 class="section-title">Trending Products</h2>
+            <div class="row">
+                {% for product in trending_products %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card trending-card h-100 animate-fadeInUp delay-{{ forloop.counter|divisibleby:4 }}">
+                        <div class="trending-badge">Trending</div>
+                        <a href="#" class="wishlist-btn" data-product-id="{{ product.id }}">
+                            <i class="far fa-heart"></i>
+                        </a>
+                        {% get_primary_image product as primary_image %}
+                        {% if primary_image %}
+                        <a href="{{ product.get_absolute_url }}">
+                            <img src="{{ primary_image }}" alt="{{ product.name }}" class="card-img-top">
+                        </a>
+                        {% else %}
+                        <div class="bg-light text-center py-5">
+                            <i class="fas fa-image fa-3x text-muted"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{{ product.get_absolute_url }}" class="text-decoration-none text-dark">{{ product.name }}</a>
+                            </h5>
+                            <p class="card-text text-muted">{{ product.category.name }}</p>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div class="product-price">
+                                    {% if product.discount_price %}
+                                    <span class="discount-price">${{ product.discount_price }}</span>
+                                    <span class="original-price ms-2">${{ product.price }}</span>
+                                    {% else %}
+                                    <span>${{ product.price }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="product-rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-sm w-100 add-to-cart-btn" data-product-id="{{ product.id }}">
+                                <i class="fas fa-shopping-cart me-1"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h3>No trending products found</h3>
+                    <p class="text-muted">Check back soon for the latest trending items</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Trending Collections -->
+            <h2 class="section-title mt-5">Trending Collections</h2>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card trending-card h-100 animate-fadeInUp delay-1">
+                        <img src="/static/img/collections/bohemian-collection.jpg" alt="Bohemian Collection" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title">Bohemian Collection</h5>
+                            <p class="card-text">Embrace the free-spirited aesthetic with our curated bohemian collection featuring handcrafted items with vibrant colors and patterns.</p>
+                            <a href="#" class="btn btn-outline-primary">Explore Collection</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card trending-card h-100 animate-fadeInUp delay-2">
+                        <img src="/static/img/collections/minimalist-collection.jpg" alt="Minimalist Collection" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title">Minimalist Collection</h5>
+                            <p class="card-text">Discover the beauty of simplicity with our minimalist collection featuring clean lines, neutral colors, and functional designs.</p>
+                            <a href="#" class="btn btn-outline-primary">Explore Collection</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Trending Searches -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Trending Searches</h5>
+                </div>
+                <div class="card-body">
+                    {% for search in trending_searches %}
+                    <a href="{% url 'products:product_list' %}?q={{ search }}" class="trending-search-tag">{{ search }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Trending Categories -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Trending Categories</h5>
+                </div>
+                <div class="card-body">
+                    {% for category in trending_categories %}
+                    <div class="trending-category-card">
+                        {% if category.image %}
+                        <img src="{{ category.image.url }}" alt="{{ category.name }}">
+                        {% else %}
+                        <img src="/static/img/categories/default-category.jpg" alt="{{ category.name }}">
+                        {% endif %}
+                        <div class="overlay">
+                            <div>
+                                <div class="category-name">{{ category.name }}</div>
+                                <div class="product-count">{{ category.products.count }} Products</div>
+                            </div>
+                        </div>
+                        <a href="{{ category.get_absolute_url }}" class="stretched-link"></a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Trending Artists -->
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Trending Artists</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="/static/img/artists/artist1.jpg" alt="Artist" class="rounded-circle me-3" width="50" height="50">
+                        <div>
+                            <h6 class="mb-0">Priya Sharma</h6>
+                            <p class="text-muted mb-0 small">Paintings | Mumbai</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="/static/img/artists/artist2.jpg" alt="Artist" class="rounded-circle me-3" width="50" height="50">
+                        <div>
+                            <h6 class="mb-0">Rajesh Kumar</h6>
+                            <p class="text-muted mb-0 small">Pottery | Jaipur</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="/static/img/artists/artist3.jpg" alt="Artist" class="rounded-circle me-3" width="50" height="50">
+                        <div>
+                            <h6 class="mb-0">Meera Patel</h6>
+                            <p class="text-muted mb-0 small">Jewelry | Ahmedabad</p>
+                        </div>
+                    </div>
+                    <a href="{% url 'products:featured_artists' %}" class="btn btn-outline-primary w-100">View All Artists</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trending This Week Section -->
+    <div class="mt-5">
+        <h2 class="section-title">Trending This Week</h2>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="row g-0">
+                        <div class="col-md-6">
+                            <img src="/static/img/trending/trending-feature.jpg" alt="Trending Feature" class="img-fluid rounded-start h-100" style="object-fit: cover;">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-body h-100 d-flex flex-column">
+                                <div class="mb-auto">
+                                    <span class="badge bg-danger mb-2">Hot Item</span>
+                                    <h3 class="card-title">Handcrafted Ceramic Vase Set</h3>
+                                    <p class="card-text">This exquisite set of handcrafted ceramic vases has become our most viewed item this week. Each piece is uniquely designed and glazed by master potter Rajesh Kumar.</p>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <div class="product-price">
+                                        <span class="discount-price">$89.99</span>
+                                        <span class="original-price ms-2">$129.99</span>
+                                    </div>
+                                    <a href="#" class="btn btn-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Weekly Highlights</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>Most Viewed</span>
+                                <span class="badge bg-primary rounded-pill">Ceramic Vases</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>Most Purchased</span>
+                                <span class="badge bg-primary rounded-pill">Handmade Jewelry</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>Highest Rated</span>
+                                <span class="badge bg-primary rounded-pill">Wall Art</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>Most Wishlisted</span>
+                                <span class="badge bg-primary rounded-pill">Personalized Gifts</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Newsletter Section -->
+    <div class="card mt-5 bg-light border-0">
+        <div class="card-body p-4 text-center">
+            <h3>Stay Updated with Trending Products</h3>
+            <p class="mb-4">Subscribe to our newsletter to receive weekly updates on trending products and exclusive offers</p>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <form class="d-flex">
+                        <input type="email" class="form-control me-2" placeholder="Your email address">
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add to cart functionality
+        const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.getAttribute('data-product-id');
+                addToCart(productId, 1);
+            });
+        });
+
+        // Wishlist functionality
+        const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+        wishlistButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const productId = this.getAttribute('data-product-id');
+                toggleWishlist(productId, this);
+            });
+        });
+
+        // Function to add product to cart
+        function addToCart(productId, quantity) {
+            fetch('/orders/cart/add/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    'product_id': productId,
+                    'quantity': quantity
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success message
+                    alert('Product added to cart!');
+                    // Update cart count in navbar
+                    const cartBadge = document.querySelector('.fa-shopping-cart + .badge');
+                    if (cartBadge) {
+                        cartBadge.textContent = data.cart_count;
+                    }
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        }
+
+        // Function to toggle wishlist
+        function toggleWishlist(productId, button) {
+            fetch('/users/wishlist/add/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    'product_id': productId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Toggle heart icon
+                    const icon = button.querySelector('i');
+                    if (data.added) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                        icon.style.color = '#dc3545';
+                    } else {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                        icon.style.color = '';
+                    }
+                } else {
+                    if (data.login_required) {
+                        window.location.href = '/accounts/login/?next=' + window.location.pathname;
+                    } else {
+                        alert(data.error);
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        }
+
+        // Function to get CSRF token from cookies
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    });
+</script>
+{% endblock %}

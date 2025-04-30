@@ -1,0 +1,268 @@
+{% extends 'base.html' %}
+
+{% block title %}Artist Stores - VarnikaKart{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">Artist Stores</h1>
+            <p class="lead">Explore dedicated stores from our talented artisans. Each store offers a curated collection of handcrafted items that showcase the unique style and expertise of the artist.</p>
+        </div>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <form class="d-flex">
+                <input class="form-control me-2" type="search" placeholder="Search artists or stores" aria-label="Search">
+                <button class="btn btn-outline-primary" type="submit">Search</button>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <select class="form-select">
+                <option selected>Filter by category</option>
+                <option value="1">Paintings</option>
+                <option value="2">Jewelry</option>
+                <option value="3">Home Decor</option>
+                <option value="4">Textiles</option>
+                <option value="5">Pottery</option>
+                <option value="6">Wood Carving</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Artist Stores -->
+    <div class="row">
+        <!-- Store 1 -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Priya's Art Gallery</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex mb-3">
+                        <img src="/static/img/artists/artist1.jpg" class="rounded-circle me-3" alt="Priya Sharma" width="60" height="60">
+                        <div>
+                            <h6 class="mb-1">Priya Sharma</h6>
+                            <p class="text-muted mb-0">Mumbai, India</p>
+                        </div>
+                    </div>
+                    <p class="card-text">Specializing in traditional Indian miniature paintings with a contemporary twist. Each piece celebrates India's rich cultural heritage while exploring modern themes.</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="badge bg-light text-dark">45 Products</span>
+                        <div>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star-half-alt text-warning"></i>
+                            <span class="ms-1">(4.5)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white">
+                    <a href="#" class="btn btn-outline-primary w-100">Visit Store</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Store 2 -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Rajesh's Pottery</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex mb-3">
+                        <img src="/static/img/artists/artist2.jpg" class="rounded-circle me-3" alt="Rajesh Kumar" width="60" height="60">
+                        <div>
+                            <h6 class="mb-1">Rajesh Kumar</h6>
+                            <p class="text-muted mb-0">Jaipur, India</p>
+                        </div>
+                    </div>
+                    <p class="card-text">Master potter creating stunning ceramic pieces that blend traditional Rajasthani techniques with contemporary design sensibilities.</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="badge bg-light text-dark">32 Products</span>
+                        <div>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <span class="ms-1">(5.0)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white">
+                    <a href="#" class="btn btn-outline-primary w-100">Visit Store</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Store 3 -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Meera's Jewelry</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex mb-3">
+                        <img src="/static/img/artists/artist3.jpg" class="rounded-circle me-3" alt="Meera Patel" width="60" height="60">
+                        <div>
+                            <h6 class="mb-1">Meera Patel</h6>
+                            <p class="text-muted mb-0">Ahmedabad, India</p>
+                        </div>
+                    </div>
+                    <p class="card-text">Exquisite handmade jewelry inspired by traditional Indian designs. Each piece tells a story and showcases impeccable attention to detail.</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="badge bg-light text-dark">58 Products</span>
+                        <div>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="far fa-star text-warning"></i>
+                            <span class="ms-1">(4.0)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white">
+                    <a href="#" class="btn btn-outline-primary w-100">Visit Store</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Store 4 -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Arjun's Textiles</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex mb-3">
+                        <img src="/static/img/artists/artist4.jpg" class="rounded-circle me-3" alt="Arjun Mehta" width="60" height="60">
+                        <div>
+                            <h6 class="mb-1">Arjun Mehta</h6>
+                            <p class="text-muted mb-0">Varanasi, India</p>
+                        </div>
+                    </div>
+                    <p class="card-text">Third-generation weaver creating stunning handwoven textiles using traditional looms and techniques passed down through generations.</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="badge bg-light text-dark">27 Products</span>
+                        <div>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star-half-alt text-warning"></i>
+                            <span class="ms-1">(4.7)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white">
+                    <a href="#" class="btn btn-outline-primary w-100">Visit Store</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Store 5 -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Ananya's Eco Decor</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex mb-3">
+                        <img src="/static/img/artists/artist5.jpg" class="rounded-circle me-3" alt="Ananya Desai" width="60" height="60">
+                        <div>
+                            <h6 class="mb-1">Ananya Desai</h6>
+                            <p class="text-muted mb-0">Pune, India</p>
+                        </div>
+                    </div>
+                    <p class="card-text">Eco-friendly home decor items that combine functionality with artistic expression. Inspired by nature and focused on sustainable materials.</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="badge bg-light text-dark">41 Products</span>
+                        <div>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="far fa-star text-warning"></i>
+                            <span class="ms-1">(4.2)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white">
+                    <a href="#" class="btn btn-outline-primary w-100">Visit Store</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Store 6 -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Vikram's Wood Art</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex mb-3">
+                        <img src="/static/img/artists/artist6.jpg" class="rounded-circle me-3" alt="Vikram Singh" width="60" height="60">
+                        <div>
+                            <h6 class="mb-1">Vikram Singh</h6>
+                            <p class="text-muted mb-0">Jodhpur, India</p>
+                        </div>
+                    </div>
+                    <p class="card-text">Master wood carver transforming raw wood into intricate works of art. Showcasing the rich tradition of Indian wood carving with contemporary forms.</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="badge bg-light text-dark">36 Products</span>
+                        <div>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star-half-alt text-warning"></i>
+                            <span class="ms-1">(4.6)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white">
+                    <a href="#" class="btn btn-outline-primary w-100">Visit Store</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Call to Action -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card bg-light">
+                <div class="card-body text-center p-5">
+                    <h3>Are you an artisan?</h3>
+                    <p class="lead mb-4">Join our community of talented artists and showcase your handcrafted creations to customers worldwide.</p>
+                    <a href="{% url 'products:become_artist' %}" class="btn btn-primary btn-lg">Become an Artist</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

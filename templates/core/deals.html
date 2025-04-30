@@ -2,42 +2,640 @@
 
 {% block title %}Deals & Special Offers - VarnikaKart{% endblock %}
 
-{% block content %}
-<div class="container py-5">
-    <h1 class="text-center mb-5">Deals & Special Offers</h1>
+{% block extra_css %}
+<style>
+    /* Deals Page Styles */
+    .deals-hero {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+        padding: 80px 0;
+        position: relative;
+        overflow: hidden;
+        border-radius: 0 0 30px 30px;
+        margin-bottom: 50px;
+        box-shadow: 0 10px 30px rgba(255, 107, 107, 0.2);
+    }
 
-    <div class="row">
-        {% for product in products %}
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="product-card h-100">
-                <div class="position-relative">
-                    {% if product.discount_price %}
-                    <span class="position-absolute top-0 start-0 m-2 badge bg-danger">
-                        {{ product.get_discount_percentage }}% OFF
-                    </span>
-                    {% endif %}
-                    {% if product.primary_image %}
-                    <img src="{{ product.primary_image.url }}" alt="{{ product.name }}" class="card-img-top">
-                    {% endif %}
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">{{ product.name }}</h5>
-                    <div class="price-block">
-                        <span class="text-muted text-decoration-line-through">₹{{ product.price }}</span>
-                        <span class="text-danger fw-bold">₹{{ product.discount_price }}</span>
+    .deals-hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://images.unsplash.com/photo-1607082349566-187342175e2f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+        background-size: cover;
+        background-position: center;
+        opacity: 0.1;
+    }
+
+    .deals-title {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        color: white;
+    }
+
+    .deals-subtitle {
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin: 0 auto 2rem;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .countdown-container {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 20px;
+        max-width: 500px;
+        margin: 0 auto;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .countdown-title {
+        font-size: 1.2rem;
+        color: white;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    .countdown-timer {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .countdown-item {
+        text-align: center;
+        width: 70px;
+    }
+
+    .countdown-number {
+        background: white;
+        color: #ff6b6b;
+        font-size: 1.8rem;
+        font-weight: 700;
+        height: 60px;
+        width: 60px;
+        line-height: 60px;
+        border-radius: 10px;
+        margin-bottom: 5px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .countdown-label {
+        font-size: 0.8rem;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .deal-card {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        position: relative;
+        margin-bottom: 30px;
+        border: none;
+    }
+
+    .deal-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .deal-card .card-img-top {
+        height: 220px;
+        object-fit: cover;
+        transition: all 0.5s ease;
+    }
+
+    .deal-card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+
+    .deal-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+        color: white;
+        font-weight: 700;
+        padding: 8px 15px;
+        border-radius: 50px;
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        z-index: 10;
+    }
+
+    .deal-timer {
+        position: absolute;
+        bottom: 15px;
+        left: 15px;
+        right: 15px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        z-index: 10;
+    }
+
+    .deal-timer i {
+        margin-right: 8px;
+        color: #ff6b6b;
+    }
+
+    .deal-card .card-body {
+        padding: 20px;
+    }
+
+    .deal-card .card-title {
+        font-weight: 700;
+        margin-bottom: 10px;
+        font-size: 1.2rem;
+    }
+
+    .deal-card .card-text {
+        color: #6c757d;
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+    }
+
+    .price-block {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .original-price {
+        text-decoration: line-through;
+        color: #6c757d;
+        margin-right: 10px;
+        font-size: 1rem;
+    }
+
+    .discount-price {
+        color: #ff6b6b;
+        font-weight: 700;
+        font-size: 1.5rem;
+    }
+
+    .savings-badge {
+        background: #e9f9f3;
+        color: #28a745;
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        border-radius: 50px;
+        margin-left: 10px;
+        font-weight: 600;
+    }
+
+    .deal-card .btn-primary {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+        border: none;
+        border-radius: 50px;
+        padding: 10px 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.2);
+    }
+
+    .deal-card .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
+    }
+
+    .deal-card .btn-outline-primary {
+        color: #ff6b6b;
+        border-color: #ff6b6b;
+        border-radius: 50px;
+        padding: 10px 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .deal-card .btn-outline-primary:hover {
+        background-color: #ff6b6b;
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(255, 107, 107, 0.2);
+    }
+
+    .deal-category {
+        display: inline-block;
+        background: #f8f9fa;
+        color: #6c757d;
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        border-radius: 50px;
+        margin-bottom: 10px;
+    }
+
+    .deal-rating {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .deal-rating .stars {
+        color: #ffc107;
+        margin-right: 5px;
+    }
+
+    .deal-rating .count {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .deal-actions {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .featured-deals {
+        margin-bottom: 50px;
+    }
+
+    .section-title {
+        position: relative;
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+    }
+
+    .filter-bar {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .filter-label {
+        font-weight: 600;
+        margin-right: 10px;
+        color: #495057;
+    }
+
+    .filter-select {
+        border-radius: 50px;
+        border: 1px solid #e0e0e0;
+        padding: 8px 15px;
+        background-color: white;
+        color: #495057;
+        font-weight: 500;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .filter-select:focus {
+        box-shadow: 0 0 0 0.25rem rgba(255, 107, 107, 0.25);
+        border-color: #ff6b6b;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 50px 0;
+    }
+
+    .empty-state i {
+        font-size: 5rem;
+        color: #e0e0e0;
+        margin-bottom: 20px;
+    }
+
+    .empty-state h4 {
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: #495057;
+    }
+
+    .empty-state p {
+        color: #6c757d;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .newsletter-deals {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 15px;
+        padding: 40px;
+        margin-top: 50px;
+        margin-bottom: 50px;
+        box-shadow: 0 15px 50px rgba(102, 126, 234, 0.2);
+    }
+
+    .newsletter-deals h3 {
+        color: white;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .newsletter-deals p {
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 20px;
+    }
+
+    .newsletter-form {
+        display: flex;
+        max-width: 500px;
+    }
+
+    .newsletter-input {
+        flex: 1;
+        border-radius: 50px 0 0 50px;
+        border: none;
+        padding: 15px 20px;
+        font-size: 1rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .newsletter-btn {
+        background: white;
+        color: #667eea;
+        border: none;
+        border-radius: 0 50px 50px 0;
+        padding: 0 25px;
+        font-weight: 700;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .newsletter-btn:hover {
+        transform: translateX(3px);
+    }
+
+    @media (max-width: 768px) {
+        .deals-title {
+            font-size: 2.5rem;
+        }
+
+        .countdown-item {
+            width: 60px;
+        }
+
+        .countdown-number {
+            font-size: 1.5rem;
+            height: 50px;
+            width: 50px;
+            line-height: 50px;
+        }
+
+        .newsletter-form {
+            flex-direction: column;
+        }
+
+        .newsletter-input {
+            border-radius: 50px;
+            margin-bottom: 10px;
+        }
+
+        .newsletter-btn {
+            border-radius: 50px;
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="deals-hero position-relative">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="deals-title">Exclusive Deals & Offers</h1>
+                <p class="deals-subtitle">Discover amazing discounts on our handcrafted products. Limited time offers that you don't want to miss!</p>
+
+                <!-- Countdown Timer -->
+                <div class="countdown-container">
+                    <h5 class="countdown-title">Flash Sale Ends In:</h5>
+                    <div class="countdown-timer" id="dealCountdown">
+                        <div class="countdown-item">
+                            <div class="countdown-number" id="days">02</div>
+                            <div class="countdown-label">Days</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-number" id="hours">18</div>
+                            <div class="countdown-label">Hours</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-number" id="minutes">45</div>
+                            <div class="countdown-label">Mins</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-number" id="seconds">30</div>
+                            <div class="countdown-label">Secs</div>
+                        </div>
                     </div>
-                </div>
-                <div class="card-footer">
-                    <a href="{{ product.get_absolute_url }}" class="btn btn-primary btn-sm w-100">View Details</a>
                 </div>
             </div>
         </div>
-        {% empty %}
-        <div class="col-12 text-center py-5">
-            <h4>No deals available at the moment</h4>
-            <p class="text-muted">Check back later for exciting offers!</p>
-        </div>
-        {% endfor %}
     </div>
+</section>
+
+<!-- Main Content -->
+<div class="container">
+    <!-- Filter Bar -->
+    <div class="filter-bar d-flex flex-wrap justify-content-between align-items-center">
+        <div class="d-flex align-items-center mb-3 mb-md-0">
+            <span class="filter-label">Sort by:</span>
+            <select class="form-select filter-select me-3">
+                <option value="discount">Highest Discount</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="newest">Newest First</option>
+            </select>
+        </div>
+        <div class="d-flex align-items-center">
+            <span class="filter-label">Category:</span>
+            <select class="form-select filter-select">
+                <option value="all">All Categories</option>
+                <option value="jewelry">Jewelry</option>
+                <option value="paintings">Paintings</option>
+                <option value="home-decor">Home Decor</option>
+                <option value="gifts">Personalized Gifts</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Featured Deals Section -->
+    <section class="featured-deals">
+        <h2 class="section-title">Featured Deals</h2>
+        <div class="row">
+            {% for product in products|slice:":2" %}
+            <div class="col-lg-6 mb-4">
+                <div class="card deal-card h-100">
+                    <div class="position-relative">
+                        {% if product.discount_price %}
+                        <div class="deal-badge">
+                            {{ product.get_discount_percentage }}% OFF
+                        </div>
+                        {% endif %}
+                        {% if product.primary_image %}
+                        <img src="{{ product.primary_image.url }}" alt="{{ product.name }}" class="card-img-top">
+                        {% else %}
+                        <div class="bg-light text-center py-5">
+                            <i class="fas fa-image fa-3x text-muted"></i>
+                        </div>
+                        {% endif %}
+                        <div class="deal-timer">
+                            <i class="fas fa-clock"></i> Limited Time Offer - Ends in 2 days
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <span class="deal-category">{{ product.category.name }}</span>
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">Handcrafted with premium materials by our skilled artisans.</p>
+
+                        <div class="deal-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="count">(24 reviews)</span>
+                        </div>
+
+                        <div class="price-block">
+                            <span class="original-price">₹{{ product.price }}</span>
+                            <span class="discount-price">₹{{ product.discount_price }}</span>
+                            <span class="savings-badge">Save ₹{{ product.price|floatformat:0|add:"-"|add:product.discount_price|floatformat:0 }}</span>
+                        </div>
+
+                        <div class="deal-actions">
+                            <a href="{{ product.get_absolute_url }}" class="btn btn-primary">
+                                <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                            </a>
+                            <a href="{{ product.get_absolute_url }}" class="btn btn-outline-primary">
+                                <i class="fas fa-eye me-2"></i>View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- All Deals Section -->
+    <section>
+        <h2 class="section-title">All Deals</h2>
+        <div class="row">
+            {% for product in products %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card deal-card h-100">
+                    <div class="position-relative">
+                        {% if product.discount_price %}
+                        <div class="deal-badge">
+                            {{ product.get_discount_percentage }}% OFF
+                        </div>
+                        {% endif %}
+                        {% if product.primary_image %}
+                        <img src="{{ product.primary_image.url }}" alt="{{ product.name }}" class="card-img-top">
+                        {% else %}
+                        <div class="bg-light text-center py-5">
+                            <i class="fas fa-image fa-3x text-muted"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <div class="price-block">
+                            <span class="original-price">₹{{ product.price }}</span>
+                            <span class="discount-price">₹{{ product.discount_price }}</span>
+                        </div>
+                        <div class="deal-actions">
+                            <a href="{{ product.get_absolute_url }}" class="btn btn-primary w-100">
+                                <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <i class="fas fa-tag"></i>
+                    <h4>No deals available at the moment</h4>
+                    <p>We're working on bringing you exciting new offers. Check back soon for amazing deals!</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter-deals">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h3>Get Exclusive Deals</h3>
+                <p>Subscribe to our newsletter and be the first to know about our special offers and promotions.</p>
+            </div>
+            <div class="col-lg-6">
+                <form class="newsletter-form">
+                    <input type="email" class="form-control newsletter-input" placeholder="Your email address">
+                    <button type="submit" class="newsletter-btn">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </section>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Countdown Timer
+        function updateCountdown() {
+            // Set the date we're counting down to (48 hours from now)
+            const countDownDate = new Date();
+            countDownDate.setHours(countDownDate.getHours() + 48);
+
+            // Update the countdown every 1 second
+            const x = setInterval(function() {
+                // Get today's date and time
+                const now = new Date().getTime();
+
+                // Find the distance between now and the countdown date
+                const distance = countDownDate - now;
+
+                // Time calculations for days, hours, minutes and seconds
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                // Display the result
+                document.getElementById("days").innerHTML = days.toString().padStart(2, '0');
+                document.getElementById("hours").innerHTML = hours.toString().padStart(2, '0');
+                document.getElementById("minutes").innerHTML = minutes.toString().padStart(2, '0');
+                document.getElementById("seconds").innerHTML = seconds.toString().padStart(2, '0');
+
+                // If the countdown is finished, clear the interval
+                if (distance < 0) {
+                    clearInterval(x);
+                    document.getElementById("dealCountdown").innerHTML = "EXPIRED";
+                }
+            }, 1000);
+        }
+
+        updateCountdown();
+    });
+</script>
 {% endblock %}

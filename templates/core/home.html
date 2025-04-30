@@ -57,31 +57,90 @@
     /* Hero Section Styles */
     .hero-section {
         position: relative;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
         overflow: hidden;
-        min-height: 600px;
+        min-height: 650px;
+        padding: 80px 0;
+    }
+
+    .hero-bg-shapes .shape {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(50px);
+        opacity: 0.5;
+        z-index: 0;
+    }
+
+    .hero-bg-shapes .shape-1 {
+        width: 300px;
+        height: 300px;
+        background: rgba(var(--primary-color-rgb), 0.2);
+        top: -100px;
+        left: -100px;
+        animation: float 8s ease-in-out infinite;
+    }
+
+    .hero-bg-shapes .shape-2 {
+        width: 200px;
+        height: 200px;
+        background: rgba(var(--secondary-color-rgb), 0.15);
+        bottom: -50px;
+        right: 10%;
+        animation: float 6s ease-in-out infinite;
+        animation-delay: 1s;
+    }
+
+    .hero-bg-shapes .shape-3 {
+        width: 150px;
+        height: 150px;
+        background: rgba(255, 107, 107, 0.1);
+        top: 30%;
+        right: 20%;
+        animation: float 7s ease-in-out infinite;
+        animation-delay: 2s;
     }
 
     .hero-content {
         position: relative;
         z-index: 2;
-        padding: 4rem 0;
     }
 
     .hero-title {
         font-size: 3.5rem;
         font-weight: 800;
         margin-bottom: 1.5rem;
-        background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: var(--text-color);
         line-height: 1.2;
     }
 
+    .hero-title .highlight {
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        position: relative;
+        display: inline-block;
+    }
+
+    .hero-title .highlight::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 6px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        bottom: 5px;
+        left: 0;
+        z-index: -1;
+        opacity: 0.3;
+        border-radius: 10px;
+    }
+
     .hero-subtitle {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         margin-bottom: 2rem;
-        color: #4a4a4a;
+        color: #6c757d;
+        max-width: 90%;
+        line-height: 1.6;
     }
 
     .hero-btn {
@@ -98,11 +157,34 @@
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     }
 
+    .stats-container {
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        padding-top: 1.5rem;
+    }
+
+    .stat-item {
+        position: relative;
+        padding-left: 10px;
+    }
+
+    .stat-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 5px;
+        height: 70%;
+        width: 3px;
+        background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+        border-radius: 10px;
+    }
+
     /* Hero Cards Container */
     .hero-cards-container {
         position: relative;
         height: 500px;
         perspective: 1000px;
+        width: 100%;
+        max-width: 500px;
     }
 
     /* Hero Cards */
@@ -114,11 +196,14 @@
         overflow: hidden;
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
         transition: all 0.5s ease;
+        transform-style: preserve-3d;
+        backface-visibility: hidden;
     }
 
     .hero-card:hover {
-        transform: translateY(-10px) scale(1.02);
+        transform: translateY(-10px) scale(1.02) rotate(2deg);
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        z-index: 10;
     }
 
     .hero-card .card-img {
@@ -137,27 +222,70 @@
         bottom: 0;
         left: 0;
         right: 0;
-        padding: 20px;
+        padding: 25px;
         background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
         color: white;
+        transform: translateY(10px);
+        opacity: 0.9;
+        transition: all 0.3s ease;
+    }
+
+    .hero-card:hover .card-overlay {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    .hero-card .card-overlay h4 {
+        font-weight: 700;
+        margin-bottom: 5px;
+        font-size: 1.4rem;
+    }
+
+    .hero-card .card-overlay p {
+        font-size: 0.95rem;
+        opacity: 0.9;
+    }
+
+    .card-shine {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.1) 50%,
+            rgba(255, 255, 255, 0) 100%
+        );
+        z-index: 5;
+        transform: translateY(100%);
+        transition: transform 0.5s ease;
+    }
+
+    .hero-card:hover .card-shine {
+        transform: translateY(-100%);
     }
 
     .card-1 {
         top: 0;
         left: 0;
         z-index: 3;
+        transform: rotate(-5deg);
     }
 
     .card-2 {
         top: 50px;
         left: 100px;
         z-index: 2;
+        transform: rotate(3deg);
     }
 
     .card-3 {
         top: 100px;
         left: 200px;
         z-index: 1;
+        transform: rotate(-2deg);
     }
 
     .float-animation-delay {
@@ -200,10 +328,13 @@
         overflow: hidden;
         transition: all 0.3s ease;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border: none;
+        position: relative;
+        background: white;
     }
 
     .product-card:hover {
-        transform: translateY(-10px) rotate(1deg);
+        transform: translateY(-10px);
         box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     }
 
@@ -222,14 +353,45 @@
     }
 
     .product-card .card-title {
-        font-weight: 600;
+        font-weight: 700;
         margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .product-card .card-footer {
         background-color: transparent;
         border-top: 1px solid rgba(0, 0, 0, 0.05);
         padding: 1rem 1.5rem;
+    }
+
+    .product-card .btn {
+        border-radius: 50px;
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .product-card .btn-primary {
+        box-shadow: 0 4px 10px rgba(var(--primary-color-rgb), 0.2);
+    }
+
+    .product-card .btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .product-card .btn-primary:hover {
+        box-shadow: 0 6px 15px rgba(var(--primary-color-rgb), 0.3);
+    }
+
+    .product-card .position-absolute {
+        transition: all 0.3s ease;
+    }
+
+    .product-card .position-absolute:hover {
+        transform: scale(1.1);
     }
 
     /* Newsletter Section */
@@ -404,14 +566,26 @@
     <i class="fas fa-shopping-cart"></i>
 </a>
 <!-- Hero Section -->
-<section class="hero-section">
-    <div class="container">
+<section class="hero-section position-relative overflow-hidden">
+    <div class="hero-bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+    <div class="container position-relative">
         <div class="row align-items-center">
             <div class="col-lg-6">
                 <div class="hero-content">
-                    <h1 class="hero-title">Handcrafted Artistry, Delivered to You</h1>
-                    <p class="hero-subtitle">Discover unique handmade crafts, paintings, jewelry, and customizable gifts that tell a story and bring joy to your space.</p>
-                    <div class="d-flex gap-3">
+                    <div class="badge bg-primary bg-opacity-10 text-primary mb-3 animate__animated animate__fadeInUp">
+                        <i class="fas fa-star me-1"></i> Premium Handcrafted Products
+                    </div>
+                    <h1 class="hero-title animate__animated animate__fadeInUp animate__delay-1s">
+                        Handcrafted Artistry, <span class="highlight">Delivered to You</span>
+                    </h1>
+                    <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-2s">
+                        Discover unique handmade crafts, paintings, jewelry, and customizable gifts that tell a story and bring joy to your space.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3 mt-4 animate__animated animate__fadeInUp animate__delay-3s">
                         <a href="{% url 'products:product_list' %}" class="btn btn-primary btn-lg hero-btn">
                             <i class="fas fa-shopping-bag me-2"></i>Shop Collection
                         </a>
@@ -421,24 +595,30 @@
                     </div>
 
                     <!-- Stats -->
-                    <div class="row mt-5">
+                    <div class="row mt-5 stats-container animate__animated animate__fadeInUp animate__delay-4s">
                         <div class="col-4">
-                            <h3 class="fw-bold mb-0">500+</h3>
-                            <p class="text-muted">Unique Products</p>
+                            <div class="stat-item">
+                                <h3 class="fw-bold mb-0 counter">500</h3>
+                                <p class="text-muted">Unique Products</p>
+                            </div>
                         </div>
                         <div class="col-4">
-                            <h3 class="fw-bold mb-0">50+</h3>
-                            <p class="text-muted">Artisans</p>
+                            <div class="stat-item">
+                                <h3 class="fw-bold mb-0 counter">50</h3>
+                                <p class="text-muted">Artisans</p>
+                            </div>
                         </div>
                         <div class="col-4">
-                            <h3 class="fw-bold mb-0">10k+</h3>
-                            <p class="text-muted">Happy Customers</p>
+                            <div class="stat-item">
+                                <h3 class="fw-bold mb-0 counter">10000</h3>
+                                <p class="text-muted">Happy Customers</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="hero-cards-container">
+            <div class="col-lg-6 d-flex justify-content-center">
+                <div class="hero-cards-container animate__animated animate__fadeIn animate__delay-2s">
                     <!-- Modern Card Design -->
                     <div class="card hero-card card-1 float-animation">
                         <div class="card-body p-0">
@@ -448,6 +628,7 @@
                                 <p class="mb-0">Unique designs</p>
                             </div>
                         </div>
+                        <div class="card-shine"></div>
                     </div>
 
                     <div class="card hero-card card-2 float-animation-delay">
@@ -458,6 +639,7 @@
                                 <p class="mb-0">Express yourself</p>
                             </div>
                         </div>
+                        <div class="card-shine"></div>
                     </div>
 
                     <div class="card hero-card card-3 float-animation">
@@ -468,6 +650,7 @@
                                 <p class="mb-0">Made with love</p>
                             </div>
                         </div>
+                        <div class="card-shine"></div>
                     </div>
                 </div>
             </div>
@@ -943,7 +1126,6 @@
 
 {% block extra_js %}
 <script>
-    // Add any custom JavaScript here
     document.addEventListener('DOMContentLoaded', function() {
         // Handle scroll progress bar
         const scrollProgress = document.getElementById('scrollProgress');
@@ -956,55 +1138,133 @@
             scrollProgress.style.width = scrollPercentage + '%';
         });
 
-        // Add hover effects to hero cards
+        // Add hover effects to hero cards with 3D tilt effect
         const heroCards = document.querySelectorAll('.hero-card');
 
         heroCards.forEach(card => {
+            // Mouse enter effect - dim other cards
             card.addEventListener('mouseenter', function() {
                 heroCards.forEach(c => {
                     if (c !== card) {
                         c.style.opacity = '0.7';
+                        c.style.transform = c.style.transform.replace('rotate', 'rotate(0deg) scale(0.95)');
                     }
                 });
             });
 
+            // Mouse leave effect - restore all cards
             card.addEventListener('mouseleave', function() {
                 heroCards.forEach(c => {
                     c.style.opacity = '1';
+                    // Restore original transforms
+                    if (c.classList.contains('card-1')) {
+                        c.style.transform = 'rotate(-5deg)';
+                    } else if (c.classList.contains('card-2')) {
+                        c.style.transform = 'rotate(3deg)';
+                    } else if (c.classList.contains('card-3')) {
+                        c.style.transform = 'rotate(-2deg)';
+                    }
                 });
+            });
+
+            // 3D tilt effect on mousemove
+            card.addEventListener('mousemove', function(e) {
+                const cardRect = card.getBoundingClientRect();
+                const cardCenterX = cardRect.left + cardRect.width / 2;
+                const cardCenterY = cardRect.top + cardRect.height / 2;
+                const mouseX = e.clientX - cardCenterX;
+                const mouseY = e.clientY - cardCenterY;
+
+                // Calculate rotation based on mouse position
+                const rotateY = (mouseX / (cardRect.width / 2)) * 5; // Max 5 degrees
+                const rotateX = -(mouseY / (cardRect.height / 2)) * 5; // Max 5 degrees
+
+                // Apply the transform
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+            });
+
+            // Reset transform on mouse leave
+            card.addEventListener('mouseleave', function() {
+                if (card.classList.contains('card-1')) {
+                    card.style.transform = 'rotate(-5deg)';
+                } else if (card.classList.contains('card-2')) {
+                    card.style.transform = 'rotate(3deg)';
+                } else if (card.classList.contains('card-3')) {
+                    card.style.transform = 'rotate(-2deg)';
+                }
             });
         });
 
-        // Add animation to stats numbers
-        const statsNumbers = document.querySelectorAll('.hero-content .fw-bold');
+        // Counter animation for stats
+        const counters = document.querySelectorAll('.counter');
 
-        function animateValue(obj, start, end, duration) {
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                obj.innerHTML = Math.floor(progress * (end - start) + start);
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
+        function animateCounter(counter) {
+            const target = parseInt(counter.innerText);
+            const duration = 2000; // 2 seconds
+            const step = target / 100; // Divide into 100 steps
+            let current = 0;
+            const increment = target / (duration / 20); // Update every 20ms
+
+            const timer = setInterval(() => {
+                current += increment;
+                counter.innerText = Math.floor(current);
+
+                if (current >= target) {
+                    counter.innerText = target;
+                    clearInterval(timer);
+
+                    // Add a small bounce effect when counter finishes
+                    counter.classList.add('animate__animated', 'animate__bounceIn');
                 }
-            };
-            window.requestAnimationFrame(step);
+            }, 20);
         }
 
-        // Animate stats when they come into view
-        const observer = new IntersectionObserver((entries) => {
+        // Intersection Observer for counters
+        const counterObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    const target = entry.target;
-                    const finalValue = parseInt(target.textContent.replace(/\D/g, ''));
-                    animateValue(target, 0, finalValue, 2000);
-                    observer.unobserve(target);
+                    animateCounter(entry.target);
+                    counterObserver.unobserve(entry.target);
                 }
             });
         }, { threshold: 0.5 });
 
-        statsNumbers.forEach(stat => {
-            observer.observe(stat);
+        counters.forEach(counter => {
+            counterObserver.observe(counter);
+        });
+
+        // Animate elements when they come into view
+        const animatedElements = document.querySelectorAll('.animate__animated');
+
+        const elementObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Add visible class to trigger animation
+                    entry.target.style.visibility = 'visible';
+                    elementObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        animatedElements.forEach(element => {
+            // Hide element initially
+            element.style.visibility = 'hidden';
+            elementObserver.observe(element);
+        });
+
+        // Add to cart button effect
+        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                button.innerHTML = '<i class="fas fa-check"></i> Added';
+                button.classList.add('animate__animated', 'animate__pulse');
+
+                setTimeout(() => {
+                    button.innerHTML = '<i class="fas fa-shopping-cart me-1"></i> Add to Cart';
+                    button.classList.remove('animate__animated', 'animate__pulse');
+                }, 2000);
+            });
         });
     });
 </script>
