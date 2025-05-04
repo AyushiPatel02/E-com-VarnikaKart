@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load product_tags %}
+{% load static %}
 
 {% block title %}
     {{ page_title }} - VarnikaKart
@@ -1406,22 +1407,34 @@
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         border-radius: 6px;
         overflow: hidden;
+        display: flex;
+        align-items: center;
     }
 
-    .grid-size-btn {
+    .grid-size-btn, .view-btn {
         padding: 6px 10px;
         border: none;
         background-color: white;
         transition: all 0.3s ease;
     }
 
-    .grid-size-btn.active {
+    .grid-size-btn.active, .view-btn.active {
         background-color: var(--bs-primary);
         color: white;
     }
 
-    .grid-size-btn:hover:not(.active) {
+    .grid-size-btn:hover:not(.active), .view-btn:hover:not(.active) {
         background-color: #f8f9fa;
+    }
+
+    /* Divider for button group */
+    .btn-group-divider {
+        width: 1px;
+        height: 24px;
+        background-color: #dee2e6;
+        margin: 0 8px;
+        display: inline-block;
+        vertical-align: middle;
     }
 
     /* Save View Button */
@@ -1490,86 +1503,114 @@
 
     /* List View Styles */
     .products-list-view .product-item {
-        width: 100%;
-        max-width: 100%;
-        flex: 0 0 100%;
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
     }
 
     .products-list-view .social-sharing {
-        display: flex;
+        display: flex !important;
+        margin-top: 15px;
     }
 
     .products-list-view .product-card {
-        display: flex;
-        flex-direction: row;
-        align-items: stretch;
-        height: auto;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: stretch !important;
+        height: auto !important;
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .products-list-view .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
 
     .products-list-view .product-img-wrapper {
-        width: 250px;
-        min-width: 250px;
-        height: 250px;
+        width: 250px !important;
+        min-width: 250px !important;
+        height: 250px !important;
+        border-radius: 0 !important;
     }
 
     .products-list-view .product-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        padding: 20px 30px;
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 20px 30px !important;
+        text-align: left !important;
     }
 
     .products-list-view .product-title {
-        font-size: 1.25rem;
-        margin-bottom: 15px;
-        -webkit-line-clamp: 1;
+        font-size: 1.25rem !important;
+        margin-bottom: 15px !important;
+        -webkit-line-clamp: 1 !important;
+        text-align: left !important;
     }
 
     .products-list-view .product-description {
-        display: block;
-        margin-bottom: 20px;
-        color: #6c757d;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+        display: -webkit-box !important;
+        margin-bottom: 20px !important;
+        color: #6c757d !important;
+        -webkit-line-clamp: 3 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
     }
 
     .products-list-view .product-actions {
-        margin-top: auto;
+        margin-top: auto !important;
+        display: flex !important;
+        gap: 10px !important;
     }
 
     .products-list-view .product-overlay {
-        top: 50%;
-        bottom: auto;
-        transform: translateY(-50%);
-        right: 20px;
-        left: auto;
-        flex-direction: column;
-        background: transparent;
+        top: 50% !important;
+        bottom: auto !important;
+        transform: translateY(-50%) !important;
+        right: 20px !important;
+        left: auto !important;
+        flex-direction: column !important;
+        background: transparent !important;
     }
 
     .products-list-view .product-card:hover .product-overlay {
-        opacity: 1;
+        opacity: 1 !important;
     }
 
     .products-list-view .product-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        margin-bottom: 15px;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 15px !important;
+        margin-bottom: 15px !important;
     }
 
     .products-list-view .product-meta-item {
-        display: flex;
-        align-items: center;
-        font-size: 0.85rem;
-        color: #6c757d;
+        display: flex !important;
+        align-items: center !important;
+        font-size: 0.85rem !important;
+        color: #6c757d !important;
     }
 
     .products-list-view .product-meta-item i {
-        margin-right: 5px;
-        color: var(--bs-primary);
+        margin-right: 5px !important;
+        color: var(--bs-primary) !important;
+    }
+
+    /* Hide certain elements in list view */
+    .products-list-view .image-gallery-thumbs {
+        display: none !important;
+    }
+
+    /* Show description in list view */
+    .product-description {
+        display: none;
+    }
+
+    .products-list-view .product-description {
+        display: -webkit-box !important;
     }
 
     /* Floating Filter Button */
@@ -1978,6 +2019,71 @@
         height: 40px;
     }
 </style>
+    <script>
+        // Set initial view on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check saved preference
+            const savedViewType = localStorage.getItem('productViewTypePreference');
+            if (savedViewType === 'list') {
+                toggleListView();
+            } else {
+                toggleGridView();
+            }
+        });
+
+        // Direct toggle functions for inline onclick handlers
+        function toggleGridView() {
+            const productsContainer = document.getElementById('products-container');
+            const gridViewBtn = document.getElementById('grid-view-btn');
+            const listViewBtn = document.getElementById('list-view-btn');
+
+            // Update buttons
+            gridViewBtn.classList.add('active');
+            listViewBtn.classList.remove('active');
+
+            // Update view
+            productsContainer.classList.remove('products-list-view');
+
+            // Show grid size buttons
+            document.querySelectorAll('.grid-size-btn').forEach(btn => {
+                btn.style.display = 'inline-block';
+            });
+
+            // Save preference
+            localStorage.setItem('productViewTypePreference', 'grid');
+
+            // Show notification
+            if (typeof showToast === 'function') {
+                showToast('Switched to grid view', 'info');
+            }
+        }
+
+        function toggleListView() {
+            const productsContainer = document.getElementById('products-container');
+            const gridViewBtn = document.getElementById('grid-view-btn');
+            const listViewBtn = document.getElementById('list-view-btn');
+
+            // Update buttons
+            gridViewBtn.classList.remove('active');
+            listViewBtn.classList.add('active');
+
+            // Update view
+            productsContainer.classList.add('products-list-view');
+
+            // Hide grid size buttons
+            document.querySelectorAll('.grid-size-btn').forEach(btn => {
+                btn.style.display = 'none';
+            });
+
+            // Save preference
+            localStorage.setItem('productViewTypePreference', 'list');
+
+            // Show notification
+            if (typeof showToast === 'function') {
+                showToast('Switched to list view', 'info');
+            }
+        }
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -2677,10 +2783,22 @@
 
 
 
-                            <!-- Grid size selector -->
+                            <!-- Grid/List view selector -->
                             <div class="ms-3 d-none d-md-block">
                                 <div class="grid-size-selector">
-                                    <div class="btn-group" role="group" aria-label="Grid size options">
+                                    <div class="btn-group" role="group" aria-label="View options">
+                                        <!-- Grid/List toggle buttons -->
+                                        <button type="button" class="btn btn-sm btn-outline-secondary view-btn" id="grid-view-btn" data-view="grid" title="Grid View" onclick="toggleGridView()">
+                                            <i class="fas fa-th"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary view-btn" id="list-view-btn" data-view="list" title="List View" onclick="toggleListView()">
+                                            <i class="fas fa-list"></i>
+                                        </button>
+
+                                        <!-- Divider -->
+                                        <div class="btn-group-divider"></div>
+
+                                        <!-- Grid size buttons -->
                                         <button type="button" class="btn btn-sm btn-outline-secondary grid-size-btn active" data-grid-size="4" title="4 Products Per Row">
                                             <i class="fas fa-grip-horizontal"></i>
                                         </button>
@@ -3324,6 +3442,10 @@
                     <div class="mb-3">
                         <label class="form-label">Current Settings</label>
                         <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                View Type
+                                <span class="badge bg-primary rounded-pill" id="currentViewType">Grid</span>
+                            </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 Grid Size
                                 <span class="badge bg-primary rounded-pill" id="currentGridSize">4</span>
@@ -4154,83 +4276,30 @@
         // Products container and grid size settings
         const productsContainer = document.getElementById('products-container');
         const gridSizeBtns = document.querySelectorAll('.grid-size-btn');
+        const viewBtns = document.querySelectorAll('.view-btn');
         const saveViewBtn = document.querySelector('.save-view-btn');
         const floatingCompareBtn = document.getElementById('floating-compare-btn');
 
-        // Load saved preferences from localStorage
-        function loadSavedPreferences() {
-            // Set default to grid view
-            productsContainer.classList.remove('products-list-view');
+        console.log('Products container:', productsContainer);
+        console.log('Grid size buttons:', gridSizeBtns.length);
+        console.log('View buttons:', viewBtns.length);
 
-            // Grid size preference
-            const savedGridSize = localStorage.getItem('productGridSizePreference');
-            if (savedGridSize) {
-                productsContainer.className = productsContainer.className
-                    .replace(/grid-size-\d+/g, '')
-                    .trim();
-                productsContainer.classList.add(`grid-size-${savedGridSize}`);
+        // Load saved preferences is now handled by view-toggle.js
 
-                gridSizeBtns.forEach(btn => {
-                    btn.classList.remove('active');
-                    if (btn.getAttribute('data-grid-size') === savedGridSize) {
-                        btn.classList.add('active');
-                    }
-                });
-            } else {
-                // Default to grid size 4 if no preference is saved
-                productsContainer.classList.add('grid-size-4');
-            }
+        // View Type Selector (Grid/List) is now handled by view-toggle.js
 
-            // Load saved views
-            const savedViews = JSON.parse(localStorage.getItem('savedProductViews') || '[]');
-            if (savedViews.length > 0) {
-                // Could add a dropdown to show saved views
-                console.log('Saved views:', savedViews);
-            }
-        }
-
-        // Call on page load
-        loadSavedPreferences();
-
-        // Grid Size Selector
-        gridSizeBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const gridSize = this.getAttribute('data-grid-size');
-
-                // Remove active class from all grid size buttons
-                gridSizeBtns.forEach(b => b.classList.remove('active'));
-
-                // Add active class to clicked button
-                this.classList.add('active');
-
-                // Update grid size class on products container
-                productsContainer.className = productsContainer.className
-                    .replace(/grid-size-\d+/g, '')
-                    .trim();
-                productsContainer.classList.add(`grid-size-${gridSize}`);
-
-                // Add animation
-                productsContainer.classList.add('sorting');
-                setTimeout(() => {
-                    productsContainer.classList.remove('sorting');
-                }, 500);
-
-                // Save preference to localStorage
-                localStorage.setItem('productGridSizePreference', gridSize);
-
-                // Show toast notification
-                showToast(`Changed to ${gridSize} products per row`, 'info');
-            });
-        });
+        // Grid Size Selector is now handled by view-toggle.js
 
         // Save View Button
         if (saveViewBtn) {
             saveViewBtn.addEventListener('click', function() {
                 // Get current view settings
+                const viewType = productsContainer.classList.contains('products-list-view') ? 'List' : 'Grid';
                 const gridSize = document.querySelector('.grid-size-btn.active')?.getAttribute('data-grid-size') || '4';
                 const sortOrder = document.querySelector('#sortDropdown').textContent.trim();
 
                 // Update modal with current settings
+                document.getElementById('currentViewType').textContent = viewType;
                 document.getElementById('currentGridSize').textContent = gridSize;
                 document.getElementById('currentSortOrder').textContent = sortOrder;
 
@@ -4250,7 +4319,7 @@
                 // Get current settings
                 const viewSettings = {
                     name: viewName,
-                    viewType: 'grid', // Always grid view now
+                    viewType: productsContainer.classList.contains('products-list-view') ? 'list' : 'grid',
                     gridSize: document.querySelector('.grid-size-btn.active')?.getAttribute('data-grid-size') || '4',
                     sortOrder: document.querySelector('#sortDropdown').textContent.trim(),
                     isDefault: document.getElementById('makeDefaultView').checked,
