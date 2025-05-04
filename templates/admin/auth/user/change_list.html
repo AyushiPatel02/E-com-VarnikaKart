@@ -37,7 +37,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Staff Users -->
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card stat-card success h-100">
@@ -58,7 +58,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Superusers -->
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card stat-card warning h-100">
@@ -79,7 +79,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Active Users -->
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card stat-card info h-100">
@@ -194,7 +194,7 @@
                 {% csrf_token %}
                 <input type="hidden" name="model" value="auth.user">
                 <input type="hidden" name="action" value="">
-                
+
                 <table class="table table-hover datatable">
                     <thead>
                         <tr>
@@ -323,7 +323,7 @@
                                 </a>
                             </li>
                         {% endif %}
-                        
+
                         {% for i in paginator.page_range %}
                             {% if page_obj.number == i %}
                                 <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
@@ -331,7 +331,7 @@
                                 <li class="page-item"><a class="page-link" href="?page={{ i }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ i }}</a></li>
                             {% endif %}
                         {% endfor %}
-                        
+
                         {% if page_obj.has_next %}
                             <li class="page-item">
                                 <a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Next">
@@ -392,7 +392,7 @@
             toggle.addEventListener('change', function() {
                 const userId = this.dataset.userId;
                 const isStaff = this.checked;
-                
+
                 fetch('#', {
                     method: 'POST',
                     headers: {
@@ -420,14 +420,14 @@
                 });
             });
         });
-        
+
         // Superuser toggles
         const superuserToggles = document.querySelectorAll('.superuser-toggle');
         superuserToggles.forEach(toggle => {
             toggle.addEventListener('change', function() {
                 const userId = this.dataset.userId;
                 const isSuperuser = this.checked;
-                
+
                 fetch('#', {
                     method: 'POST',
                     headers: {
@@ -455,14 +455,14 @@
                 });
             });
         });
-        
+
         // Active toggles
         const activeToggles = document.querySelectorAll('.active-toggle');
         activeToggles.forEach(toggle => {
             toggle.addEventListener('change', function() {
                 const userId = this.dataset.userId;
                 const isActive = this.checked;
-                
+
                 fetch('#', {
                     method: 'POST',
                     headers: {
@@ -490,35 +490,35 @@
                 });
             });
         });
-        
+
         // Bulk actions
         const bulkActionApply = document.getElementById('bulk-action-apply');
         const bulkActionSelect = document.getElementById('bulk-action-select');
         const bulkActionForm = document.getElementById('bulk-action-form');
-        
+
         bulkActionApply.addEventListener('click', function() {
             const action = bulkActionSelect.value;
             if (!action) {
                 showNotification('Please select an action.', 'warning');
                 return;
             }
-            
+
             const selectedCheckboxes = document.querySelectorAll('.bulk-select-checkbox:checked');
             if (selectedCheckboxes.length === 0) {
                 showNotification('Please select at least one user.', 'warning');
                 return;
             }
-            
+
             if (action === 'delete') {
                 $('#bulkDeleteModal').modal('show');
                 return;
             }
-            
+
             // Set the action and submit the form
             document.querySelector('input[name="action"]').value = action;
             bulkActionForm.submit();
         });
-        
+
         // Confirm bulk delete
         const confirmBulkDelete = document.getElementById('confirm-bulk-delete');
         confirmBulkDelete.addEventListener('click', function() {
@@ -526,38 +526,38 @@
             bulkActionForm.submit();
             $('#bulkDeleteModal').modal('hide');
         });
-        
+
         // Select all checkboxes
         const selectAll = document.getElementById('selectAll');
         const checkboxes = document.querySelectorAll('.bulk-select-checkbox');
-        
+
         selectAll.addEventListener('change', function() {
             checkboxes.forEach(checkbox => {
                 checkbox.checked = this.checked;
             });
         });
-        
+
         // Update select all checkbox when individual checkboxes change
         checkboxes.forEach(checkbox => {
             checkbox.addEventListener('change', function() {
                 const allChecked = [...checkboxes].every(c => c.checked);
                 const someChecked = [...checkboxes].some(c => c.checked);
-                
+
                 selectAll.checked = allChecked;
                 selectAll.indeterminate = someChecked && !allChecked;
             });
         });
-        
-        // Initialize DataTable
-        if ($.fn.DataTable) {
-            $('.datatable').DataTable({
+
+        // Initialize DataTable with custom options
+        if (typeof initDataTables === 'function') {
+            initDataTables('.datatable', {
                 paging: false,
                 searching: false,
                 info: false,
                 responsive: true
             });
         }
-        
+
         // Delete confirmation
         const deleteLinks = document.querySelectorAll('.delete-confirm');
         deleteLinks.forEach(link => {
@@ -567,7 +567,7 @@
                 }
             });
         });
-        
+
         // Show notification function
         function showNotification(message, type = 'info') {
             if (typeof window.showNotification === 'function') {

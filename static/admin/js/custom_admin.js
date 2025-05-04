@@ -118,28 +118,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Initialize DataTables
-    const dataTables = document.querySelectorAll('.datatable');
-    dataTables.forEach(table => {
-        if ($.fn.DataTable) {
-            $(table).DataTable({
-                responsive: true,
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Search...",
-                    lengthMenu: "Show _MENU_ entries",
-                    info: "Showing _START_ to _END_ of _TOTAL_ entries",
-                    infoEmpty: "Showing 0 to 0 of 0 entries",
-                    infoFiltered: "(filtered from _MAX_ total entries)",
-                    paginate: {
-                        first: '<i class="fas fa-angle-double-left"></i>',
-                        previous: '<i class="fas fa-angle-left"></i>',
-                        next: '<i class="fas fa-angle-right"></i>',
-                        last: '<i class="fas fa-angle-double-right"></i>'
-                    }
-                }
-            });
-        }
-    });
+    // This is now handled by datatable-utils.js
+    // initDataTables();
 
     // Initialize Select2
     const select2Inputs = document.querySelectorAll('.select2');

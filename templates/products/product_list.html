@@ -105,6 +105,9 @@
         font-weight: 600;
         font-size: 1.1rem;
         position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
 
     .filter-body {
@@ -137,6 +140,109 @@
         height: 3px;
         background: var(--primary-gradient);
         border-radius: 3px;
+    }
+
+    /* Filter Tabs */
+    .filter-tabs {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+
+    .filter-tabs .nav-link {
+        color: #495057;
+        border: none;
+        border-radius: 0;
+        padding: 10px 15px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .filter-tabs .nav-link:hover {
+        color: var(--bs-primary);
+        background-color: rgba(var(--bs-primary-rgb), 0.05);
+    }
+
+    .filter-tabs .nav-link.active {
+        color: var(--bs-primary);
+        background-color: white;
+        border-bottom: 2px solid var(--bs-primary);
+    }
+
+    /* Active Filter Tags */
+    .active-filter-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .filter-tag {
+        display: inline-flex;
+        align-items: center;
+        background-color: #f8f9fa;
+        color: #495057;
+        border-radius: 20px;
+        padding: 5px 12px;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+    }
+
+    .filter-tag .remove-filter {
+        margin-left: 6px;
+        color: #6c757d;
+        transition: all 0.3s ease;
+    }
+
+    .filter-tag:hover {
+        background-color: #e9ecef;
+    }
+
+    .filter-tag:hover .remove-filter {
+        color: #dc3545;
+    }
+
+    /* Filter Search */
+    .filter-search {
+        position: relative;
+        margin-bottom: 15px;
+    }
+
+    .filter-search input {
+        padding-left: 30px;
+        border-radius: 20px;
+    }
+
+    .filter-search::before {
+        content: '\f002';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #adb5bd;
+        font-size: 0.85rem;
+    }
+
+    /* Price Presets */
+    .price-presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 15px;
+    }
+
+    .price-preset {
+        font-size: 0.85rem;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .price-preset:hover {
+        background-color: var(--bs-primary);
+        color: white;
+        border-color: var(--bs-primary);
     }
 
     .filter-option {
@@ -281,6 +387,8 @@
         box-shadow: var(--card-shadow);
         height: 100%;
         background-color: white;
+        transform: perspective(1000px) rotateY(0deg);
+        transform-style: preserve-3d;
     }
 
     /* Product Sorting Animation */
@@ -304,8 +412,47 @@
     }
 
     .product-card:hover {
-        transform: translateY(-8px);
+        transform: perspective(1000px) rotateY(2deg) translateY(-8px);
         box-shadow: var(--card-hover-shadow);
+    }
+
+    /* Grid size classes */
+    .grid-size-2 .product-item {
+        width: 50%;
+        max-width: 50%;
+        flex: 0 0 50%;
+    }
+
+    .grid-size-3 .product-item {
+        width: 33.333%;
+        max-width: 33.333%;
+        flex: 0 0 33.333%;
+    }
+
+    .grid-size-4 .product-item {
+        width: 25%;
+        max-width: 25%;
+        flex: 0 0 25%;
+    }
+
+    @media (max-width: 991.98px) {
+        .grid-size-2 .product-item,
+        .grid-size-3 .product-item,
+        .grid-size-4 .product-item {
+            width: 50%;
+            max-width: 50%;
+            flex: 0 0 50%;
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        .grid-size-2 .product-item,
+        .grid-size-3 .product-item,
+        .grid-size-4 .product-item {
+            width: 100%;
+            max-width: 100%;
+            flex: 0 0 100%;
+        }
     }
 
     .product-img-wrapper {
@@ -1252,15 +1399,42 @@
         opacity: 0.7;
     }
 
-    /* Grid/List View Toggle */
-    .view-toggle {
+
+
+    /* Grid Size Selector */
+    .grid-size-selector .btn-group {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    .grid-size-btn {
+        padding: 6px 10px;
+        border: none;
+        background-color: white;
         transition: all 0.3s ease;
     }
 
-    .view-toggle.active {
+    .grid-size-btn.active {
         background-color: var(--bs-primary);
         color: white;
-        border-color: var(--bs-primary);
+    }
+
+    .grid-size-btn:hover:not(.active) {
+        background-color: #f8f9fa;
+    }
+
+    /* Save View Button */
+    .save-view-btn {
+        border-radius: 6px;
+        padding: 6px 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+
+    .save-view-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
     /* Social Sharing */
@@ -1425,6 +1599,81 @@
         font-size: 1.1rem;
     }
 
+
+
+
+
+    /* Floating Compare Button */
+    .floating-compare-btn {
+        position: fixed;
+        bottom: 150px;
+        right: 20px;
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        background: var(--primary-gradient);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        cursor: pointer;
+        z-index: 999;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        opacity: 0;
+        transform: scale(0.8);
+        pointer-events: none;
+    }
+
+    .floating-compare-btn.active {
+        opacity: 1;
+        transform: scale(1);
+        pointer-events: auto;
+    }
+
+    .floating-compare-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+
+    .floating-compare-btn .compare-count {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background-color: #dc3545;
+        color: white;
+        font-size: 0.75rem;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    /* Animation for view toggle */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    .floating-view-btn.active {
+        animation: pulse 0.5s ease-in-out;
+    }
+
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+        40% {transform: translateY(-10px);}
+        60% {transform: translateY(-5px);}
+    }
+
+    .floating-compare-btn.bounce {
+        animation: bounce 1s ease;
+    }
+
     /* Back to Top Button */
     .back-to-top-btn {
         position: fixed;
@@ -1579,6 +1828,155 @@
             justify-content: center;
         }
     }
+
+    /* Product Comparison Bar */
+    .comparison-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: white;
+        box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+        padding: 15px 0;
+        z-index: 1000;
+        transform: translateY(100%);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .comparison-bar.active {
+        transform: translateY(0);
+    }
+
+    /* Quick View Modal Styles */
+    .quick-view-gallery {
+        position: relative;
+        overflow: hidden;
+        border-radius: 10px;
+    }
+
+    .quick-view-main-image {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 400px;
+    }
+
+    .quick-view-main-image img {
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+        transition: transform 0.5s ease;
+    }
+
+    .quick-view-main-image:hover img {
+        transform: scale(1.05);
+    }
+
+    .quick-view-thumbnails {
+        margin-top: 15px;
+    }
+
+    .quick-view-thumbnail {
+        cursor: pointer;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fa;
+    }
+
+    .quick-view-thumbnail img {
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: cover;
+    }
+
+    .quick-view-thumbnail.active {
+        border-color: var(--bs-primary);
+    }
+
+    .quick-view-thumbnail:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .quick-view-details {
+        padding: 0 15px;
+    }
+
+    .quick-view-price {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--bs-primary);
+    }
+
+    .quick-view-original-price {
+        font-size: 1.2rem;
+    }
+
+    .quick-view-discount {
+        font-size: 0.9rem;
+        padding: 5px 10px;
+    }
+
+    .quick-view-description {
+        color: #6c757d;
+        line-height: 1.6;
+    }
+
+    .quick-view-meta {
+        border-top: 1px solid #e9ecef;
+        padding-top: 15px;
+    }
+
+    .quick-view-meta-item {
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+    }
+
+    .meta-label {
+        font-weight: 600;
+        color: #495057;
+        margin-right: 5px;
+    }
+
+    .quantity-input {
+        display: flex;
+        align-items: center;
+        max-width: 150px;
+    }
+
+    .quantity-btn {
+        width: 40px;
+        height: 40px;
+        border: 1px solid #ced4da;
+        background-color: #f8f9fa;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .quantity-btn:hover {
+        background-color: #e9ecef;
+    }
+
+    #quickViewQuantity {
+        text-align: center;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        height: 40px;
+    }
 </style>
 {% endblock %}
 
@@ -1593,49 +1991,289 @@
             </button>
 
             <div class="filter-sidebar">
-                <!-- Active filters section -->
-                {% if search_query or min_price or max_price or category or collection %}
                 <div class="filter-card mb-4">
                     <div class="filter-header">
-                        <i class="fas fa-tag me-2"></i> Active Filters
+                        <span><i class="fas fa-sliders-h me-2"></i> Filters</span>
+                        <div>
+                            <button type="button" class="btn btn-sm btn-outline-light" id="saveFilterBtn" title="Save filters">
+                                <i class="fas fa-save"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="filter-body">
-                        <div class="active-filters">
-                            {% if search_query %}
-                            <a href="?{% if collection %}collection={{ collection }}&{% endif %}{% if category_filter %}category={{ category_filter }}&{% endif %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}{% if sort_by %}sort={{ sort_by }}{% endif %}" class="filter-badge">
-                                Search: {{ search_query }}
-                                <i class="fas fa-times close-icon"></i>
-                            </a>
-                            {% endif %}
 
-                            {% if min_price or max_price %}
-                            <a href="?{% if collection %}collection={{ collection }}&{% endif %}{% if category_filter %}category={{ category_filter }}&{% endif %}{% if search_query %}q={{ search_query }}&{% endif %}{% if sort_by %}sort={{ sort_by }}{% endif %}" class="filter-badge">
-                                Price: {% if min_price %}${{ min_price }}{% else %}$0{% endif %} - {% if max_price %}${{ max_price }}{% else %}$∞{% endif %}
-                                <i class="fas fa-times close-icon"></i>
-                            </a>
-                            {% endif %}
+                    <!-- Active Filters -->
+                    <div class="filter-body pb-2">
+                        <div class="active-filters mb-3" id="activeFilters">
+                            {% if search_query or min_price or max_price or category or collection %}
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="text-muted me-2">Active filters:</span>
+                                <a href="{% url 'products:product_list' %}" class="ms-auto btn btn-sm btn-link text-danger">
+                                    Clear All
+                                </a>
+                            </div>
+                            <div class="active-filter-tags">
+                                {% if search_query %}
+                                <span class="filter-tag">
+                                    Search: {{ search_query }}
+                                    <a href="?{% if collection %}collection={{ collection }}&{% endif %}{% if category_filter %}category={{ category_filter }}&{% endif %}{% if min_price %}min_price={{ min_price }}&{% endif %}{% if max_price %}max_price={{ max_price }}&{% endif %}{% if sort_by %}sort={{ sort_by }}{% endif %}" class="remove-filter"><i class="fas fa-times"></i></a>
+                                </span>
+                                {% endif %}
 
-                            {% if category %}
-                            <a href="{% url 'products:product_list' %}{% if collection %}?collection={{ collection }}{% endif %}" class="filter-badge">
-                                Category: {{ category.name }}
-                                <i class="fas fa-times close-icon"></i>
-                            </a>
-                            {% endif %}
+                                {% if min_price or max_price %}
+                                <span class="filter-tag">
+                                    Price: {% if min_price %}${{ min_price }}{% else %}$0{% endif %} - {% if max_price %}${{ max_price }}{% else %}$∞{% endif %}
+                                    <a href="?{% if collection %}collection={{ collection }}&{% endif %}{% if category_filter %}category={{ category_filter }}&{% endif %}{% if search_query %}q={{ search_query }}&{% endif %}{% if sort_by %}sort={{ sort_by }}{% endif %}" class="remove-filter"><i class="fas fa-times"></i></a>
+                                </span>
+                                {% endif %}
 
-                            {% if collection %}
-                            <a href="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'products:product_list' %}{% endif %}{% if search_query %}?q={{ search_query }}{% endif %}" class="filter-badge">
-                                Collection: {{ collection|title }}
-                                <i class="fas fa-times close-icon"></i>
-                            </a>
+                                {% if category %}
+                                <span class="filter-tag">
+                                    Category: {{ category.name }}
+                                    <a href="{% url 'products:product_list' %}{% if collection %}?collection={{ collection }}{% endif %}" class="remove-filter"><i class="fas fa-times"></i></a>
+                                </span>
+                                {% endif %}
+
+                                {% if collection %}
+                                <span class="filter-tag">
+                                    Collection: {{ collection|title }}
+                                    <a href="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'products:product_list' %}{% endif %}{% if search_query %}?q={{ search_query }}{% endif %}" class="remove-filter"><i class="fas fa-times"></i></a>
+                                </span>
+                                {% endif %}
+                            </div>
                             {% endif %}
                         </div>
-
-                        <a href="{% url 'products:product_list' %}" class="btn btn-sm btn-outline-secondary w-100">
-                            <i class="fas fa-times me-2"></i> Clear All Filters
-                        </a>
                     </div>
                 </div>
-                {% endif %}
+
+                <!-- Filter Tabs -->
+                <div class="filter-card">
+                    <ul class="nav nav-tabs filter-tabs" id="filterTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="categories-tab" data-bs-toggle="tab" data-bs-target="#categories-filters" type="button" role="tab" aria-controls="categories-filters" aria-selected="true">Categories</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="price-tab" data-bs-toggle="tab" data-bs-target="#price-filters" type="button" role="tab" aria-controls="price-filters" aria-selected="false">Price</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="advanced-tab" data-bs-toggle="tab" data-bs-target="#advanced-filters" type="button" role="tab" aria-controls="advanced-filters" aria-selected="false">Advanced</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content p-3 border border-top-0 rounded-bottom" id="filterTabsContent">
+                        <!-- Categories Tab -->
+                        <div class="tab-pane fade show active" id="categories-filters" role="tabpanel" aria-labelledby="categories-tab">
+                            <div class="filter-search mb-2">
+                                <input type="text" class="form-control form-control-sm" id="categorySearch" placeholder="Search categories...">
+                            </div>
+
+                            <div class="filter-section">
+                                <div class="filter-option">
+                                    <input type="checkbox" id="category-all" {% if not category %}checked{% endif %}>
+                                    <label for="category-all">All Products</label>
+                                    <span class="filter-count">{{ products.paginator.count }}</span>
+                                </div>
+
+                                {% for c in categories %}
+                                <div class="filter-option category-item">
+                                    <input type="checkbox" id="category-{{ c.id }}" {% if category.id == c.id %}checked{% endif %}>
+                                    <label for="category-{{ c.id }}">{{ c.name }}</label>
+                                    <span class="filter-count">{{ c.products.count }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Collections -->
+                            <div class="filter-section mt-4">
+                                <h6 class="filter-section-title">Collections</h6>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="collection-new" {% if collection == 'new_arrivals' %}checked{% endif %}>
+                                    <label for="collection-new">New Arrivals</label>
+                                </div>
+
+                                <div class="filter-option">
+                                    <input type="checkbox" id="collection-best" {% if collection == 'best_sellers' %}checked{% endif %}>
+                                    <label for="collection-best">Best Sellers</label>
+                                </div>
+
+                                <div class="filter-option">
+                                    <input type="checkbox" id="collection-sale" {% if collection == 'on_sale' %}checked{% endif %}>
+                                    <label for="collection-sale">On Sale</label>
+                                </div>
+
+                                <div class="filter-option">
+                                    <input type="checkbox" id="collection-featured" {% if collection == 'featured' %}checked{% endif %}>
+                                    <label for="collection-featured">Featured</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Price Tab -->
+                        <div class="tab-pane fade" id="price-filters" role="tabpanel" aria-labelledby="price-tab">
+                            <div class="filter-section">
+                                <form method="get" action="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'products:product_list' %}{% endif %}" id="price-filter-form">
+                                    {% if collection %}
+                                    <input type="hidden" name="collection" value="{{ collection }}">
+                                    {% endif %}
+                                    {% if search_query %}
+                                    <input type="hidden" name="q" value="{{ search_query }}">
+                                    {% endif %}
+                                    {% if sort_by %}
+                                    <input type="hidden" name="sort" value="{{ sort_by }}">
+                                    {% endif %}
+
+                                    <div id="price-slider" class="mb-4"></div>
+
+                                    <div class="price-inputs">
+                                        <div class="price-input">
+                                            <label for="min_price" class="form-label small">Min Price</label>
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-text">$</span>
+                                                <input type="number" class="form-control" id="min_price" name="min_price" value="{{ min_price|default:0 }}" min="0">
+                                            </div>
+                                        </div>
+
+                                        <div class="price-input">
+                                            <label for="max_price" class="form-label small">Max Price</label>
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-text">$</span>
+                                                <input type="number" class="form-control" id="max_price" name="max_price" value="{{ max_price|default:1000 }}" min="0">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="price-presets mt-3">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary price-preset" data-min="0" data-max="500">Under $500</button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary price-preset" data-min="500" data-max="1000">$500 - $1000</button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary price-preset" data-min="1000" data-max="2000">$1000 - $2000</button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary price-preset" data-min="2000" data-max="5000">$2000+</button>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary btn-sm w-100 mt-4">
+                                        <i class="fas fa-filter me-2"></i> Apply Price Filter
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Discount Filter -->
+                            <div class="filter-section mt-4">
+                                <h6 class="filter-section-title">Discount</h6>
+                                <div class="filter-option">
+                                    <input type="radio" id="discount-any" name="discount" value="" checked>
+                                    <label for="discount-any">Any</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="radio" id="discount-yes" name="discount" value="yes">
+                                    <label for="discount-yes">On Sale</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="radio" id="discount-no" name="discount" value="no">
+                                    <label for="discount-no">Regular Price</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Advanced Tab -->
+                        <div class="tab-pane fade" id="advanced-filters" role="tabpanel" aria-labelledby="advanced-tab">
+                            <!-- Rating Filter -->
+                            <div class="filter-section">
+                                <h6 class="filter-section-title">Rating</h6>
+                                <div class="filter-option">
+                                    <input type="radio" id="rating-any" name="rating" value="" checked>
+                                    <label for="rating-any">Any Rating</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="radio" id="rating-4" name="rating" value="4">
+                                    <label for="rating-4">
+                                        <div class="rating-stars">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                        </div>
+                                        <span class="text-muted small">& up</span>
+                                    </label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="radio" id="rating-3" name="rating" value="3">
+                                    <label for="rating-3">
+                                        <div class="rating-stars">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                        </div>
+                                        <span class="text-muted small">& up</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Availability Filter -->
+                            <div class="filter-section mt-4">
+                                <h6 class="filter-section-title">Availability</h6>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="availability-in-stock" name="availability" value="in_stock" checked>
+                                    <label for="availability-in-stock">In Stock</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="availability-out-of-stock" name="availability" value="out_of_stock">
+                                    <label for="availability-out-of-stock">Out of Stock</label>
+                                </div>
+                            </div>
+
+                            <!-- Material Filter -->
+                            <div class="filter-section mt-4">
+                                <h6 class="filter-section-title">Material</h6>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="material-wood" name="material" value="wood">
+                                    <label for="material-wood">Wood</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="material-metal" name="material" value="metal">
+                                    <label for="material-metal">Metal</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="material-fabric" name="material" value="fabric">
+                                    <label for="material-fabric">Fabric</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="material-ceramic" name="material" value="ceramic">
+                                    <label for="material-ceramic">Ceramic</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="material-glass" name="material" value="glass">
+                                    <label for="material-glass">Glass</label>
+                                </div>
+                            </div>
+
+                            <!-- Style Filter -->
+                            <div class="filter-section mt-4">
+                                <h6 class="filter-section-title">Style</h6>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="style-traditional" name="style" value="traditional">
+                                    <label for="style-traditional">Traditional</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="style-modern" name="style" value="modern">
+                                    <label for="style-modern">Modern</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="style-contemporary" name="style" value="contemporary">
+                                    <label for="style-contemporary">Contemporary</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="style-ethnic" name="style" value="ethnic">
+                                    <label for="style-ethnic">Ethnic</label>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-primary btn-sm w-100 mt-4" id="applyAdvancedFilters">
+                                <i class="fas fa-filter me-2"></i> Apply Advanced Filters
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Categories filter -->
                 <div class="filter-card">
@@ -2037,16 +2675,30 @@
                                 </ul>
                             </div>
 
-                            <!-- Grid/List view toggle -->
+
+
+                            <!-- Grid size selector -->
                             <div class="ms-3 d-none d-md-block">
-                                <div class="btn-group" role="group" aria-label="View options">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary view-toggle active" data-view="grid" title="Grid View">
-                                        <i class="fas fa-th"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary view-toggle" data-view="list" title="List View">
-                                        <i class="fas fa-list"></i>
-                                    </button>
+                                <div class="grid-size-selector">
+                                    <div class="btn-group" role="group" aria-label="Grid size options">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary grid-size-btn active" data-grid-size="4" title="4 Products Per Row">
+                                            <i class="fas fa-grip-horizontal"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary grid-size-btn" data-grid-size="3" title="3 Products Per Row">
+                                            <i class="fas fa-th-large"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary grid-size-btn" data-grid-size="2" title="2 Products Per Row">
+                                            <i class="fas fa-th"></i>
+                                        </button>
+                                    </div>
                                 </div>
+                            </div>
+
+                            <!-- Save view button -->
+                            <div class="ms-3 d-none d-lg-block">
+                                <button type="button" class="btn btn-sm btn-outline-primary save-view-btn" title="Save this view">
+                                    <i class="fas fa-save me-1"></i><span class="d-none d-xl-inline">Save View</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -2516,6 +3168,183 @@
             <div class="modal-footer">
                 <a href="#" class="btn btn-outline-primary" id="quickViewDetailsLink">View Full Details</a>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Floating Compare Button -->
+<div class="floating-compare-btn" id="floating-compare-btn">
+    <span class="compare-count">0</span>
+    <i class="fas fa-balance-scale"></i>
+</div>
+
+<!-- Quick View Modal -->
+<div class="modal fade" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="quickViewTitle">Product Title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="quick-view-gallery">
+                            <div class="quick-view-main-image">
+                                <img src="" alt="Product" id="quickViewImage" class="img-fluid">
+                            </div>
+                            <div class="quick-view-thumbnails mt-3">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="quick-view-thumbnail active" data-index="0">
+                                            <img src="" alt="Thumbnail" id="quickViewThumb1" class="img-fluid">
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="quick-view-thumbnail" data-index="1">
+                                            <img src="" alt="Thumbnail" id="quickViewThumb2" class="img-fluid">
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="quick-view-thumbnail" data-index="2">
+                                            <img src="" alt="Thumbnail" id="quickViewThumb3" class="img-fluid">
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="quick-view-thumbnail" data-index="3">
+                                            <img src="" alt="Thumbnail" id="quickViewThumb4" class="img-fluid">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="quick-view-details">
+                            <div class="quick-view-category mb-2">
+                                <span class="badge bg-secondary" id="quickViewCategory">Category</span>
+                            </div>
+
+                            <div class="quick-view-price-container mb-3">
+                                <span class="quick-view-price" id="quickViewPrice">$0.00</span>
+                                <span class="quick-view-original-price text-decoration-line-through text-muted ms-2" id="quickViewOriginalPrice">$0.00</span>
+                                <span class="quick-view-discount badge bg-danger ms-2" id="quickViewDiscount">0% OFF</span>
+                            </div>
+
+                            <div class="quick-view-rating mb-3">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <span class="rating-count">(24 reviews)</span>
+                            </div>
+
+                            <div class="quick-view-description mb-4" id="quickViewDescription">
+                                Loading product description...
+                            </div>
+
+                            <div class="quick-view-availability mb-3">
+                                <span class="text-success"><i class="fas fa-check-circle me-1"></i> In Stock</span>
+                            </div>
+
+                            <div class="quick-view-quantity mb-4">
+                                <label for="quickViewQuantity" class="form-label">Quantity</label>
+                                <div class="quantity-input">
+                                    <button type="button" class="quantity-btn" id="decreaseQuantity">-</button>
+                                    <input type="number" id="quickViewQuantity" class="form-control" value="1" min="1">
+                                    <button type="button" class="quantity-btn" id="increaseQuantity">+</button>
+                                </div>
+                            </div>
+
+                            <div class="quick-view-actions">
+                                <button type="button" class="btn btn-primary btn-lg me-2" id="quickViewAddToCart" data-product-id="">
+                                    <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+                                </button>
+                                <button type="button" class="btn btn-outline-primary btn-lg wishlist-btn">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-lg ms-2 add-to-compare"
+                                    data-product-id=""
+                                    data-product-name=""
+                                    data-product-price=""
+                                    data-product-image=""
+                                    data-product-url="">
+                                    <i class="fas fa-balance-scale"></i>
+                                </button>
+                            </div>
+
+                            <div class="quick-view-meta mt-4">
+                                <div class="quick-view-meta-item">
+                                    <span class="meta-label">SKU:</span>
+                                    <span class="meta-value">ABC123</span>
+                                </div>
+                                <div class="quick-view-meta-item">
+                                    <span class="meta-label">Categories:</span>
+                                    <span class="meta-value">Home Decor, Handmade</span>
+                                </div>
+                                <div class="quick-view-meta-item">
+                                    <span class="meta-label">Tags:</span>
+                                    <span class="meta-value">Artisanal, Eco-friendly, Gift</span>
+                                </div>
+                            </div>
+
+                            <div class="quick-view-footer mt-4">
+                                <a href="" class="btn btn-link" id="quickViewDetailsLink">
+                                    <i class="fas fa-external-link-alt me-1"></i> View Full Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Save View Modal -->
+<div class="modal fade" id="saveViewModal" tabindex="-1" aria-labelledby="saveViewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="saveViewModalLabel">Save Current View</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="saveViewForm">
+                    <div class="mb-3">
+                        <label for="viewName" class="form-label">View Name</label>
+                        <input type="text" class="form-control" id="viewName" placeholder="My Custom View" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Current Settings</label>
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Grid Size
+                                <span class="badge bg-primary rounded-pill" id="currentGridSize">4</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Sort Order
+                                <span class="badge bg-primary rounded-pill" id="currentSortOrder">Newest First</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="makeDefaultView">
+                        <label class="form-check-label" for="makeDefaultView">
+                            Make this my default view
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveViewBtn">Save View</button>
             </div>
         </div>
     </div>
@@ -3322,43 +4151,206 @@
         // Initialize comparison bar on page load
         updateComparisonBar();
 
-        // Grid/List View Toggle
-        const viewToggles = document.querySelectorAll('.view-toggle');
+        // Products container and grid size settings
         const productsContainer = document.getElementById('products-container');
+        const gridSizeBtns = document.querySelectorAll('.grid-size-btn');
+        const saveViewBtn = document.querySelector('.save-view-btn');
+        const floatingCompareBtn = document.getElementById('floating-compare-btn');
 
-        // Check if there's a saved view preference in localStorage
-        const savedView = localStorage.getItem('productViewPreference');
-        if (savedView === 'list') {
-            productsContainer.classList.add('products-list-view');
-            viewToggles.forEach(toggle => {
-                toggle.classList.remove('active');
-                if (toggle.getAttribute('data-view') === 'list') {
-                    toggle.classList.add('active');
+        // Load saved preferences from localStorage
+        function loadSavedPreferences() {
+            // Set default to grid view
+            productsContainer.classList.remove('products-list-view');
+
+            // Grid size preference
+            const savedGridSize = localStorage.getItem('productGridSizePreference');
+            if (savedGridSize) {
+                productsContainer.className = productsContainer.className
+                    .replace(/grid-size-\d+/g, '')
+                    .trim();
+                productsContainer.classList.add(`grid-size-${savedGridSize}`);
+
+                gridSizeBtns.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.getAttribute('data-grid-size') === savedGridSize) {
+                        btn.classList.add('active');
+                    }
+                });
+            } else {
+                // Default to grid size 4 if no preference is saved
+                productsContainer.classList.add('grid-size-4');
+            }
+
+            // Load saved views
+            const savedViews = JSON.parse(localStorage.getItem('savedProductViews') || '[]');
+            if (savedViews.length > 0) {
+                // Could add a dropdown to show saved views
+                console.log('Saved views:', savedViews);
+            }
+        }
+
+        // Call on page load
+        loadSavedPreferences();
+
+        // Grid Size Selector
+        gridSizeBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const gridSize = this.getAttribute('data-grid-size');
+
+                // Remove active class from all grid size buttons
+                gridSizeBtns.forEach(b => b.classList.remove('active'));
+
+                // Add active class to clicked button
+                this.classList.add('active');
+
+                // Update grid size class on products container
+                productsContainer.className = productsContainer.className
+                    .replace(/grid-size-\d+/g, '')
+                    .trim();
+                productsContainer.classList.add(`grid-size-${gridSize}`);
+
+                // Add animation
+                productsContainer.classList.add('sorting');
+                setTimeout(() => {
+                    productsContainer.classList.remove('sorting');
+                }, 500);
+
+                // Save preference to localStorage
+                localStorage.setItem('productGridSizePreference', gridSize);
+
+                // Show toast notification
+                showToast(`Changed to ${gridSize} products per row`, 'info');
+            });
+        });
+
+        // Save View Button
+        if (saveViewBtn) {
+            saveViewBtn.addEventListener('click', function() {
+                // Get current view settings
+                const gridSize = document.querySelector('.grid-size-btn.active')?.getAttribute('data-grid-size') || '4';
+                const sortOrder = document.querySelector('#sortDropdown').textContent.trim();
+
+                // Update modal with current settings
+                document.getElementById('currentGridSize').textContent = gridSize;
+                document.getElementById('currentSortOrder').textContent = sortOrder;
+
+                // Show modal
+                const saveViewModal = new bootstrap.Modal(document.getElementById('saveViewModal'));
+                saveViewModal.show();
+            });
+
+            // Save View Form Submit
+            document.getElementById('saveViewBtn').addEventListener('click', function() {
+                const viewName = document.getElementById('viewName').value.trim();
+                if (!viewName) {
+                    showToast('Please enter a name for your view', 'warning');
+                    return;
                 }
+
+                // Get current settings
+                const viewSettings = {
+                    name: viewName,
+                    viewType: 'grid', // Always grid view now
+                    gridSize: document.querySelector('.grid-size-btn.active')?.getAttribute('data-grid-size') || '4',
+                    sortOrder: document.querySelector('#sortDropdown').textContent.trim(),
+                    isDefault: document.getElementById('makeDefaultView').checked,
+                    timestamp: new Date().toISOString()
+                };
+
+                // Get existing saved views
+                const savedViews = JSON.parse(localStorage.getItem('savedProductViews') || '[]');
+
+                // Check if a view with this name already exists
+                const existingViewIndex = savedViews.findIndex(v => v.name === viewName);
+                if (existingViewIndex !== -1) {
+                    // Replace existing view
+                    savedViews[existingViewIndex] = viewSettings;
+                } else {
+                    // Add new view
+                    savedViews.push(viewSettings);
+                }
+
+                // Save to localStorage
+                localStorage.setItem('savedProductViews', JSON.stringify(savedViews));
+
+                // If this is set as default, update default view
+                if (viewSettings.isDefault) {
+                    localStorage.setItem('defaultProductView', JSON.stringify(viewSettings));
+                }
+
+                // Close modal
+                const saveViewModal = bootstrap.Modal.getInstance(document.getElementById('saveViewModal'));
+                saveViewModal.hide();
+
+                // Show success message
+                showToast(`View "${viewName}" saved successfully`, 'success');
             });
         }
 
-        // Add event listeners to view toggle buttons
-        viewToggles.forEach(toggle => {
-            toggle.addEventListener('click', function() {
-                const view = this.getAttribute('data-view');
+        // Floating Compare Button
+        function updateFloatingCompareButton() {
+            const comparison = getComparisonProducts();
+            const compareCount = document.querySelector('.floating-compare-btn .compare-count');
 
-                // Remove active class from all toggles
-                viewToggles.forEach(t => t.classList.remove('active'));
+            if (compareCount) {
+                compareCount.textContent = comparison.length;
+            }
 
-                // Add active class to clicked toggle
-                this.classList.add('active');
+            if (comparison.length > 0) {
+                floatingCompareBtn.classList.add('active');
+            } else {
+                floatingCompareBtn.classList.remove('active');
+            }
+        }
 
-                // Toggle list view class on products container
-                if (view === 'list') {
-                    productsContainer.classList.add('products-list-view');
-                    localStorage.setItem('productViewPreference', 'list');
-                } else {
-                    productsContainer.classList.remove('products-list-view');
-                    localStorage.setItem('productViewPreference', 'grid');
+        // Initialize floating compare button
+        updateFloatingCompareButton();
+
+        // Add click event to floating compare button
+        if (floatingCompareBtn) {
+            floatingCompareBtn.addEventListener('click', function() {
+                const comparison = getComparisonProducts();
+                if (comparison.length < 2) {
+                    showToast('Please add at least 2 products to compare', 'warning');
+                    return;
                 }
+
+                // Build URL for comparison page
+                const productIds = comparison.map(p => p.id).join(',');
+                window.location.href = `/products/compare/?ids=${productIds}`;
             });
-        });
+        }
+
+        // Override the addToComparison function to update floating button
+        const originalAddToComparison = addToComparison;
+        addToComparison = function(productId, productName, productPrice, productImage, productUrl) {
+            const result = originalAddToComparison(productId, productName, productPrice, productImage, productUrl);
+            updateFloatingCompareButton();
+
+            // Add bounce animation to floating compare button when a product is added
+            if (result && floatingCompareBtn) {
+                floatingCompareBtn.classList.add('bounce');
+                setTimeout(() => {
+                    floatingCompareBtn.classList.remove('bounce');
+                }, 1000);
+            }
+
+            return result;
+        };
+
+        // Override the removeFromComparison function to update floating button
+        const originalRemoveFromComparison = removeFromComparison;
+        removeFromComparison = function(productId) {
+            originalRemoveFromComparison(productId);
+            updateFloatingCompareButton();
+        };
+
+        // Override the clearComparison function to update floating button
+        const originalClearComparison = clearComparison;
+        clearComparison = function() {
+            originalClearComparison();
+            updateFloatingCompareButton();
+        };
 
         // Floating Filter Button
         const floatingFilterBtn = document.querySelector('.floating-filter-btn');

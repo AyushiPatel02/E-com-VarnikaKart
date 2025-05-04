@@ -185,25 +185,104 @@
 
                     <!-- Search Bar with Suggestions -->
                     <div class="search-bar me-3">
-                        <i class="fas fa-search search-icon"></i>
                         <input type="search" class="search-input" placeholder="Search products...">
+                        <i class="fas fa-search search-icon"></i>
 
                         <!-- Search Suggestions -->
                         <div class="search-suggestions">
-                            <div class="suggestion-item">
-                                <img src="product1.jpg" alt="Product">
+                            <!-- Header will be added by JS -->
+
+                            <!-- Example suggestion items -->
+                            <div class="suggestion-item" data-url="/products/handmade-pottery/">
+                                <img src="{% static 'img/products/pottery.jpg' %}" alt="Handmade Pottery">
                                 <div class="details">
                                     <div class="name">Handmade Pottery</div>
-                                    <div class="category">Home Decor</div>
+                                    <div class="category"><i class="fas fa-home"></i> Home Decor</div>
                                 </div>
                                 <div class="price">$49.99</div>
                             </div>
-                            <!-- More suggestion items -->
+
+                            <div class="suggestion-item" data-url="/products/silver-necklace/">
+                                <img src="{% static 'img/products/necklace.jpg' %}" alt="Silver Necklace">
+                                <div class="details">
+                                    <div class="name">Silver Necklace with Gemstones</div>
+                                    <div class="category"><i class="fas fa-gem"></i> Jewelry</div>
+                                </div>
+                                <div class="price">$89.99</div>
+                            </div>
+
+                            <div class="suggestion-item" data-url="/products/abstract-painting/">
+                                <img src="{% static 'img/products/painting.jpg' %}" alt="Abstract Painting">
+                                <div class="details">
+                                    <div class="name">Abstract Canvas Painting</div>
+                                    <div class="category"><i class="fas fa-palette"></i> Paintings</div>
+                                </div>
+                                <div class="price">$129.99</div>
+                            </div>
+
+                            <!-- Footer will be added by JS -->
                         </div>
                     </div>
 
                     <!-- Action Buttons -->
                     <div class="nav-actions">
+                        <!-- Theme Switcher Button -->
+                        <div class="dropdown">
+                            <button class="action-btn" title="Change Theme" id="themeSwitcherBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-palette"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end theme-dropdown p-3">
+                                <h6 class="dropdown-header border-bottom pb-2 mb-2">Select Theme</h6>
+                                <div class="theme-options">
+                                    <div class="theme-option d-flex align-items-center p-2 rounded mb-2" data-theme="artisanal-elegance">
+                                        <div class="theme-preview me-2">
+                                            <div class="theme-color" style="background: linear-gradient(135deg, #d4a5a5, #a5a6d4);"></div>
+                                        </div>
+                                        <div>
+                                            <div class="fw-medium" id="current-theme-name">Artisanal Elegance</div>
+                                            <small class="text-muted">Soft, elegant, handcrafted feel</small>
+                                        </div>
+                                    </div>
+                                    <div class="theme-option d-flex align-items-center p-2 rounded mb-2" data-theme="boho-brush">
+                                        <div class="theme-preview me-2">
+                                            <div class="theme-color" style="background: linear-gradient(135deg, #c77d5e, #8ba888);"></div>
+                                        </div>
+                                        <div>
+                                            <div class="fw-medium">Boho & Brush</div>
+                                            <small class="text-muted">Bohemian with artistic brush strokes</small>
+                                        </div>
+                                    </div>
+                                    <div class="theme-option d-flex align-items-center p-2 rounded mb-2" data-theme="modern-minimal">
+                                        <div class="theme-preview me-2">
+                                            <div class="theme-color" style="background: linear-gradient(135deg, #4361ee, #f72585);"></div>
+                                        </div>
+                                        <div>
+                                            <div class="fw-medium">Modern Minimal</div>
+                                            <small class="text-muted">Clean, professional design</small>
+                                        </div>
+                                    </div>
+                                    <div class="theme-option d-flex align-items-center p-2 rounded mb-2" data-theme="mystic-indian">
+                                        <div class="theme-preview me-2">
+                                            <div class="theme-color" style="background: linear-gradient(135deg, #9c0e0e, #f1c40f);"></div>
+                                        </div>
+                                        <div>
+                                            <div class="fw-medium">Mystic Indian</div>
+                                            <small class="text-muted">Traditional Indian meets modern</small>
+                                        </div>
+                                    </div>
+                                    <div class="theme-option d-flex align-items-center p-2 rounded" data-theme="pastel-dream">
+                                        <div class="theme-preview me-2">
+                                            <div class="theme-color" style="background: linear-gradient(135deg, #ffafcc, #a2d2ff);"></div>
+                                        </div>
+                                        <div>
+                                            <div class="fw-medium">Pastel Dream</div>
+                                            <small class="text-muted">Soft, feminine aesthetic</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <button class="action-btn" title="Notifications">
                             <i class="fas fa-bell"></i>
                             <span class="badge">3</span>

@@ -472,6 +472,9 @@
     <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
 
+    <!-- DataTable Utils -->
+    <script src="{% static 'js/datatable-utils.js' %}"></script>
+
     <!-- Select2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
@@ -502,30 +505,9 @@
                 });
             }
 
-            // Initialize DataTables
-            const dataTables = document.querySelectorAll('.datatable');
-
-            if (dataTables.length > 0) {
-                dataTables.forEach(table => {
-                    $(table).DataTable({
-                        responsive: true,
-                        language: {
-                            search: "_INPUT_",
-                            searchPlaceholder: "Search...",
-                            lengthMenu: "Show _MENU_ entries",
-                            info: "Showing _START_ to _END_ of _TOTAL_ entries",
-                            infoEmpty: "Showing 0 to 0 of 0 entries",
-                            infoFiltered: "(filtered from _MAX_ total entries)",
-                            paginate: {
-                                first: '<i class="fas fa-angle-double-left"></i>',
-                                previous: '<i class="fas fa-angle-left"></i>',
-                                next: '<i class="fas fa-angle-right"></i>',
-                                last: '<i class="fas fa-angle-double-right"></i>'
-                            }
-                        }
-                    });
-                });
-            }
+            // Initialize DataTables using the utility function
+            // This is now handled by datatable-utils.js
+            // initDataTables();
 
             // Initialize Select2
             const select2Elements = document.querySelectorAll('.select2');

@@ -1,7 +1,405 @@
 {% extends "admin/custom_base.html" %}
-{% load i18n static admin_urls %}
+{% load i18n static admin_urls admin_list %}
 
 {% block title %}Products | VarnikaKart Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+    .product-card {
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        overflow: hidden;
+        height: 100%;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        background-color: #fff;
+        position: relative;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        border-color: rgba(0,0,0,0.1);
+    }
+
+    .product-image {
+        height: 200px;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .product-image .badges {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        z-index: 2;
+    }
+
+    .product-image .badges .badge {
+        font-size: 0.7rem;
+        padding: 5px 8px;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .product-image .actions {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        z-index: 2;
+    }
+
+    .product-image .action-btn {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--dark-color);
+        transition: all 0.2s ease;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .product-image .action-btn:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: scale(1.1);
+    }
+
+    .product-quick-actions {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        z-index: 2;
+    }
+
+    .product-quick-actions .btn {
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .product-details {
+        padding: 15px;
+    }
+
+    .product-title {
+        font-weight: 600;
+        margin-bottom: 5px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        height: 48px;
+    }
+
+    .product-title a {
+        color: var(--dark-color);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .product-title a:hover {
+        color: var(--primary-color);
+    }
+
+    .product-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .product-category {
+        color: var(--secondary-color);
+        font-size: 0.85rem;
+    }
+
+    .product-category a {
+        color: var(--secondary-color);
+        transition: color 0.2s ease;
+    }
+
+    .product-category a:hover {
+        color: var(--primary-color);
+    }
+
+    .product-id {
+        font-size: 0.75rem;
+    }
+
+    .product-pricing {
+        margin-top: 10px;
+    }
+
+    .product-price {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--primary-color);
+    }
+
+    .product-original-price {
+        text-decoration: line-through;
+        color: var(--secondary-color);
+        font-size: 0.9rem;
+        margin-right: 5px;
+    }
+
+    .product-discount {
+        color: var(--success-color);
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .product-footer {
+        padding: 10px 15px;
+        background-color: rgba(0,0,0,0.02);
+        border-top: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .product-stock-info {
+        font-size: 0.85rem;
+    }
+
+    .stock-label {
+        color: var(--secondary-color);
+    }
+
+    .stock-value {
+        font-weight: 600;
+    }
+
+    .product-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    /* Hover overlay effect */
+    .product-image::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .product-card:hover .product-image::after {
+        opacity: 1;
+    }
+
+    .grid-view-btn, .list-view-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background-color: var(--light-color);
+        color: var(--dark-color);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .grid-view-btn.active, .list-view-btn.active {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .grid-view-btn:hover, .list-view-btn:hover {
+        background-color: var(--primary-dark);
+        color: white;
+    }
+
+    .product-list-view {
+        display: none;
+    }
+
+    .product-grid-view {
+        display: block;
+    }
+
+    .no-image {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        background-color: #f8f9fa;
+        color: #adb5bd;
+        font-size: 2rem;
+    }
+
+    .stat-card {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        opacity: 0.8;
+    }
+
+    .stat-title {
+        font-size: 1rem;
+        color: rgba(255,255,255,0.8);
+        margin-bottom: 5px;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .stat-progress {
+        display: flex;
+        align-items: center;
+    }
+
+    .stat-progress .progress {
+        flex-grow: 1;
+        height: 6px;
+        background-color: rgba(255,255,255,0.2);
+    }
+
+    .stat-progress .progress-bar {
+        background-color: rgba(255,255,255,0.8);
+    }
+
+    .stat-card.primary {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+        color: white;
+    }
+
+    .stat-card.success {
+        background: linear-gradient(135deg, #1cc88a 0%, #13855c 100%);
+        color: white;
+    }
+
+    .stat-card.info {
+        background: linear-gradient(135deg, #36b9cc 0%, #258391 100%);
+        color: white;
+    }
+
+    .stat-card.warning {
+        background: linear-gradient(135deg, #f6c23e 0%, #dda20a 100%);
+        color: white;
+    }
+
+    .action-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white-color);
+        transition: all 0.2s ease;
+    }
+
+    .action-btn.edit {
+        background-color: var(--primary-color);
+    }
+
+    .action-btn.view {
+        background-color: var(--info-color);
+    }
+
+    .action-btn.delete {
+        background-color: var(--danger-color);
+    }
+
+    .action-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(78, 115, 223, 0.05);
+    }
+
+    .datatable thead th {
+        background-color: var(--light-color);
+        font-weight: 600;
+        border-bottom: none;
+    }
+
+    .datatable tbody td {
+        vertical-align: middle;
+    }
+
+    .slide-in-up {
+        animation: slideInUp 0.5s ease-out;
+    }
+
+    .slide-in-left {
+        animation: slideInLeft 0.5s ease-out;
+    }
+
+    .slide-in-right {
+        animation: slideInRight 0.5s ease-out;
+    }
+
+    @keyframes slideInUp {
+        from {
+            transform: translateY(30px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideInLeft {
+        from {
+            transform: translateX(-30px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideInRight {
+        from {
+            transform: translateX(30px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="page-header">
@@ -15,27 +413,114 @@
         </nav>
     </div>
     <div>
-        <a href="{% url 'admin:products_product_add' %}" class="btn btn-primary">
-            <i class="fas fa-plus me-1"></i> Add Product
-        </a>
+        <div class="btn-group">
+            <a href="{% url 'admin:products_product_add' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i> Add Product
+            </a>
+            <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'admin:products_product_add' %}"><i class="fas fa-plus me-2"></i>Add Single Product</a></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-file-import me-2"></i>Import Products</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Product Settings</a></li>
+            </ul>
+        </div>
+        <div class="btn-group ms-2 view-toggle">
+            <button type="button" class="list-view-btn active" title="List View">
+                <i class="fas fa-list"></i>
+            </button>
+            <button type="button" class="grid-view-btn" title="Grid View">
+                <i class="fas fa-th-large"></i>
+            </button>
+        </div>
     </div>
 </div>
 
-<!-- Product Stats -->
+<!-- Product Dashboard Summary -->
 <div class="row slide-in-up">
-    <!-- Total Products -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card stat-card primary h-100">
-            <div class="card-body">
-                <div class="stat-icon">
-                    <i class="fas fa-box"></i>
+    <!-- Stats Cards Row -->
+    <div class="col-12 mb-4">
+        <div class="row">
+            <!-- Total Products -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card primary h-100">
+                    <div class="card-body">
+                        <div class="stat-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-title">Total Products</div>
+                            <div class="stat-value">{{ total_products }}</div>
+                            <div class="stat-progress">
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="stat-content">
-                    <div class="stat-title">Total Products</div>
-                    <div class="stat-value">{{ total_products }}</div>
-                    <div class="stat-progress">
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+
+            <!-- Active Products -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card success h-100">
+                    <div class="card-body">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-title">Active Products</div>
+                            <div class="stat-value">{{ active_products }}</div>
+                            <div class="stat-progress">
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: {{ active_percentage }}%" aria-valuenow="{{ active_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <span class="ms-2">{{ active_percentage }}%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Products -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card info h-100">
+                    <div class="card-body">
+                        <div class="stat-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-title">Featured Products</div>
+                            <div class="stat-value">{{ featured_products }}</div>
+                            <div class="stat-progress">
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: {{ featured_percentage }}%" aria-valuenow="{{ featured_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <span class="ms-2">{{ featured_percentage }}%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Low Stock Products -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card warning h-100">
+                    <div class="card-body">
+                        <div class="stat-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-title">Low Stock</div>
+                            <div class="stat-value">{{ low_stock_products }}</div>
+                            <div class="stat-progress">
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: {{ low_stock_percentage }}%" aria-valuenow="{{ low_stock_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <span class="ms-2">{{ low_stock_percentage }}%</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -43,63 +528,37 @@
         </div>
     </div>
 
-    <!-- Active Products -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card stat-card success h-100">
-            <div class="card-body">
-                <div class="stat-icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="stat-content">
-                    <div class="stat-title">Active Products</div>
-                    <div class="stat-value">{{ active_products }}</div>
-                    <div class="stat-progress">
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: {{ active_percentage }}%" aria-valuenow="{{ active_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <span class="ms-2">{{ active_percentage }}%</span>
-                    </div>
-                </div>
+    <!-- Quick Actions Row -->
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Quick Actions</h5>
             </div>
-        </div>
-    </div>
-
-    <!-- Featured Products -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card stat-card info h-100">
             <div class="card-body">
-                <div class="stat-icon">
-                    <i class="fas fa-star"></i>
-                </div>
-                <div class="stat-content">
-                    <div class="stat-title">Featured Products</div>
-                    <div class="stat-value">{{ featured_products }}</div>
-                    <div class="stat-progress">
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: {{ featured_percentage }}%" aria-valuenow="{{ featured_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <span class="ms-2">{{ featured_percentage }}%</span>
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 mb-3 mb-md-0">
+                        <a href="{% url 'admin:products_product_add' %}" class="btn btn-outline-primary w-100 py-3">
+                            <i class="fas fa-plus-circle fa-2x mb-2"></i>
+                            <div>Add New Product</div>
+                        </a>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Low Stock Products -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card stat-card warning h-100">
-            <div class="card-body">
-                <div class="stat-icon">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <div class="stat-content">
-                    <div class="stat-title">Low Stock</div>
-                    <div class="stat-value">{{ low_stock_products }}</div>
-                    <div class="stat-progress">
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: {{ low_stock_percentage }}%" aria-valuenow="{{ low_stock_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <span class="ms-2">{{ low_stock_percentage }}%</span>
+                    <div class="col-md-3 col-sm-6 mb-3 mb-md-0">
+                        <a href="{% url 'admin:products_category_changelist' %}" class="btn btn-outline-info w-100 py-3">
+                            <i class="fas fa-tags fa-2x mb-2"></i>
+                            <div>Manage Categories</div>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3 mb-sm-0">
+                        <button type="button" class="btn btn-outline-warning w-100 py-3" data-bs-toggle="modal" data-bs-target="#exportModal">
+                            <i class="fas fa-file-export fa-2x mb-2"></i>
+                            <div>Export Products</div>
+                        </button>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <button type="button" class="btn btn-outline-success w-100 py-3" data-bs-toggle="modal" data-bs-target="#importModal">
+                            <i class="fas fa-file-import fa-2x mb-2"></i>
+                            <div>Import Products</div>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -107,12 +566,72 @@
     </div>
 </div>
 
-<!-- Filters and Search -->
+<!-- Export Modal -->
+<div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exportModalLabel">Export Products</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Select the format to export your products:</p>
+                <div class="d-grid gap-2">
+                    <a href="#" class="btn btn-outline-primary">
+                        <i class="fas fa-file-csv me-2"></i> Export as CSV
+                    </a>
+                    <a href="#" class="btn btn-outline-success">
+                        <i class="fas fa-file-excel me-2"></i> Export as Excel
+                    </a>
+                    <a href="#" class="btn btn-outline-danger">
+                        <i class="fas fa-file-pdf me-2"></i> Export as PDF
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Import Modal -->
+<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importModalLabel">Import Products</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="importFile" class="form-label">Select CSV or Excel file</label>
+                        <input class="form-control" type="file" id="importFile" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="overwriteExisting">
+                        <label class="form-check-label" for="overwriteExisting">Overwrite existing products</label>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i> Make sure your file follows the required format. <a href="#">Download template</a>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Import</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Advanced Filters and Search -->
 <div class="card mb-4 slide-in-left">
-    <div class="card-header">
-        <h5>Filters</h5>
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Advanced Filters</h5>
         <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-bs-toggle="collapse" data-bs-target="#filtersCollapse" aria-expanded="true" aria-controls="filtersCollapse">
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#filtersCollapse" aria-expanded="true" aria-controls="filtersCollapse">
                 <i class="fas fa-minus"></i>
             </button>
         </div>
@@ -120,192 +639,634 @@
     <div class="collapse show" id="filtersCollapse">
         <div class="card-body">
             <form method="get" id="product-filter-form">
-                <div class="row">
-                    <div class="col-md-3 mb-3">
-                        <label for="category" class="form-label">Category</label>
-                        <select name="category" id="category" class="form-select select2">
-                            <option value="">All Categories</option>
-                            {% for category in categories %}
-                                <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"i" %}selected{% endif %}>{{ category.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="is_available" class="form-label">Status</label>
-                        <select name="is_available" id="is_available" class="form-select">
-                            <option value="">All Status</option>
-                            <option value="1" {% if request.GET.is_available == '1' %}selected{% endif %}>Active</option>
-                            <option value="0" {% if request.GET.is_available == '0' %}selected{% endif %}>Inactive</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="is_featured" class="form-label">Featured</label>
-                        <select name="is_featured" id="is_featured" class="form-select">
-                            <option value="">All</option>
-                            <option value="1" {% if request.GET.is_featured == '1' %}selected{% endif %}>Featured</option>
-                            <option value="0" {% if request.GET.is_featured == '0' %}selected{% endif %}>Not Featured</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="stock" class="form-label">Stock</label>
-                        <select name="stock" id="stock" class="form-select">
-                            <option value="">All</option>
-                            <option value="low" {% if request.GET.stock == 'low' %}selected{% endif %}>Low Stock (≤ 10)</option>
-                            <option value="out" {% if request.GET.stock == 'out' %}selected{% endif %}>Out of Stock (0)</option>
-                            <option value="in" {% if request.GET.stock == 'in' %}selected{% endif %}>In Stock (> 0)</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="search" class="form-label">Search</label>
-                        <div class="input-group">
-                            <input type="text" name="search" id="search" class="form-control" placeholder="Search products..." value="{{ request.GET.search|default:'' }}">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-search"></i>
+                <div class="row g-3">
+                    <!-- Search Bar -->
+                    <div class="col-12 mb-3">
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-white">
+                                <i class="fas fa-search text-muted"></i>
+                            </span>
+                            <input type="text" name="search" id="search" class="form-control form-control-lg border-start-0" placeholder="Search products by name, SKU, or description..." value="{{ request.GET.search|default:'' }}">
+                            <button type="submit" class="btn btn-primary px-4">
+                                Search
                             </button>
                         </div>
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="price_min" class="form-label">Min Price</label>
-                        <input type="number" name="price_min" id="price_min" class="form-control" placeholder="Min Price" value="{{ request.GET.price_min|default:'' }}">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="price_max" class="form-label">Max Price</label>
-                        <input type="number" name="price_max" id="price_max" class="form-control" placeholder="Max Price" value="{{ request.GET.price_max|default:'' }}">
+
+                    <!-- Filter Tabs -->
+                    <div class="col-12 mb-3">
+                        <ul class="nav nav-tabs" id="filterTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="basic-filters-tab" data-bs-toggle="tab" data-bs-target="#basic-filters" type="button" role="tab" aria-controls="basic-filters" aria-selected="true">
+                                    Basic Filters
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="price-filters-tab" data-bs-toggle="tab" data-bs-target="#price-filters" type="button" role="tab" aria-controls="price-filters" aria-selected="false">
+                                    Price & Stock
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="date-filters-tab" data-bs-toggle="tab" data-bs-target="#date-filters" type="button" role="tab" aria-controls="date-filters" aria-selected="false">
+                                    Date Filters
+                                </button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content p-3 border border-top-0 rounded-bottom" id="filterTabsContent">
+                            <!-- Basic Filters Tab -->
+                            <div class="tab-pane fade show active" id="basic-filters" role="tabpanel" aria-labelledby="basic-filters-tab">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label for="category" class="form-label">Category</label>
+                                        <select name="category" id="category" class="form-select select2">
+                                            <option value="">All Categories</option>
+                                            {% for category in categories %}
+                                                <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"i" %}selected{% endif %}>{{ category.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="is_available" class="form-label">Status</label>
+                                        <div class="d-flex">
+                                            <div class="form-check me-3">
+                                                <input class="form-check-input" type="radio" name="is_available" id="status_all" value="" {% if request.GET.is_available == '' or not request.GET.is_available %}checked{% endif %}>
+                                                <label class="form-check-label" for="status_all">All</label>
+                                            </div>
+                                            <div class="form-check me-3">
+                                                <input class="form-check-input" type="radio" name="is_available" id="status_active" value="1" {% if request.GET.is_available == '1' %}checked{% endif %}>
+                                                <label class="form-check-label" for="status_active">Active</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="is_available" id="status_inactive" value="0" {% if request.GET.is_available == '0' %}checked{% endif %}>
+                                                <label class="form-check-label" for="status_inactive">Inactive</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="is_featured" class="form-label">Featured</label>
+                                        <div class="d-flex">
+                                            <div class="form-check me-3">
+                                                <input class="form-check-input" type="radio" name="is_featured" id="featured_all" value="" {% if request.GET.is_featured == '' or not request.GET.is_featured %}checked{% endif %}>
+                                                <label class="form-check-label" for="featured_all">All</label>
+                                            </div>
+                                            <div class="form-check me-3">
+                                                <input class="form-check-input" type="radio" name="is_featured" id="featured_yes" value="1" {% if request.GET.is_featured == '1' %}checked{% endif %}>
+                                                <label class="form-check-label" for="featured_yes">Featured</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="is_featured" id="featured_no" value="0" {% if request.GET.is_featured == '0' %}checked{% endif %}>
+                                                <label class="form-check-label" for="featured_no">Not Featured</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Price & Stock Filters Tab -->
+                            <div class="tab-pane fade" id="price-filters" role="tabpanel" aria-labelledby="price-filters-tab">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Price Range (₹)</label>
+                                        <div class="row g-2">
+                                            <div class="col-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">₹</span>
+                                                    <input type="number" name="price_min" id="price_min" class="form-control" placeholder="Min" value="{{ request.GET.price_min|default:'' }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">₹</span>
+                                                    <input type="number" name="price_max" id="price_max" class="form-control" placeholder="Max" value="{{ request.GET.price_max|default:'' }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="stock" class="form-label">Stock Status</label>
+                                        <select name="stock" id="stock" class="form-select">
+                                            <option value="">All Stock Levels</option>
+                                            <option value="out" {% if request.GET.stock == 'out' %}selected{% endif %}>Out of Stock (0)</option>
+                                            <option value="low" {% if request.GET.stock == 'low' %}selected{% endif %}>Low Stock (≤ 10)</option>
+                                            <option value="in" {% if request.GET.stock == 'in' %}selected{% endif %}>In Stock (> 0)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="discount" class="form-label">Discount</label>
+                                        <select name="discount" id="discount" class="form-select">
+                                            <option value="">All Products</option>
+                                            <option value="yes" {% if request.GET.discount == 'yes' %}selected{% endif %}>On Sale</option>
+                                            <option value="no" {% if request.GET.discount == 'no' %}selected{% endif %}>Regular Price</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Date Filters Tab -->
+                            <div class="tab-pane fade" id="date-filters" role="tabpanel" aria-labelledby="date-filters-tab">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Created Date Range</label>
+                                        <div class="row g-2">
+                                            <div class="col-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                                                    <input type="date" name="date_from" id="date_from" class="form-control" placeholder="From" value="{{ request.GET.date_from|default:'' }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                                                    <input type="date" name="date_to" id="date_to" class="form-control" placeholder="To" value="{{ request.GET.date_to|default:'' }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="date_preset" class="form-label">Quick Date Presets</label>
+                                        <select name="date_preset" id="date_preset" class="form-select">
+                                            <option value="">Custom Range</option>
+                                            <option value="today">Today</option>
+                                            <option value="yesterday">Yesterday</option>
+                                            <option value="this_week">This Week</option>
+                                            <option value="last_week">Last Week</option>
+                                            <option value="this_month">This Month</option>
+                                            <option value="last_month">Last Month</option>
+                                            <option value="this_year">This Year</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12">
+
+                <!-- Filter Actions -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div>
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-filter me-1"></i> Apply Filters
                         </button>
-                        <a href="{% url 'admin:products_product_changelist' %}" class="btn btn-secondary">
+                        <a href="{% url 'admin:products_product_changelist' %}" class="btn btn-outline-secondary ms-2">
                             <i class="fas fa-times me-1"></i> Clear Filters
                         </a>
-                        <div class="float-end">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-download me-1"></i> Export
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#"><i class="fas fa-file-csv me-2"></i>CSV</a></li>
-                                    <li><a class="dropdown-item" href="#"><i class="fas fa-file-excel me-2"></i>Excel</a></li>
-                                    <li><a class="dropdown-item" href="#"><i class="fas fa-file-pdf me-2"></i>PDF</a></li>
-                                </ul>
-                            </div>
-                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#bulkDeleteModal">
-                                <i class="fas fa-trash me-1"></i> Bulk Delete
+                        <button type="button" class="btn btn-outline-primary ms-2" id="saveFilterBtn">
+                            <i class="fas fa-save me-1"></i> Save Filter
+                        </button>
+                    </div>
+                    <div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-download me-1"></i> Export Filtered Results
                             </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exportModal"><i class="fas fa-file-csv me-2"></i>CSV</a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exportModal"><i class="fas fa-file-excel me-2"></i>Excel</a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exportModal"><i class="fas fa-file-pdf me-2"></i>PDF</a></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
+
+                <!-- Active Filters -->
+                {% if request.GET %}
+                <div class="mt-3">
+                    <div class="d-flex align-items-center">
+                        <span class="text-muted me-2">Active Filters:</span>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% if request.GET.search %}
+                                <span class="badge bg-light text-dark p-2">
+                                    Search: "{{ request.GET.search }}"
+                                    <a href="#" class="ms-1 text-danger remove-filter" data-filter="search"><i class="fas fa-times"></i></a>
+                                </span>
+                            {% endif %}
+                            {% if request.GET.category %}
+                                <span class="badge bg-light text-dark p-2">
+                                    Category: {{ request.GET.category }}
+                                    <a href="#" class="ms-1 text-danger remove-filter" data-filter="category"><i class="fas fa-times"></i></a>
+                                </span>
+                            {% endif %}
+                            {% if request.GET.is_available == '1' %}
+                                <span class="badge bg-light text-dark p-2">
+                                    Status: Active
+                                    <a href="#" class="ms-1 text-danger remove-filter" data-filter="is_available"><i class="fas fa-times"></i></a>
+                                </span>
+                            {% elif request.GET.is_available == '0' %}
+                                <span class="badge bg-light text-dark p-2">
+                                    Status: Inactive
+                                    <a href="#" class="ms-1 text-danger remove-filter" data-filter="is_available"><i class="fas fa-times"></i></a>
+                                </span>
+                            {% endif %}
+                            <!-- Add more active filters here -->
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </form>
         </div>
     </div>
 </div>
 
-<!-- Products Table -->
-<div class="card mb-4 slide-in-right">
-    <div class="card-header">
-        <h5>Products List</h5>
-        <div class="card-tools">
-            <span class="text-muted">Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ paginator.count }} products</span>
+<!-- Save Filter Modal -->
+<div class="modal fade" id="saveFilterModal" tabindex="-1" aria-labelledby="saveFilterModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="saveFilterModalLabel">Save Filter</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="filterName" class="form-label">Filter Name</label>
+                        <input type="text" class="form-control" id="filterName" placeholder="My Custom Filter">
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="makeDefault">
+                        <label class="form-check-label" for="makeDefault">Make Default</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Save Filter</button>
+            </div>
         </div>
     </div>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <form id="bulk-action-form" method="post" action="#">
-                {% csrf_token %}
-                <input type="hidden" name="model" value="products.product">
-                <input type="hidden" name="action" value="">
+</div>
 
-                <table class="table table-hover datatable">
-                    <thead>
-                        <tr>
-                            <th width="30">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="selectAll">
-                                </div>
-                            </th>
-                            <th width="60">Image</th>
-                            <th>Name</th>
-                            <th>Category</th>
-                            <th>Price</th>
-                            <th>Stock</th>
-                            <th>Status</th>
-                            <th>Featured</th>
-                            <th>Created</th>
-                            <th width="120">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for product in product_list %}
+<!-- Products Display -->
+<div class="card mb-4 slide-in-right">
+    <div class="card-header">
+        <h5>Products</h5>
+        <div class="card-tools">
+            <span class="text-muted">Showing {{ cl.result_count }} products</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <form id="bulk-action-form" method="post" action="#">
+            {% csrf_token %}
+            <input type="hidden" name="model" value="products.product">
+            <input type="hidden" name="action" value="">
+
+            <!-- List View -->
+            <div class="product-list-view">
+                <div class="table-responsive">
+                    <table class="table table-hover datatable">
+                        <thead>
                             <tr>
-                                <td>
+                                <th width="30">
                                     <div class="form-check">
-                                        <input class="form-check-input bulk-select-checkbox" type="checkbox" name="selected_ids" value="{{ product.id }}">
+                                        <input class="form-check-input" type="checkbox" id="selectAll">
                                     </div>
-                                </td>
-                                <td>
-                                    {% with product.images.all|first as image %}
-                                        {% if image %}
-                                            <img src="{{ image.image.url }}" alt="{{ product.name }}" class="img-thumbnail" width="50">
-                                        {% else %}
+                                </th>
+                                <th width="60">Image</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                                <th>Featured</th>
+                                <th>Created</th>
+                                <th width="120">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if cl.result_list %}
+                                {% for product in cl.result_list %}
+                                    <tr>
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input bulk-select-checkbox" type="checkbox" name="selected_ids" value="{{ product.id }}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {% with product.images.all|first as image %}
+                                                {% if image %}
+                                                    <img src="{{ image.image.url }}" alt="{{ product.name }}" class="img-thumbnail" width="50">
+                                                {% else %}
+                                                    <div class="no-image" style="width: 50px; height: 50px;">
+                                                        <i class="fas fa-image"></i>
+                                                    </div>
+                                                {% endif %}
+                                            {% endwith %}
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'admin:products_product_change' product.id %}">{{ product.name }}</a>
+                                            <div class="small text-muted">SKU: {{ product.id }}</div>
+                                        </td>
+                                        <td>{{ product.category.name }}</td>
+                                        <td>
+                                            <div>₹{{ product.price }}</div>
+                                            {% if product.discount_price %}
+                                                <div class="small text-success">₹{{ product.discount_price }} ({{ product.get_discount_percentage }}% off)</div>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{% if product.stock <= 0 %}danger{% elif product.stock <= 10 %}warning{% else %}success{% endif %}">
+                                                {{ product.stock }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input status-toggle" type="checkbox" role="switch" data-product-id="{{ product.id }}" {% if product.is_available %}checked{% endif %}>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input featured-toggle" type="checkbox" role="switch" data-product-id="{{ product.id }}" {% if product.is_featured %}checked{% endif %}>
+                                            </div>
+                                        </td>
+                                        <td>{{ product.created_at|date:"M d, Y" }}</td>
+                                        <td>
+                                            <a href="{% url 'admin:products_product_change' product.id %}" class="action-btn edit" data-bs-toggle="tooltip" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'products:product_detail' product.slug %}" class="action-btn view" data-bs-toggle="tooltip" title="View" target="_blank">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{% url 'admin:products_product_delete' product.id %}" class="action-btn delete delete-confirm" data-bs-toggle="tooltip" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% elif product_list %}
+                                {% for product in product_list %}
+                                    <tr>
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input bulk-select-checkbox" type="checkbox" name="selected_ids" value="{{ product.id }}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {% with product.images.all|first as image %}
+                                                {% if image %}
+                                                    <img src="{{ image.image.url }}" alt="{{ product.name }}" class="img-thumbnail" width="50">
+                                                {% else %}
+                                                    <div class="no-image" style="width: 50px; height: 50px;">
+                                                        <i class="fas fa-image"></i>
+                                                    </div>
+                                                {% endif %}
+                                            {% endwith %}
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'admin:products_product_change' product.id %}">{{ product.name }}</a>
+                                            <div class="small text-muted">SKU: {{ product.id }}</div>
+                                        </td>
+                                        <td>{{ product.category.name }}</td>
+                                        <td>
+                                            <div>₹{{ product.price }}</div>
+                                            {% if product.discount_price %}
+                                                <div class="small text-success">₹{{ product.discount_price }} ({{ product.get_discount_percentage }}% off)</div>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{% if product.stock <= 0 %}danger{% elif product.stock <= 10 %}warning{% else %}success{% endif %}">
+                                                {{ product.stock }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input status-toggle" type="checkbox" role="switch" data-product-id="{{ product.id }}" {% if product.is_available %}checked{% endif %}>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input featured-toggle" type="checkbox" role="switch" data-product-id="{{ product.id }}" {% if product.is_featured %}checked{% endif %}>
+                                            </div>
+                                        </td>
+                                        <td>{{ product.created_at|date:"M d, Y" }}</td>
+                                        <td>
+                                            <a href="{% url 'admin:products_product_change' product.id %}" class="action-btn edit" data-bs-toggle="tooltip" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'products:product_detail' product.slug %}" class="action-btn view" data-bs-toggle="tooltip" title="View" target="_blank">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{% url 'admin:products_product_delete' product.id %}" class="action-btn delete delete-confirm" data-bs-toggle="tooltip" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="10" class="text-center">No products found.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Grid View -->
+            <div class="product-grid-view">
+                <div class="row">
+                    {% if cl.result_list %}
+                        {% for product in cl.result_list %}
+                            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                                <div class="product-card" data-product-id="{{ product.id }}">
+                                    <div class="product-image" style="{% with product.images.all|first as image %}{% if image %}background-image: url('{{ image.image.url }}'){% endif %}{% endwith %}">
+                                        {% if not product.images.all|first %}
                                             <div class="no-image">
                                                 <i class="fas fa-image"></i>
                                             </div>
                                         {% endif %}
-                                    {% endwith %}
-                                </td>
-                                <td>
-                                    <a href="{% url 'admin:products_product_change' product.id %}">{{ product.name }}</a>
-                                    <div class="small text-muted">SKU: {{ product.id }}</div>
-                                </td>
-                                <td>{{ product.category.name }}</td>
-                                <td>
-                                    <div>₹{{ product.price }}</div>
-                                    {% if product.discount_price %}
-                                        <div class="small text-success">₹{{ product.discount_price }} ({{ product.get_discount_percentage }}% off)</div>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <span class="badge bg-{% if product.stock <= 0 %}danger{% elif product.stock <= 10 %}warning{% else %}success{% endif %}">
-                                        {{ product.stock }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input status-toggle" type="checkbox" role="switch" data-product-id="{{ product.id }}" {% if product.is_available %}checked{% endif %}>
+
+                                        <div class="badges">
+                                            {% if product.is_featured %}
+                                                <span class="badge bg-info">
+                                                    <i class="fas fa-star me-1"></i> Featured
+                                                </span>
+                                            {% endif %}
+                                            {% if product.discount_price %}
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-tags me-1"></i> {{ product.get_discount_percentage }}% OFF
+                                                </span>
+                                            {% endif %}
+                                            {% if product.stock <= 0 %}
+                                                <span class="badge bg-danger">
+                                                    <i class="fas fa-exclamation-circle me-1"></i> Out of Stock
+                                                </span>
+                                            {% elif product.stock <= 10 %}
+                                                <span class="badge bg-warning text-dark">
+                                                    <i class="fas fa-exclamation-triangle me-1"></i> Low Stock
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="actions">
+                                            <a href="{% url 'admin:products_product_change' product.id %}" class="action-btn" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'products:product_detail' product.slug %}" class="action-btn" title="View" target="_blank">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <div class="form-check" style="margin: 0; padding: 0;">
+                                                <input class="form-check-input bulk-select-checkbox" type="checkbox" name="selected_ids" value="{{ product.id }}" id="product-{{ product.id }}" style="margin: 0; position: relative; opacity: 0; z-index: -1;">
+                                                <label class="action-btn" for="product-{{ product.id }}" title="Select">
+                                                    <i class="fas fa-check"></i>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="product-quick-actions">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <li><a class="dropdown-item" href="{% url 'admin:products_product_change' product.id %}"><i class="fas fa-edit me-2"></i>Edit</a></li>
+                                                    <li><a class="dropdown-item" href="{% url 'products:product_detail' product.slug %}" target="_blank"><i class="fas fa-eye me-2"></i>View on Site</a></li>
+                                                    <li><a class="dropdown-item" href="#" onclick="duplicateProduct({{ product.id }})"><i class="fas fa-copy me-2"></i>Duplicate</a></li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li><a class="dropdown-item text-danger" href="{% url 'admin:products_product_delete' product.id %}"><i class="fas fa-trash me-2"></i>Delete</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </div>
-                                </td>
-                                <td>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input featured-toggle" type="checkbox" role="switch" data-product-id="{{ product.id }}" {% if product.is_featured %}checked{% endif %}>
+
+                                    <div class="product-details">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="product-title">
+                                                <a href="{% url 'admin:products_product_change' product.id %}">{{ product.name }}</a>
+                                            </h5>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input status-toggle" type="checkbox" role="switch" data-product-id="{{ product.id }}" {% if product.is_available %}checked{% endif %} title="Status">
+                                            </div>
+                                        </div>
+                                        <div class="product-meta">
+                                            <div class="product-category">
+                                                <i class="fas fa-tag me-1 text-muted"></i>
+                                                <a href="?category={{ product.category.id }}" class="text-decoration-none">{{ product.category.name }}</a>
+                                            </div>
+                                            <div class="product-id text-muted">
+                                                <small>ID: {{ product.id }}</small>
+                                            </div>
+                                        </div>
+                                        <div class="product-pricing mt-2">
+                                            {% if product.discount_price %}
+                                                <div class="d-flex align-items-center">
+                                                    <span class="product-original-price">₹{{ product.price }}</span>
+                                                    <span class="product-price">₹{{ product.discount_price }}</span>
+                                                    <span class="product-discount ms-2">{{ product.get_discount_percentage }}% off</span>
+                                                </div>
+                                            {% else %}
+                                                <span class="product-price">₹{{ product.price }}</span>
+                                            {% endif %}
+                                        </div>
                                     </div>
-                                </td>
-                                <td>{{ product.created_at|date:"M d, Y" }}</td>
-                                <td>
-                                    <a href="{% url 'admin:products_product_change' product.id %}" class="action-btn edit" data-toggle="tooltip" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a href="{% url 'products:product_detail' product.slug %}" class="action-btn view" data-toggle="tooltip" title="View" target="_blank">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{% url 'admin:products_product_delete' product.id %}" class="action-btn delete delete-confirm" data-toggle="tooltip" title="Delete">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        {% empty %}
-                            <tr>
-                                <td colspan="10" class="text-center">No products found.</td>
-                            </tr>
+
+                                    <div class="product-footer">
+                                        <div class="row align-items-center">
+                                            <div class="col-7">
+                                                <div class="product-stock-info">
+                                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                                        <span class="stock-label">
+                                                            <i class="fas fa-cubes me-1"></i> Stock:
+                                                        </span>
+                                                        <span class="stock-value fw-bold {% if product.stock <= 0 %}text-danger{% elif product.stock <= 10 %}text-warning{% else %}text-success{% endif %}">
+                                                            {{ product.stock }}
+                                                        </span>
+                                                    </div>
+                                                    <div class="progress" style="height: 6px;">
+                                                        <div class="progress-bar bg-{% if product.stock <= 0 %}danger{% elif product.stock <= 10 %}warning{% else %}success{% endif %}" role="progressbar"
+                                                            style="width: {% if product.stock > 100 %}100{% else %}{{ product.stock }}{% endif %}%;"
+                                                            aria-valuenow="{{ product.stock }}" aria-valuemin="0" aria-valuemax="100">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-5 text-end">
+                                                <small class="text-muted d-block">Created</small>
+                                                <small>{{ product.created_at|date:"M d, Y" }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         {% endfor %}
-                    </tbody>
-                </table>
-            </form>
-        </div>
+                    {% elif product_list %}
+                        {% for product in product_list %}
+                            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                                <div class="product-card" data-product-id="{{ product.id }}">
+                                    <div class="product-image" style="{% with product.images.all|first as image %}{% if image %}background-image: url('{{ image.image.url }}'){% endif %}{% endwith %}">
+                                        {% if not product.images.all|first %}
+                                            <div class="no-image">
+                                                <i class="fas fa-image"></i>
+                                            </div>
+                                        {% endif %}
+
+                                        <div class="badges">
+                                            {% if product.is_featured %}
+                                                <span class="badge bg-info">Featured</span>
+                                            {% endif %}
+                                            {% if product.discount_price %}
+                                                <span class="badge bg-success">{{ product.get_discount_percentage }}% OFF</span>
+                                            {% endif %}
+                                            {% if product.stock <= 0 %}
+                                                <span class="badge bg-danger">Out of Stock</span>
+                                            {% elif product.stock <= 10 %}
+                                                <span class="badge bg-warning text-dark">Low Stock</span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="actions">
+                                            <a href="{% url 'admin:products_product_change' product.id %}" class="action-btn" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'products:product_detail' product.slug %}" class="action-btn" title="View" target="_blank">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <div class="form-check" style="margin: 0; padding: 0;">
+                                                <input class="form-check-input bulk-select-checkbox" type="checkbox" name="selected_ids" value="{{ product.id }}" style="margin: 0; position: relative; opacity: 0; z-index: -1;">
+                                                <label class="action-btn" for="product-{{ product.id }}" title="Select">
+                                                    <i class="fas fa-check"></i>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="product-details">
+                                        <h5 class="product-title">
+                                            <a href="{% url 'admin:products_product_change' product.id %}">{{ product.name }}</a>
+                                        </h5>
+                                        <div class="product-category">{{ product.category.name }}</div>
+                                        <div class="d-flex align-items-center">
+                                            {% if product.discount_price %}
+                                                <span class="product-original-price">₹{{ product.price }}</span>
+                                                <span class="product-price">₹{{ product.discount_price }}</span>
+                                            {% else %}
+                                                <span class="product-price">₹{{ product.price }}</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="product-footer">
+                                        <div class="product-stock">
+                                            <i class="fas fa-cubes me-1"></i> Stock: {{ product.stock }}
+                                        </div>
+                                        <div class="product-actions">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input status-toggle" type="checkbox" role="switch" data-product-id="{{ product.id }}" {% if product.is_available %}checked{% endif %} title="Status">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i> No products found.
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
     </div>
     <div class="card-footer">
         <div class="row">
@@ -325,14 +1286,14 @@
             <div class="col-md-6">
                 <nav aria-label="Page navigation">
                     <ul class="pagination justify-content-end mb-0">
-                        {% if page_obj.has_previous %}
+                        {% if cl.page_num > 0 %}
                             <li class="page-item">
-                                <a class="page-link" href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="First">
+                                <a class="page-link" href="?p=0{{ cl.get_query_string }}" aria-label="First">
                                     <span aria-hidden="true">&laquo;&laquo;</span>
                                 </a>
                             </li>
                             <li class="page-item">
-                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Previous">
+                                <a class="page-link" href="?p={{ cl.page_num|add:"-1" }}{{ cl.get_query_string }}" aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
@@ -349,22 +1310,24 @@
                             </li>
                         {% endif %}
 
-                        {% for i in paginator.page_range %}
-                            {% if page_obj.number == i %}
-                                <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
-                            {% elif i > page_obj.number|add:"-3" and i < page_obj.number|add:"3" %}
-                                <li class="page-item"><a class="page-link" href="?page={{ i }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ i }}</a></li>
-                            {% endif %}
-                        {% endfor %}
+                        {% with paginator_range=cl.paginator.page_range|length %}
+                            {% for i in cl.paginator.page_range %}
+                                {% if cl.page_num == forloop.counter0 %}
+                                    <li class="page-item active"><a class="page-link" href="#">{{ forloop.counter }}</a></li>
+                                {% elif forloop.counter0 > cl.page_num|add:"-3" and forloop.counter0 < cl.page_num|add:"3" %}
+                                    <li class="page-item"><a class="page-link" href="?p={{ forloop.counter0 }}{{ cl.get_query_string }}">{{ forloop.counter }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
 
-                        {% if page_obj.has_next %}
+                        {% if cl.page_num < cl.paginator.num_pages|add:"-1" %}
                             <li class="page-item">
-                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Next">
+                                <a class="page-link" href="?p={{ cl.page_num|add:"1" }}{{ cl.get_query_string }}" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
                             </li>
                             <li class="page-item">
-                                <a class="page-link" href="?page={{ paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Last">
+                                <a class="page-link" href="?p={{ cl.paginator.num_pages|add:"-1" }}{{ cl.get_query_string }}" aria-label="Last">
                                     <span aria-hidden="true">&raquo;&raquo;</span>
                                 </a>
                             </li>
@@ -411,12 +1374,76 @@
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // View Toggle
+        const listViewBtn = document.querySelector('.list-view-btn');
+        const gridViewBtn = document.querySelector('.grid-view-btn');
+        const listView = document.querySelector('.product-list-view');
+        const gridView = document.querySelector('.product-grid-view');
+
+        // Check localStorage for view preference
+        const viewPreference = localStorage.getItem('productViewPreference') || 'list';
+
+        // Set initial view based on preference
+        if (viewPreference === 'grid') {
+            listView.style.display = 'none';
+            gridView.style.display = 'block';
+            listViewBtn.classList.remove('active');
+            gridViewBtn.classList.add('active');
+        } else {
+            listView.style.display = 'block';
+            gridView.style.display = 'none';
+            listViewBtn.classList.add('active');
+            gridViewBtn.classList.remove('active');
+        }
+
+        // List view button click
+        listViewBtn.addEventListener('click', function() {
+            listView.style.display = 'block';
+            gridView.style.display = 'none';
+            listViewBtn.classList.add('active');
+            gridViewBtn.classList.remove('active');
+            localStorage.setItem('productViewPreference', 'list');
+        });
+
+        // Grid view button click
+        gridViewBtn.addEventListener('click', function() {
+            listView.style.display = 'none';
+            gridView.style.display = 'block';
+            listViewBtn.classList.remove('active');
+            gridViewBtn.classList.add('active');
+            localStorage.setItem('productViewPreference', 'grid');
+        });
+
+        // Initialize tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Select All Checkbox
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const bulkSelectCheckboxes = document.querySelectorAll('.bulk-select-checkbox');
+
+        selectAllCheckbox?.addEventListener('change', function() {
+            bulkSelectCheckboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        });
+
         // Status toggle
         const statusToggles = document.querySelectorAll('.status-toggle');
         statusToggles.forEach(toggle => {
             toggle.addEventListener('change', function() {
                 const productId = this.dataset.productId;
                 const isAvailable = this.checked;
+
+                // Update all toggles for the same product
+                document.querySelectorAll(`.status-toggle[data-product-id="${productId}"]`).forEach(t => {
+                    t.checked = isAvailable;
+                });
+
+                // Show loading indicator
+                showNotification(`Updating product status...`, 'info');
 
                 fetch('#', {
                     method: 'POST',
@@ -433,15 +1460,29 @@
                 .then(data => {
                     if (data.success) {
                         showNotification(`Product status ${isAvailable ? 'activated' : 'deactivated'} successfully.`, 'success');
+
+                        // Update badges if needed
+                        const productCards = document.querySelectorAll(`.product-card[data-product-id="${productId}"]`);
+                        productCards.forEach(card => {
+                            if (isAvailable) {
+                                card.classList.remove('product-inactive');
+                            } else {
+                                card.classList.add('product-inactive');
+                            }
+                        });
                     } else {
                         showNotification('Failed to update product status.', 'error');
-                        toggle.checked = !isAvailable;
+                        document.querySelectorAll(`.status-toggle[data-product-id="${productId}"]`).forEach(t => {
+                            t.checked = !isAvailable;
+                        });
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
                     showNotification('An error occurred while updating product status.', 'error');
-                    toggle.checked = !isAvailable;
+                    document.querySelectorAll(`.status-toggle[data-product-id="${productId}"]`).forEach(t => {
+                        t.checked = !isAvailable;
+                    });
                 });
             });
         });
@@ -452,6 +1493,9 @@
             toggle.addEventListener('change', function() {
                 const productId = this.dataset.productId;
                 const isFeatured = this.checked;
+
+                // Show loading indicator
+                showNotification(`Updating featured status...`, 'info');
 
                 fetch('#', {
                     method: 'POST',
@@ -468,6 +1512,25 @@
                 .then(data => {
                     if (data.success) {
                         showNotification(`Product ${isFeatured ? 'added to' : 'removed from'} featured successfully.`, 'success');
+
+                        // Update featured badge
+                        const productCards = document.querySelectorAll(`.product-card[data-product-id="${productId}"]`);
+                        productCards.forEach(card => {
+                            const badgesContainer = card.querySelector('.badges');
+                            if (isFeatured) {
+                                if (!badgesContainer.querySelector('.badge.bg-info')) {
+                                    const featuredBadge = document.createElement('span');
+                                    featuredBadge.className = 'badge bg-info';
+                                    featuredBadge.innerHTML = '<i class="fas fa-star me-1"></i> Featured';
+                                    badgesContainer.appendChild(featuredBadge);
+                                }
+                            } else {
+                                const featuredBadge = badgesContainer.querySelector('.badge.bg-info');
+                                if (featuredBadge) {
+                                    featuredBadge.remove();
+                                }
+                            }
+                        });
                     } else {
                         showNotification('Failed to update product featured status.', 'error');
                         toggle.checked = !isFeatured;
@@ -486,7 +1549,7 @@
         const bulkActionSelect = document.getElementById('bulk-action-select');
         const bulkActionForm = document.getElementById('bulk-action-form');
 
-        bulkActionApply.addEventListener('click', function() {
+        bulkActionApply?.addEventListener('click', function() {
             const action = bulkActionSelect.value;
             if (!action) {
                 showNotification('Please select an action.', 'warning');
@@ -500,7 +1563,8 @@
             }
 
             if (action === 'delete') {
-                $('#bulkDeleteModal').modal('show');
+                const bulkDeleteModal = new bootstrap.Modal(document.getElementById('bulkDeleteModal'));
+                bulkDeleteModal.show();
                 return;
             }
 
@@ -511,11 +1575,212 @@
 
         // Confirm bulk delete
         const confirmBulkDelete = document.getElementById('confirm-bulk-delete');
-        confirmBulkDelete.addEventListener('click', function() {
+        confirmBulkDelete?.addEventListener('click', function() {
             document.querySelector('input[name="action"]').value = 'delete';
             bulkActionForm.submit();
-            $('#bulkDeleteModal').modal('hide');
+            const bulkDeleteModal = bootstrap.Modal.getInstance(document.getElementById('bulkDeleteModal'));
+            bulkDeleteModal.hide();
         });
+
+        // Initialize DataTables with custom options
+        if (typeof initDataTables === 'function') {
+            initDataTables('.datatable', {
+                responsive: true,
+                autoWidth: false,
+                searchPlaceholder: "Search products...",
+                dom: '<"d-flex justify-content-between align-items-center mb-3"<"d-flex align-items-center"l><"d-flex"f>>t<"d-flex justify-content-between align-items-center mt-3"<"text-muted"i><"pagination-container"p>>',
+                drawCallback: function() {
+                    // Re-initialize tooltips after table redraw
+                    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                    tooltipTriggerList.map(function (tooltipTriggerEl) {
+                        return new bootstrap.Tooltip(tooltipTriggerEl);
+                    });
+                }
+            });
+        }
+
+        // Filter tabs
+        const filterTabs = document.querySelectorAll('#filterTabs .nav-link');
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Store the active tab in localStorage
+                localStorage.setItem('activeFilterTab', this.id);
+            });
+        });
+
+        // Restore active filter tab from localStorage
+        const activeFilterTab = localStorage.getItem('activeFilterTab');
+        if (activeFilterTab) {
+            const tab = document.getElementById(activeFilterTab);
+            if (tab) {
+                const tabInstance = new bootstrap.Tab(tab);
+                tabInstance.show();
+            }
+        }
+
+        // Date preset selector
+        const datePresetSelect = document.getElementById('date_preset');
+        const dateFromInput = document.getElementById('date_from');
+        const dateToInput = document.getElementById('date_to');
+
+        datePresetSelect?.addEventListener('change', function() {
+            const preset = this.value;
+            if (!preset) return;
+
+            const today = new Date();
+            let fromDate = new Date();
+            let toDate = new Date();
+
+            switch(preset) {
+                case 'today':
+                    // Keep fromDate as today
+                    break;
+                case 'yesterday':
+                    fromDate.setDate(fromDate.getDate() - 1);
+                    toDate.setDate(toDate.getDate() - 1);
+                    break;
+                case 'this_week':
+                    fromDate.setDate(fromDate.getDate() - fromDate.getDay());
+                    break;
+                case 'last_week':
+                    fromDate.setDate(fromDate.getDate() - fromDate.getDay() - 7);
+                    toDate.setDate(toDate.getDate() - toDate.getDay() - 1);
+                    break;
+                case 'this_month':
+                    fromDate.setDate(1);
+                    break;
+                case 'last_month':
+                    fromDate.setMonth(fromDate.getMonth() - 1);
+                    fromDate.setDate(1);
+                    toDate.setDate(0);
+                    break;
+                case 'this_year':
+                    fromDate.setMonth(0);
+                    fromDate.setDate(1);
+                    break;
+            }
+
+            // Format dates for input fields (YYYY-MM-DD)
+            dateFromInput.value = formatDate(fromDate);
+            dateToInput.value = formatDate(toDate);
+        });
+
+        // Format date as YYYY-MM-DD
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // Remove filter buttons
+        const removeFilterButtons = document.querySelectorAll('.remove-filter');
+        removeFilterButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const filter = this.dataset.filter;
+                const url = new URL(window.location.href);
+                url.searchParams.delete(filter);
+                window.location.href = url.toString();
+            });
+        });
+
+        // Save filter button
+        const saveFilterBtn = document.getElementById('saveFilterBtn');
+        saveFilterBtn?.addEventListener('click', function() {
+            const saveFilterModal = new bootstrap.Modal(document.getElementById('saveFilterModal'));
+            saveFilterModal.show();
+        });
+
+        // Duplicate product function
+        window.duplicateProduct = function(productId) {
+            if (!productId) return;
+
+            showNotification('Duplicating product...', 'info');
+
+            fetch(`/admin/products/product/${productId}/duplicate/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('Product duplicated successfully!', 'success');
+                    // Reload the page after a short delay
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                } else {
+                    showNotification('Failed to duplicate product: ' + (data.error || 'Unknown error'), 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('An error occurred while duplicating the product.', 'error');
+            });
+        };
+
+        // Function to show notifications
+        function showNotification(message, type = 'info') {
+            // Check if Toastr is available
+            if (typeof toastr !== 'undefined') {
+                toastr.options = {
+                    closeButton: true,
+                    progressBar: true,
+                    positionClass: 'toast-top-right',
+                    timeOut: type === 'error' ? 5000 : 3000
+                };
+                toastr[type](message);
+            } else {
+                // Create a custom notification
+                const notification = document.createElement('div');
+                notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show notification-toast`;
+                notification.innerHTML = `
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+
+                // Add styles
+                notification.style.position = 'fixed';
+                notification.style.top = '20px';
+                notification.style.right = '20px';
+                notification.style.zIndex = '9999';
+                notification.style.minWidth = '300px';
+                notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+                notification.style.animation = 'fadeInRight 0.5s ease-out';
+
+                // Add to body
+                document.body.appendChild(notification);
+
+                // Auto remove after 3 seconds
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 500);
+                }, type === 'error' ? 5000 : 3000);
+            }
+        }
     });
 </script>
+
+<style>
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.notification-toast {
+    animation: fadeInRight 0.5s ease-out;
+}
+</style>
 {% endblock %}

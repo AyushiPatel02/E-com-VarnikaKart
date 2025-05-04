@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let isFixed = false;
     let lastScrollTop = 0;
     let scrollTimer;
+    let hideNavbarTimer;
+    let navbarHeight = mainNav ? mainNav.offsetHeight : 0;
 
     // Function to handle scroll behavior
     function handleScroll() {
@@ -27,14 +29,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!isFixed) {
                 mainNav.classList.add('navbar-fixed');
                 if (categoryNav) {
-                    categoryNav.style.marginTop = mainNav.offsetHeight + 'px';
+                    categoryNav.style.marginTop = navbarHeight + 'px';
                     categoryNav.classList.add('category-navbar-fixed');
                 }
-                document.body.style.paddingTop = mainNav.offsetHeight + 'px';
+                document.body.style.paddingTop = navbarHeight + 'px';
                 isFixed = true;
-
-                // Add animation class for smooth transition
-                mainNav.style.animation = 'slideDown 0.3s ease-in-out forwards';
             }
         } else {
             if (isFixed) {
@@ -45,11 +44,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 document.body.style.paddingTop = '0';
                 isFixed = false;
-
-                // Reset animation
-                mainNav.style.animation = '';
             }
         }
+
+        // Auto-hide navbar when scrolling down (optional feature)
+        // if (isScrollingDown && currentScrollTop > 300) {
+        //     if (mainNav.classList.contains('navbar-visible')) {
+        //         mainNav.classList.remove('navbar-visible');
+        //         mainNav.classList.add('navbar-hidden');
+        //     }
+        // } else {
+        //     if (mainNav.classList.contains('navbar-hidden')) {
+        //         mainNav.classList.remove('navbar-hidden');
+        //         mainNav.classList.add('navbar-visible');
+        //     }
+        // }
 
         // Update last scroll position
         lastScrollTop = currentScrollTop;
@@ -68,36 +77,179 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize on page load
     handleScroll();
 
-    // Search autocomplete functionality
-    const searchInput = document.getElementById('searchInput');
+    // Handle dropdown menus on hover for desktop
+    const dropdownItems = document.querySelectorAll('.nav-item.dropdown');
+
+    dropdownItems.forEach(item => {
+        const dropdownMenu = item.querySelector('.dropdown-menu');
+
+        if (window.innerWidth >= 992) { // Only for desktop
+            item.addEventListener('mouseenter', function() {
+                dropdownMenu.classList.add('show');
+            });
+
+            item.addEventListener('mouseleave', function() {
+                dropdownMenu.classList.remove('show');
+            });
+        }
+    });
+
+    // Handle mega menu on mobile
+    const megaMenuItems = document.querySelectorAll('.nav-item');
+
+    megaMenuItems.forEach(item => {
+        if (window.innerWidth < 992) { // Only for mobile
+            const link = item.querySelector('.nav-link');
+            const megaMenu = item.querySelector('.mega-menu');
+
+            if (link && megaMenu) {
+                link.addEventListener('click', function(e) {
+                    if (window.innerWidth < 992) {
+                        e.preventDefault();
+                        item.classList.toggle('show');
+                    }
+                });
+            }
+        }
+    });
+
+    // Enhanced Search autocomplete functionality
+    const searchInput = document.querySelector('.search-input');
     const mobileSearchInput = document.getElementById('mobileSearchInput');
-    const searchResults = document.getElementById('searchResults');
+    const searchSuggestions = document.querySelector('.search-suggestions');
 
     if (searchInput) {
+        // Add placeholder animation
+        const originalPlaceholder = searchInput.getAttribute('placeholder');
+        const placeholders = [
+            'Search for paintings...',
+            'Search for jewelry...',
+            'Search for home decor...',
+            'Search for gifts...',
+            originalPlaceholder
+        ];
+        let placeholderIndex = 0;
+
+        // Animate placeholder text
+        function animatePlaceholder() {
+            searchInput.setAttribute('placeholder', placeholders[placeholderIndex]);
+            placeholderIndex = (placeholderIndex + 1) % placeholders.length;
+        }
+
+        // Start placeholder animation after 3 seconds
+        setTimeout(() => {
+            setInterval(animatePlaceholder, 2000);
+        }, 3000);
+
+        // Show suggestions on focus
         searchInput.addEventListener('focus', function() {
-            if (searchResults) {
-                searchResults.style.display = 'block';
+            if (searchSuggestions) {
+                searchSuggestions.classList.add('active');
+
+                // Add header and footer to search suggestions if they don't exist
+                if (!searchSuggestions.querySelector('.search-suggestions-header')) {
+                    const header = document.createElement('div');
+                    header.className = 'search-suggestions-header';
+                    header.innerHTML = `
+                        <div class="search-suggestions-title">Popular Searches</div>
+                        <div class="search-suggestions-clear">Clear All</div>
+                    `;
+                    searchSuggestions.prepend(header);
+
+                    // Add footer
+                    const footer = document.createElement('div');
+                    footer.className = 'search-suggestions-footer';
+                    footer.innerHTML = `
+                        <a href="/products/search/">View all results <i class="fas fa-arrow-right"></i></a>
+                    `;
+                    searchSuggestions.appendChild(footer);
+
+                    // Add event listener to clear button
+                    const clearBtn = header.querySelector('.search-suggestions-clear');
+                    clearBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        searchInput.value = '';
+                        searchSuggestions.classList.remove('active');
+                    });
+                }
             }
         });
 
         // Close search results when clicking outside
         document.addEventListener('click', function(e) {
-            if (searchResults && searchInput && !searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-                searchResults.style.display = 'none';
+            if (searchSuggestions && searchInput && !searchInput.contains(e.target) && !searchSuggestions.contains(e.target)) {
+                searchSuggestions.classList.remove('active');
             }
         });
 
-        // Simple search functionality
+        // Enhanced search functionality
         searchInput.addEventListener('input', function() {
             // Here you would typically make an AJAX call to get search results
             // For demo purposes, we're just showing/hiding the results
             if (this.value.length > 0) {
-                if (searchResults) {
-                    searchResults.style.display = 'block';
+                if (searchSuggestions) {
+                    searchSuggestions.classList.add('active');
+
+                    // Update header title
+                    const header = searchSuggestions.querySelector('.search-suggestions-header');
+                    if (header) {
+                        const title = header.querySelector('.search-suggestions-title');
+                        title.textContent = `Results for "${this.value}"`;
+                    }
                 }
             } else {
-                if (searchResults) {
-                    searchResults.style.display = 'none';
+                if (searchSuggestions) {
+                    // Reset header title
+                    const header = searchSuggestions.querySelector('.search-suggestions-header');
+                    if (header) {
+                        const title = header.querySelector('.search-suggestions-title');
+                        title.textContent = 'Popular Searches';
+                    }
+                }
+            }
+        });
+
+        // Add keyboard navigation for search results
+        searchInput.addEventListener('keydown', function(e) {
+            if (searchSuggestions && searchSuggestions.classList.contains('active')) {
+                const items = searchSuggestions.querySelectorAll('.suggestion-item');
+                let focusedItem = searchSuggestions.querySelector('.suggestion-item.focused');
+                let focusedIndex = -1;
+
+                if (focusedItem) {
+                    focusedIndex = Array.from(items).indexOf(focusedItem);
+                }
+
+                // Down arrow
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (focusedIndex < items.length - 1) {
+                        if (focusedItem) focusedItem.classList.remove('focused');
+                        items[focusedIndex + 1].classList.add('focused');
+                        items[focusedIndex + 1].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                }
+
+                // Up arrow
+                if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (focusedIndex > 0) {
+                        if (focusedItem) focusedItem.classList.remove('focused');
+                        items[focusedIndex - 1].classList.add('focused');
+                        items[focusedIndex - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                }
+
+                // Enter key
+                if (e.key === 'Enter' && focusedItem) {
+                    e.preventDefault();
+                    window.location.href = focusedItem.getAttribute('data-url') || '/products/search/?q=' + encodeURIComponent(searchInput.value);
+                }
+
+                // Escape key
+                if (e.key === 'Escape') {
+                    searchSuggestions.classList.remove('active');
+                    searchInput.blur();
                 }
             }
         });

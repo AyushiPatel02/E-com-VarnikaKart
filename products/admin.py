@@ -66,6 +66,48 @@ class ProductAdmin(admin.ModelAdmin):
         }),
     )
 
+    def changelist_view(self, request, extra_context=None):
+        # Get product stats
+        total_products = Product.objects.count()
+        active_products = Product.objects.filter(is_available=True).count()
+        featured_products = Product.objects.filter(is_featured=True).count()
+        low_stock_products = Product.objects.filter(stock__lte=10, is_available=True).count()
+
+        # Calculate percentages
+        active_percentage = int((active_products / total_products * 100) if total_products > 0 else 0)
+        featured_percentage = int((featured_products / total_products * 100) if total_products > 0 else 0)
+        low_stock_percentage = int((low_stock_products / total_products * 100) if total_products > 0 else 0)
+
+        # Get all categories for filter dropdown
+        categories = Category.objects.filter(is_active=True).order_by('name')
+
+        # Get all products for the list
+        products = Product.objects.all()
+
+        # Create context
+        context = {
+            'total_products': total_products,
+            'active_products': active_products,
+            'featured_products': featured_products,
+            'low_stock_products': low_stock_products,
+            'active_percentage': active_percentage,
+            'featured_percentage': featured_percentage,
+            'low_stock_percentage': low_stock_percentage,
+            'categories': categories,
+            'product_list': products,
+        }
+
+        if extra_context:
+            context.update(extra_context)
+
+        return super().changelist_view(request, context)
+
+    class Media:
+        css = {
+            'all': ('admin/css/custom_admin.css',)
+        }
+        js = ('admin/js/custom_admin.js',)
+
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ('product', 'user', 'rating', 'title', 'created_at')
     list_filter = ('rating', 'created_at')
