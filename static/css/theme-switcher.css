@@ -34,6 +34,71 @@ body {
     transition: all var(--transition-speed);
 }
 
+/* Top Bar Styles */
+.top-bar {
+    background-color: var(--secondary-color);
+    color: var(--button-text-color);
+    transition: all var(--transition-speed);
+}
+
+.top-bar-link {
+    color: var(--button-text-color);
+    transition: all var(--transition-speed);
+}
+
+.top-bar-link:hover {
+    color: var(--accent-color);
+}
+
+.social-icon {
+    color: var(--button-text-color);
+    transition: all var(--transition-speed);
+}
+
+.social-icon:hover {
+    color: var(--accent-color);
+}
+
+/* Newsletter Section */
+.newsletter-section {
+    background-color: var(--primary-color);
+    color: var(--button-text-color);
+    transition: all var(--transition-speed);
+}
+
+.newsletter-btn {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    border: none;
+    transition: all var(--transition-speed);
+}
+
+.newsletter-btn:hover {
+    background-color: var(--secondary-color);
+    color: var(--button-text-color);
+}
+
+/* Footer Styles */
+.footer-logo {
+    font-size: 1.5rem;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: all var(--transition-speed);
+}
+
+.footer-social-btn {
+    background-color: var(--primary-color);
+    color: var(--button-text-color);
+    border: none;
+    transition: all var(--transition-speed);
+}
+
+.footer-social-btn:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-3px);
+}
+
 /* Navigation styles */
 .pro-navbar {
     background-color: var(--nav-bg-color);

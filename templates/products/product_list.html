@@ -16,8 +16,8 @@
         --card-border-radius: 12px;
         --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
         --card-hover-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
-        --primary-gradient: linear-gradient(135deg, var(--bs-primary) 0%, #6610f2 100%);
-        --secondary-gradient: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+        --primary-gradient: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        --secondary-gradient: linear-gradient(135deg, var(--accent-color) 0%, var(--primary-color) 100%);
         --transition-fast: all 0.3s ease;
         --transition-medium: all 0.5s ease;
     }
@@ -160,14 +160,14 @@
     }
 
     .filter-tabs .nav-link:hover {
-        color: var(--bs-primary);
-        background-color: rgba(var(--bs-primary-rgb), 0.05);
+        color: var(--primary-color);
+        background-color: rgba(var(--primary-color-rgb), 0.05);
     }
 
     .filter-tabs .nav-link.active {
-        color: var(--bs-primary);
+        color: var(--primary-color);
         background-color: white;
-        border-bottom: 2px solid var(--bs-primary);
+        border-bottom: 2px solid var(--primary-color);
     }
 
     /* Active Filter Tags */
@@ -260,7 +260,7 @@
 
     .filter-option input[type="checkbox"] {
         margin-right: 10px;
-        accent-color: var(--bs-primary);
+        accent-color: var(--primary-color);
     }
 
     .filter-option label {
@@ -272,7 +272,7 @@
     }
 
     .filter-option:hover label {
-        color: var(--bs-primary);
+        color: var(--primary-color);
     }
 
     .filter-count {
@@ -286,8 +286,8 @@
     }
 
     .filter-option:hover .filter-count {
-        background-color: var(--bs-primary);
-        color: white;
+        background-color: var(--primary-color);
+        color: var(--button-text-color);
     }
 
     /* Price Range Slider */
@@ -298,7 +298,7 @@
     .noUi-handle {
         border-radius: 50%;
         background: white;
-        box-shadow: 0 0 0 3px var(--bs-primary);
+        box-shadow: 0 0 0 3px var(--primary-color);
         border: none;
     }
 
@@ -370,8 +370,8 @@
 
     .sort-btn:hover, .sort-btn:focus {
         background-color: #f8f9fa;
-        border-color: var(--bs-primary);
-        color: var(--bs-primary);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
     }
 
     .dropdown-item.active, .dropdown-item:active {
