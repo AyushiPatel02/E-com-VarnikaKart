@@ -4,18 +4,26 @@
 
 :root {
     /* Default theme variables - will be overridden by JS */
-    --primary-color: #d4a5a5;
-    --secondary-color: #a5a6d4;
-    --accent-color: #d4c9a5;
-    --background-color: #f8f5f2;
-    --text-color: #3a3a3a;
+    --primary-color: #7e9a9a;
+    --secondary-color: #a4c3b2;
+    --accent-color: #efd9ce;
+    --background-color: #f6f6f6;
+    --text-color: #2c3e50;
     --card-bg-color: #ffffff;
-    --border-radius: 15px;
-    --box-shadow: 8px 8px 15px #e6e6e6, -8px -8px 15px #ffffff;
-    --font-family: 'Cormorant Garamond', serif;
+    --border-radius: 12px;
+    --box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+    --font-family: 'Playfair Display', serif;
+    --theme-category: 'paintings';
 
     /* Animation variables */
     --transition-speed: 0.3s;
+
+    /* Font imports for themes */
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 }
 
 /* Apply theme variables to elements */
@@ -23,12 +31,49 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     font-family: var(--font-family);
-    transition: background-color var(--transition-speed), color var(--transition-speed);
+    transition: all var(--transition-speed);
+}
+
+/* Navigation styles */
+.pro-navbar {
+    background-color: var(--nav-bg-color);
+    transition: all var(--transition-speed);
+}
+
+.nav-link {
+    color: var(--text-color);
+    transition: all var(--transition-speed);
+}
+
+.nav-link:hover {
+    color: var(--primary-color);
+}
+
+.dropdown-menu {
+    background-color: var(--card-bg-color);
+    border-color: var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.dropdown-item {
+    color: var(--text-color);
+}
+
+.dropdown-item:hover {
+    background-color: rgba(var(--primary-color-rgb, 0, 0, 0), 0.1);
+    color: var(--primary-color);
+}
+
+/* Button styles */
+.btn {
+    transition: all var(--transition-speed);
 }
 
 .btn-primary {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
+    color: var(--button-text-color);
 }
 
 .btn-primary:hover, .btn-primary:focus {
@@ -45,8 +90,37 @@ body {
 .btn-outline-primary:hover, .btn-outline-primary:focus {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
+    color: var(--button-text-color);
 }
 
+/* Button style variations */
+.theme-canvas-bloom .btn {
+    border-radius: 12px;
+}
+
+.theme-midnight-royal .btn {
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.theme-pastel-pop .btn {
+    border-radius: 30px;
+    font-weight: 600;
+}
+
+.theme-boho-vibe .btn {
+    border-radius: 6px;
+    text-transform: capitalize;
+}
+
+.theme-monochrome-chic .btn {
+    border-radius: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Background and text colors */
 .bg-primary {
     background-color: var(--primary-color) !important;
 }
@@ -55,11 +129,45 @@ body {
     color: var(--primary-color) !important;
 }
 
+a {
+    color: var(--link-color);
+    transition: all var(--transition-speed);
+}
+
+a:hover {
+    color: var(--primary-color);
+}
+
+/* Card styles */
 .card {
     background-color: var(--card-bg-color);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
-    transition: transform 0.3s, box-shadow 0.3s;
+    border-color: var(--border-color);
+    transition: all var(--transition-speed);
+}
+
+/* Footer styles */
+.footer {
+    background-color: var(--footer-bg-color);
+    transition: all var(--transition-speed);
+}
+
+.footer h5, .footer h6 {
+    color: var(--text-color);
+}
+
+.footer p, .footer li {
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.footer a {
+    color: var(--link-color);
+}
+
+.footer a:hover {
+    color: var(--primary-color);
 }
 
 /* Theme Switcher UI */
@@ -154,50 +262,432 @@ body {
 }
 
 /* Theme-specific styles */
-.theme-artisanal-elegance .card:hover {
+
+/* Canvas Bloom Theme */
+.theme-canvas-bloom {
+    --primary-color-rgb: 126, 154, 154;
+}
+
+.theme-canvas-bloom .pro-navbar {
+    background: linear-gradient(to right, #e8f0f0, #f6f6f6);
+    border-bottom: 1px solid #d0e0e0;
+}
+
+.theme-canvas-bloom .navbar-brand {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #7e9a9a;
+}
+
+.theme-canvas-bloom .card {
+    border: 1px solid #d0e0e0;
+    padding: 5px;
+}
+
+.theme-canvas-bloom .card:hover {
     transform: translateY(-5px);
     box-shadow: 12px 12px 20px #e0e0e0, -12px -12px 20px #ffffff;
 }
 
-.theme-boho-brush .card {
-    background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M10,10 C20,20 80,30 90,90" stroke="rgba(0,0,0,0.03)" fill="none" stroke-width="2" stroke-linecap="round"/></svg>');
-    background-size: 400px;
-    background-position: bottom right;
-    background-repeat: no-repeat;
+.theme-canvas-bloom .footer {
+    border-top: 1px solid #d0e0e0;
 }
 
-.theme-modern-minimal .card {
+.theme-canvas-bloom .btn-primary {
+    background: linear-gradient(135deg, #7e9a9a, #a4c3b2);
+}
+
+/* Midnight Royal Theme */
+.theme-midnight-royal {
+    --primary-color-rgb: 108, 92, 231;
+}
+
+.theme-midnight-royal .pro-navbar {
+    background: linear-gradient(to right, #0f1416, #1e272e);
+    border-bottom: 1px solid #4b4b4b;
+}
+
+.theme-midnight-royal .navbar-brand {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    color: #ffeaa7;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.theme-midnight-royal .card {
+    border: 1px solid #4b4b4b;
+    background-color: #2d3436;
+}
+
+.theme-midnight-royal .card-title {
+    color: #ffeaa7;
+}
+
+.theme-midnight-royal .card-text {
+    color: #dfe6e9;
+}
+
+.theme-midnight-royal .footer {
+    border-top: 1px solid #4b4b4b;
+}
+
+.theme-midnight-royal .btn-primary {
+    background: linear-gradient(135deg, #6c5ce7, #4834d4);
+}
+
+.theme-midnight-royal a {
+    text-decoration: none;
+}
+
+/* Pastel Pop Theme */
+.theme-pastel-pop {
+    --primary-color-rgb: 255, 159, 243;
+}
+
+.theme-pastel-pop .pro-navbar {
+    background: linear-gradient(to right, #fdeff9, #e4f9ff);
+    border-bottom: 2px solid #d6f5ff;
+}
+
+.theme-pastel-pop .navbar-brand {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    background: linear-gradient(45deg, #ff9ff3, #48dbfb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.theme-pastel-pop .card {
+    border-radius: 30px;
     border: none;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
 }
 
-.theme-modern-minimal .card:hover {
+.theme-pastel-pop .card:hover {
     transform: translateY(-10px) scale(1.02);
 }
 
-.theme-mystic-indian .card {
-    background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" stroke="rgba(0,0,0,0.03)" fill="none" stroke-width="2"/><circle cx="50" cy="50" r="30" stroke="rgba(0,0,0,0.03)" fill="none" stroke-width="2"/><circle cx="50" cy="50" r="20" stroke="rgba(0,0,0,0.03)" fill="none" stroke-width="2"/></svg>');
-    background-size: 200px;
-    background-position: center;
+.theme-pastel-pop .footer {
+    background: linear-gradient(to right, #fdeff9, #e4f9ff);
+    border-top: 2px solid #d6f5ff;
+}
+
+.theme-pastel-pop .btn-primary {
+    background: linear-gradient(45deg, #ff9ff3, #48dbfb);
+    border: none;
+}
+
+.theme-pastel-pop a {
+    font-weight: 500;
+}
+
+/* Boho Vibe Theme */
+.theme-boho-vibe {
+    --primary-color-rgb: 185, 122, 99;
+}
+
+.theme-boho-vibe .pro-navbar {
+    background-color: #ede3d0;
+    border-bottom: 1px solid #d9cbb8;
+}
+
+.theme-boho-vibe .navbar-brand {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: #b97a63;
+}
+
+.theme-boho-vibe .card {
+    background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M10,10 C20,20 80,30 90,90" stroke="rgba(185,122,99,0.05)" fill="none" stroke-width="2" stroke-linecap="round"/></svg>');
+    background-size: 400px;
+    background-position: bottom right;
     background-repeat: no-repeat;
+    border: 1px solid #d9cbb8;
 }
 
-.theme-pastel-dream .card {
-    border-radius: 30px;
+.theme-boho-vibe .footer {
+    background-color: #e5d9c3;
+    border-top: 1px solid #d9cbb8;
 }
 
-.theme-pastel-dream .btn {
-    border-radius: 30px;
+.theme-boho-vibe .btn-primary {
+    background: #b97a63;
+    border: none;
+}
+
+/* Monochrome Chic Theme */
+.theme-monochrome-chic {
+    --primary-color-rgb: 0, 0, 0;
+}
+
+.theme-monochrome-chic .pro-navbar {
+    background-color: #000000;
+    border-bottom: none;
+}
+
+.theme-monochrome-chic .navbar-brand {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.theme-monochrome-chic .card {
+    border: none;
+    border-radius: 0;
+}
+
+.theme-monochrome-chic .card:hover {
+    transform: translateY(-5px);
+    box-shadow: -5px 5px 0 rgba(0, 0, 0, 0.8);
+}
+
+.theme-monochrome-chic .footer {
+    background-color: #111111;
+    color: #ffffff;
+}
+
+.theme-monochrome-chic .btn-primary {
+    background-color: #000000;
+    border: none;
+}
+
+.theme-monochrome-chic .btn-primary:hover {
+    background-color: #e74c3c;
+}
+
+.theme-monochrome-chic a {
+    text-decoration: none;
+}
+
+/* Floating Theme Switcher styles removed as per user request */
+
+/* Theme-specific Effects */
+/* Canvas Bloom - Paintings */
+.effect-brush-stroke .card {
+    position: relative;
+}
+
+.effect-brush-stroke .card::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M10,50 C30,30 70,30 90,50" stroke="rgba(126,154,154,0.2)" fill="none" stroke-width="5" stroke-linecap="round"/></svg>');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.effect-brush-stroke .card:hover::before {
+    opacity: 1;
+}
+
+.effect-paint-splatter .btn-primary::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-image: url('data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="8" fill="rgba(255,255,255,0.3)"/></svg>');
+    background-size: contain;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+}
+
+.effect-paint-splatter .btn-primary:hover::after {
+    opacity: 1;
+    animation: splatter 0.5s ease-out;
+}
+
+@keyframes splatter {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+/* Midnight Royal - Jewelry */
+.effect-shimmer .card {
+    position: relative;
+    overflow: hidden;
+}
+
+.effect-shimmer .card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: skewX(-25deg);
+    transition: all 0.75s ease;
+}
+
+.effect-shimmer .card:hover::after {
+    left: 100%;
+}
+
+.effect-glow .btn-primary {
+    box-shadow: 0 0 10px rgba(var(--primary-color-rgb, 108, 92, 231), 0.5);
+    transition: box-shadow 0.3s ease;
+}
+
+.effect-glow .btn-primary:hover {
+    box-shadow: 0 0 20px rgba(var(--primary-color-rgb, 108, 92, 231), 0.8);
+}
+
+/* Pastel Pop - Gifts */
+.effect-confetti {
+    position: relative;
+}
+
+.effect-confetti .card:hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(circle, var(--primary-color) 2px, transparent 2px),
+        radial-gradient(circle, var(--secondary-color) 2px, transparent 2px),
+        radial-gradient(circle, var(--accent-color) 2px, transparent 2px);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 15px, 5px 10px;
+    animation: confetti-fade 1s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes confetti-fade {
+    0% {
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.effect-bounce .btn {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.effect-bounce .btn:hover {
+    transform: scale(1.05) translateY(-3px);
+}
+
+.effect-bounce .btn:active {
+    transform: scale(0.95);
+}
+
+/* Boho Vibe - Decor */
+.effect-texture-overlay .card {
+    position: relative;
+}
+
+.effect-texture-overlay .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="none" stroke="rgba(185,122,99,0.1)" stroke-width="1" stroke-dasharray="5,5"/></svg>');
+    background-size: 20px 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.effect-texture-overlay .card:hover::before {
+    opacity: 1;
+}
+
+.effect-natural-patterns .btn-primary {
+    position: relative;
+    overflow: hidden;
+}
+
+.effect-natural-patterns .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,50 C20,30 80,70 100,50" stroke="rgba(255,255,255,0.2)" fill="none" stroke-width="2" stroke-dasharray="5,5"/></svg>');
+    background-size: 100px 100px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.effect-natural-patterns .btn-primary:hover::before {
+    opacity: 1;
+}
+
+/* Monochrome Chic - Modern */
+.effect-sharp-edges .card {
+    transition: all 0.3s ease;
+}
+
+.effect-sharp-edges .card:hover {
+    transform: perspective(500px) rotateX(5deg) rotateY(5deg);
+    box-shadow: -5px 5px 0 rgba(0, 0, 0, 0.8);
+}
+
+.effect-minimal-animation .btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.effect-minimal-animation .btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-color);
+    transition: width 0.3s ease;
+}
+
+.effect-minimal-animation .btn:hover::after {
+    width: 100%;
 }
 
 /* Responsive adjustments */
 @media (max-width: 576px) {
     .theme-panel {
         width: 280px;
+        right: 0;
     }
 
     .theme-toggle-btn {
-        width: 45px;
-        height: 45px;
+        width: 48px;
+        height: 48px;
+        font-size: 1.2rem;
+    }
+
+    .theme-switcher-float {
+        bottom: 20px;
+        right: 20px;
     }
 }

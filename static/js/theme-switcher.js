@@ -5,95 +5,160 @@
 
 // Theme definitions
 const themes = {
-    'artisanal-elegance': {
-        name: 'Artisanal Elegance',
-        description: 'Soft, elegant, handcrafted feel with light neumorphism',
+    'canvas-bloom': {
+        name: 'Canvas Bloom',
+        description: 'Light artistic theme for paintings',
+        category: 'paintings',
         colors: {
-            primary: '#d4a5a5',
-            secondary: '#a5a6d4',
-            accent: '#d4c9a5',
-            background: '#f8f5f2',
-            text: '#3a3a3a',
-            cardBg: '#ffffff'
-        },
-        styles: {
-            borderRadius: '15px',
-            boxShadow: '8px 8px 15px #e6e6e6, -8px -8px 15px #ffffff',
-            fontFamily: "'Cormorant Garamond', serif"
-        }
-    },
-    'boho-brush': {
-        name: 'Boho & Brush',
-        description: 'Bohemian with artistic brush strokes',
-        colors: {
-            primary: '#c77d5e',
-            secondary: '#8ba888',
-            accent: '#e6c9a8',
-            background: '#f5f1e8',
-            text: '#4a4a4a',
-            cardBg: '#fdfbf7'
-        },
-        styles: {
-            borderRadius: '8px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-            fontFamily: "'Montserrat', sans-serif"
-        }
-    },
-    'modern-minimal': {
-        name: 'Modern Minimal',
-        description: 'Clean, professional, and futuristic design',
-        colors: {
-            primary: '#4361ee',
-            secondary: '#3a0ca3',
-            accent: '#f72585',
-            background: '#ffffff',
-            text: '#2b2d42',
-            cardBg: '#ffffff'
-        },
-        styles: {
-            borderRadius: '10px',
-            boxShadow: '0 10px 20px rgba(0,0,0,0.05)',
-            fontFamily: "'Poppins', sans-serif"
-        }
-    },
-    'mystic-indian': {
-        name: 'Mystic Indian Fusion',
-        description: 'Traditional Indian meets modern design',
-        colors: {
-            primary: '#9c0e0e',
-            secondary: '#2c3e50',
-            accent: '#f1c40f',
-            background: '#f9f5eb',
-            text: '#333333',
-            cardBg: '#ffffff'
+            primary: '#7e9a9a',
+            secondary: '#a4c3b2',
+            accent: '#efd9ce',
+            background: '#f6f6f6',
+            text: '#2c3e50',
+            cardBg: '#ffffff',
+            navBg: '#e8f0f0',
+            footerBg: '#dce8e8',
+            buttonText: '#ffffff',
+            linkColor: '#5a7a7a',
+            borderColor: '#d0e0e0'
         },
         styles: {
             borderRadius: '12px',
-            boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
-            fontFamily: "'Amita', cursive"
+            boxShadow: '0 8px 16px rgba(0,0,0,0.05)',
+            fontFamily: "'Playfair Display', serif",
+            headerStyle: 'elegant',
+            buttonStyle: 'soft',
+            cardStyle: 'framed'
+        },
+        effects: {
+            brushStroke: true,
+            paintSplatter: true
         }
     },
-    'pastel-dream': {
-        name: 'Pastel Dream',
-        description: 'Soft, feminine, creative aesthetic',
+    'midnight-royal': {
+        name: 'Midnight Royal',
+        description: 'Dark luxury theme for jewelry',
+        category: 'jewelry',
         colors: {
-            primary: '#ffafcc',
-            secondary: '#a2d2ff',
-            accent: '#cdb4db',
-            background: '#fef9ff',
-            text: '#5a5a5a',
-            cardBg: '#ffffff'
+            primary: '#6c5ce7',
+            secondary: '#2d3436',
+            accent: '#ffeaa7',
+            background: '#1e272e',
+            text: '#dfe6e9',
+            cardBg: '#2d3436',
+            navBg: '#0f1416',
+            footerBg: '#0a0c0e',
+            buttonText: '#ffffff',
+            linkColor: '#a29bfe',
+            borderColor: '#4b4b4b'
+        },
+        styles: {
+            borderRadius: '8px',
+            boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
+            fontFamily: "'Cinzel', serif",
+            headerStyle: 'royal',
+            buttonStyle: 'glossy',
+            cardStyle: 'dark'
+        },
+        effects: {
+            shimmer: true,
+            glow: true
+        }
+    },
+    'pastel-pop': {
+        name: 'Pastel Pop',
+        description: 'Colorful modern theme for vibrant gifts',
+        category: 'gifts',
+        colors: {
+            primary: '#ff9ff3',
+            secondary: '#48dbfb',
+            accent: '#feca57',
+            background: '#f1f2f6',
+            text: '#2f3542',
+            cardBg: '#ffffff',
+            navBg: '#fdeff9',
+            footerBg: '#e4f9ff',
+            buttonText: '#ffffff',
+            linkColor: '#fd79a8',
+            borderColor: '#d6f5ff'
         },
         styles: {
             borderRadius: '20px',
-            boxShadow: '0 6px 15px rgba(0,0,0,0.05)',
-            fontFamily: "'Quicksand', sans-serif"
+            boxShadow: '0 6px 15px rgba(0,0,0,0.08)',
+            fontFamily: "'Poppins', sans-serif",
+            headerStyle: 'playful',
+            buttonStyle: 'rounded',
+            cardStyle: 'bubble'
+        },
+        effects: {
+            confetti: true,
+            bounce: true
+        }
+    },
+    'boho-vibe': {
+        name: 'Boho Vibe',
+        description: 'Earthy, bohemian theme for handmade decor',
+        category: 'decor',
+        colors: {
+            primary: '#b97a63',
+            secondary: '#8d7b68',
+            accent: '#e6c9a8',
+            background: '#f5f0e1',
+            text: '#5d534a',
+            cardBg: '#faf6ed',
+            navBg: '#ede3d0',
+            footerBg: '#e5d9c3',
+            buttonText: '#ffffff',
+            linkColor: '#a56a58',
+            borderColor: '#d9cbb8'
+        },
+        styles: {
+            borderRadius: '6px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
+            fontFamily: "'Montserrat', sans-serif",
+            headerStyle: 'natural',
+            buttonStyle: 'textured',
+            cardStyle: 'earthy'
+        },
+        effects: {
+            textureOverlay: true,
+            naturalPatterns: true
+        }
+    },
+    'monochrome-chic': {
+        name: 'Monochrome Chic',
+        description: 'Sleek black-white theme with accent color',
+        category: 'modern',
+        colors: {
+            primary: '#000000',
+            secondary: '#333333',
+            accent: '#e74c3c',
+            background: '#ffffff',
+            text: '#222222',
+            cardBg: '#f9f9f9',
+            navBg: '#000000',
+            footerBg: '#111111',
+            buttonText: '#ffffff',
+            linkColor: '#e74c3c',
+            borderColor: '#dddddd'
+        },
+        styles: {
+            borderRadius: '0px',
+            boxShadow: '0 15px 25px rgba(0,0,0,0.05)',
+            fontFamily: "'Roboto', sans-serif",
+            headerStyle: 'minimal',
+            buttonStyle: 'sharp',
+            cardStyle: 'flat'
+        },
+        effects: {
+            sharpEdges: true,
+            minimalAnimation: true
         }
     }
 };
 
 // Default theme
-let currentTheme = 'artisanal-elegance';
+let currentTheme = 'canvas-bloom';
 
 // Function to apply theme
 function applyTheme(themeName) {
@@ -121,11 +186,22 @@ function applyTheme(themeName) {
     root.style.setProperty('--background-color', theme.colors.background);
     root.style.setProperty('--text-color', theme.colors.text);
     root.style.setProperty('--card-bg-color', theme.colors.cardBg);
+    root.style.setProperty('--nav-bg-color', theme.colors.navBg);
+    root.style.setProperty('--footer-bg-color', theme.colors.footerBg);
+    root.style.setProperty('--button-text-color', theme.colors.buttonText);
+    root.style.setProperty('--link-color', theme.colors.linkColor);
+    root.style.setProperty('--border-color', theme.colors.borderColor);
 
     // Apply styles
     root.style.setProperty('--border-radius', theme.styles.borderRadius);
     root.style.setProperty('--box-shadow', theme.styles.boxShadow);
     root.style.setProperty('--font-family', theme.styles.fontFamily);
+    root.style.setProperty('--header-style', theme.styles.headerStyle);
+    root.style.setProperty('--button-style', theme.styles.buttonStyle);
+    root.style.setProperty('--card-style', theme.styles.cardStyle);
+
+    // Apply category-specific CSS variable
+    root.style.setProperty('--theme-category', theme.category || 'default');
 
     console.log('Applied CSS variables to root');
 
@@ -154,6 +230,10 @@ function applyTheme(themeName) {
     document.body.className = '';
     document.body.classList.add(`theme-${themeName}`);
     console.log('Added theme class to body:', `theme-${themeName}`);
+
+    // Apply theme-specific effects
+    applyThemeEffects(themeName);
+    console.log('Applied theme effects');
 
     // Trigger custom event for theme change
     document.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: themeName } }));
@@ -230,6 +310,40 @@ function initThemeSwitcher() {
     console.log('Theme switcher initialization complete');
 }
 
+// Floating theme switcher function removed as per user request
+
+// Apply theme-specific effects
+function applyThemeEffects(themeName) {
+    const theme = themes[themeName];
+    if (!theme || !theme.effects) return;
+
+    // Remove all previous effect classes
+    document.body.classList.remove(
+        'effect-brush-stroke',
+        'effect-paint-splatter',
+        'effect-shimmer',
+        'effect-glow',
+        'effect-confetti',
+        'effect-bounce',
+        'effect-texture-overlay',
+        'effect-natural-patterns',
+        'effect-sharp-edges',
+        'effect-minimal-animation'
+    );
+
+    // Add new effect classes
+    if (theme.effects.brushStroke) document.body.classList.add('effect-brush-stroke');
+    if (theme.effects.paintSplatter) document.body.classList.add('effect-paint-splatter');
+    if (theme.effects.shimmer) document.body.classList.add('effect-shimmer');
+    if (theme.effects.glow) document.body.classList.add('effect-glow');
+    if (theme.effects.confetti) document.body.classList.add('effect-confetti');
+    if (theme.effects.bounce) document.body.classList.add('effect-bounce');
+    if (theme.effects.textureOverlay) document.body.classList.add('effect-texture-overlay');
+    if (theme.effects.naturalPatterns) document.body.classList.add('effect-natural-patterns');
+    if (theme.effects.sharpEdges) document.body.classList.add('effect-sharp-edges');
+    if (theme.effects.minimalAnimation) document.body.classList.add('effect-minimal-animation');
+}
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Theme switcher script loaded');
@@ -243,4 +357,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize theme switcher
     initThemeSwitcher();
+
+    // Floating theme switcher removed as per user request
 });
