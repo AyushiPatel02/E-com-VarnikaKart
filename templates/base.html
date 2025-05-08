@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
     <link rel="stylesheet" href="{% static 'css/theme-switcher.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dark-mode.css' %}">
 
     <!-- Additional CSS block for templates -->
     {% block extra_css %}{% endblock %}
@@ -228,55 +229,104 @@
                     <div class="nav-actions">
                         <!-- Theme Switcher Button -->
                         <div class="dropdown">
-                            <button class="action-btn" title="Change Theme" id="themeSwitcherBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="action-btn" title="Appearance Settings" id="themeSwitcherBtn" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-palette"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end theme-dropdown p-3">
-                                <h6 class="dropdown-header border-bottom pb-2 mb-2">Select Theme</h6>
+                                <h6 class="dropdown-header border-bottom pb-2 mb-2 fw-bold">Appearance Settings</h6>
+
+                                <!-- Dark/Light Mode Toggle -->
+                                <div class="mode-toggle mb-4">
+                                    <h6 class="small fw-bold mb-2">Display Mode</h6>
+                                    <div class="mode-toggle-container p-3 rounded border">
+                                        <div class="d-flex align-items-center justify-content-between mb-2">
+                                            <div class="mode-icon-container">
+                                                <i class="fas fa-sun mode-icon mode-icon-sun"></i>
+                                                <i class="fas fa-moon mode-icon mode-icon-moon"></i>
+                                            </div>
+                                            <div class="mode-time small text-muted">
+                                                Auto: Light 6AM-6PM, Dark 6PM-6AM
+                                            </div>
+                                        </div>
+                                        <div class="btn-group w-100 mode-btn-group" role="group" aria-label="Display mode">
+                                            <button type="button" class="btn btn-sm btn-outline-primary mode-btn" data-mode="light" id="lightModeBtn">
+                                                <i class="fas fa-sun me-1"></i> Light
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-primary mode-btn" data-mode="auto" id="autoModeBtn">
+                                                <i class="fas fa-adjust me-1"></i> Auto
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-primary mode-btn" data-mode="dark" id="darkModeBtn">
+                                                <i class="fas fa-moon me-1"></i> Dark
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Theme Selection -->
+                                <h6 class="small fw-bold mb-3">Select Theme</h6>
                                 <div class="theme-options">
-                                    <div class="theme-option d-flex align-items-center p-2 rounded mb-2" data-theme="canvas-bloom">
-                                        <div class="theme-preview me-2">
+                                    <div class="theme-option d-flex align-items-center p-3 rounded mb-2" data-theme="canvas-bloom">
+                                        <div class="theme-preview me-3">
                                             <div class="theme-color" style="background: linear-gradient(135deg, #7e9a9a, #a4c3b2);"></div>
                                         </div>
-                                        <div>
-                                            <div class="fw-medium" id="current-theme-name">Canvas Bloom</div>
-                                            <small class="text-muted">Light artistic theme for paintings</small>
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-palette me-2 text-primary"></i>
+                                                <div class="fw-bold" id="current-theme-name">Canvas Bloom</div>
+                                            </div>
+                                            <small class="text-muted d-block mt-1 fw-medium">Elegant artistic theme with soft colors</small>
                                         </div>
                                     </div>
-                                    <div class="theme-option d-flex align-items-center p-2 rounded mb-2" data-theme="midnight-royal">
-                                        <div class="theme-preview me-2">
+
+                                    <div class="theme-option d-flex align-items-center p-3 rounded mb-2" data-theme="midnight-royal">
+                                        <div class="theme-preview me-3">
                                             <div class="theme-color" style="background: linear-gradient(135deg, #6c5ce7, #2d3436);"></div>
                                         </div>
-                                        <div>
-                                            <div class="fw-medium">Midnight Royal</div>
-                                            <small class="text-muted">Dark luxury theme for jewelry</small>
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-gem me-2 text-primary"></i>
+                                                <div class="fw-bold">Midnight Royal</div>
+                                            </div>
+                                            <small class="text-muted d-block mt-1 fw-medium">Luxurious dark theme with royal accents</small>
                                         </div>
                                     </div>
-                                    <div class="theme-option d-flex align-items-center p-2 rounded mb-2" data-theme="pastel-pop">
-                                        <div class="theme-preview me-2">
+
+                                    <div class="theme-option d-flex align-items-center p-3 rounded mb-2" data-theme="pastel-pop">
+                                        <div class="theme-preview me-3">
                                             <div class="theme-color" style="background: linear-gradient(135deg, #ff9ff3, #48dbfb);"></div>
                                         </div>
-                                        <div>
-                                            <div class="fw-medium">Pastel Pop</div>
-                                            <small class="text-muted">Colorful modern theme for vibrant gifts</small>
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-gift me-2 text-primary"></i>
+                                                <div class="fw-bold">Pastel Pop</div>
+                                            </div>
+                                            <small class="text-muted d-block mt-1 fw-medium">Vibrant, playful theme with pastel colors</small>
                                         </div>
                                     </div>
-                                    <div class="theme-option d-flex align-items-center p-2 rounded mb-2" data-theme="boho-vibe">
-                                        <div class="theme-preview me-2">
+
+                                    <div class="theme-option d-flex align-items-center p-3 rounded mb-2" data-theme="boho-vibe">
+                                        <div class="theme-preview me-3">
                                             <div class="theme-color" style="background: linear-gradient(135deg, #b97a63, #8d7b68);"></div>
                                         </div>
-                                        <div>
-                                            <div class="fw-medium">Boho Vibe</div>
-                                            <small class="text-muted">Earthy, bohemian theme for handmade decor</small>
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-home me-2 text-primary"></i>
+                                                <div class="fw-bold">Boho Vibe</div>
+                                            </div>
+                                            <small class="text-muted d-block mt-1 fw-medium">Earthy, natural theme for handmade items</small>
                                         </div>
                                     </div>
-                                    <div class="theme-option d-flex align-items-center p-2 rounded" data-theme="monochrome-chic">
-                                        <div class="theme-preview me-2">
+
+                                    <div class="theme-option d-flex align-items-center p-3 rounded" data-theme="monochrome-chic">
+                                        <div class="theme-preview me-3">
                                             <div class="theme-color" style="background: linear-gradient(135deg, #000000, #333333);"></div>
                                         </div>
-                                        <div>
-                                            <div class="fw-medium">Monochrome Chic</div>
-                                            <small class="text-muted">Sleek black-white theme with accent color</small>
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-tachometer-alt me-2 text-primary"></i>
+                                                <div class="fw-bold">Monochrome Chic</div>
+                                            </div>
+                                            <small class="text-muted d-block mt-1 fw-medium">Sleek, modern theme with minimalist design</small>
                                         </div>
                                     </div>
                                 </div>
@@ -531,6 +581,9 @@
 
     <!-- Theme Switcher JS -->
     <script src="{% static 'js/theme-switcher.js' %}"></script>
+
+    <!-- Dark Mode JS -->
+    <script src="{% static 'js/dark-mode.js' %}"></script>
 
     <!-- User Menu JS -->
     <script src="{% static 'js/user-menu.js' %}"></script>

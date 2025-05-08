@@ -3248,35 +3248,35 @@
                             <!-- Product badges -->
                             <div class="product-badges">
                                 {% if product.created_at|date:'Y-m-d' > now|date:'Y-m-d'|timesince:'days=-30' %}
-                                <span class="product-badge badge-new">New</span>
+                                <span class="product-badge badge-new" style="display: inline-block !important; visibility: visible !important; opacity: 1 !important; background-color: #4CAF50 !important; color: #000000 !important;">New</span>
                                 {% endif %}
 
                                 {% if product.discount_price %}
                                 {% get_discount_percentage product as discount_percentage %}
-                                <span class="product-badge badge-sale">{{ discount_percentage }}% OFF</span>
+                                <span class="product-badge badge-sale" style="display: inline-block !important; visibility: visible !important; opacity: 1 !important; background-color: #FF5722 !important; color: #000000 !important;">{{ discount_percentage }}% OFF</span>
                                 {% endif %}
 
                                 {% if product.is_featured %}
-                                <span class="product-badge badge-featured">Featured</span>
+                                <span class="product-badge badge-featured" style="display: inline-block !important; visibility: visible !important; opacity: 1 !important; background-color: #9C27B0 !important; color: #ffffff !important;">Featured</span>
                                 {% endif %}
 
                                 <!-- Availability badge -->
                                 {% if product.stock_quantity == 0 %}
-                                <span class="product-badge badge-out-of-stock">Out of Stock</span>
+                                <span class="product-badge badge-out-of-stock" style="display: inline-block !important; visibility: visible !important; opacity: 1 !important; background-color: #F44336 !important; color: #ffffff !important;">Out of Stock</span>
                                 {% elif product.stock_quantity <= 5 %}
-                                <span class="product-badge badge-low-stock">Low Stock</span>
+                                <span class="product-badge badge-low-stock" style="display: inline-block !important; visibility: visible !important; opacity: 1 !important; background-color: #FFC107 !important; color: #000000 !important;">Low Stock</span>
                                 {% endif %}
 
                                 <!-- Trending badge (for demo) -->
                                 {% if forloop.counter|divisibleby:5 %}
-                                <span class="product-badge badge-trending">
-                                    <i class="fas fa-fire-alt me-1"></i> Trending
+                                <span class="product-badge badge-trending" style="display: inline-block !important; visibility: visible !important; opacity: 1 !important; background-color: #2196F3 !important; color: #ffffff !important;">
+                                    <i class="fas fa-fire-alt me-1" style="display: inline-block !important; visibility: visible !important; opacity: 1 !important;"></i> Trending
                                 </span>
                                 {% endif %}
 
                                 <!-- Handmade badge (for demo) -->
                                 {% if forloop.counter|divisibleby:3 %}
-                                <span class="product-badge badge-handmade">Handmade</span>
+                                <span class="product-badge badge-handmade" style="display: inline-block !important; visibility: visible !important; opacity: 1 !important; background-color: #795548 !important; color: #ffffff !important;">Handmade</span>
                                 {% endif %}
                             </div>
 
