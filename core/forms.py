@@ -41,7 +41,9 @@ class NewsletterForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Enter your email address',
                 'aria-label': 'Email address',
-                'aria-describedby': 'subscribe-btn'
+                'aria-describedby': 'subscribe-btn',
+                'autocomplete': 'email',
+                'required': True
             }),
         }
 

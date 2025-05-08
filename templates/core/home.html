@@ -59,50 +59,84 @@
         position: relative;
         background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
         overflow: hidden;
-        min-height: 650px;
+        min-height: 700px;
         padding: 80px 0;
+        border-radius: 0 0 30px 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        position: relative;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23000000' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.5;
+        z-index: 0;
+        pointer-events: none;
     }
 
     .hero-bg-shapes .shape {
         position: absolute;
         border-radius: 50%;
-        filter: blur(50px);
-        opacity: 0.5;
+        filter: blur(60px);
+        opacity: 0.6;
         z-index: 0;
+        transition: all 0.8s ease;
     }
 
     .hero-bg-shapes .shape-1 {
-        width: 300px;
-        height: 300px;
-        background: rgba(var(--primary-color-rgb), 0.2);
-        top: -100px;
+        width: 350px;
+        height: 350px;
+        background: rgba(var(--primary-color-rgb), 0.25);
+        top: -120px;
         left: -100px;
-        animation: float 8s ease-in-out infinite;
+        animation: float 12s ease-in-out infinite;
     }
 
     .hero-bg-shapes .shape-2 {
-        width: 200px;
-        height: 200px;
-        background: rgba(var(--secondary-color-rgb), 0.15);
-        bottom: -50px;
+        width: 250px;
+        height: 250px;
+        background: rgba(var(--secondary-color-rgb), 0.2);
+        bottom: -80px;
         right: 10%;
-        animation: float 6s ease-in-out infinite;
+        animation: float 10s ease-in-out infinite;
         animation-delay: 1s;
     }
 
     .hero-bg-shapes .shape-3 {
-        width: 150px;
-        height: 150px;
-        background: rgba(255, 107, 107, 0.1);
+        width: 180px;
+        height: 180px;
+        background: rgba(255, 107, 107, 0.15);
         top: 30%;
         right: 20%;
-        animation: float 7s ease-in-out infinite;
+        animation: float 8s ease-in-out infinite;
         animation-delay: 2s;
+    }
+
+    .hero-section:hover .shape-1 {
+        transform: scale(1.1) translateY(-20px);
+    }
+
+    .hero-section:hover .shape-2 {
+        transform: scale(1.05) translateX(20px);
+    }
+
+    .hero-section:hover .shape-3 {
+        transform: scale(1.15) translateY(15px);
     }
 
     .hero-content {
         position: relative;
         z-index: 2;
+        transition: all 0.5s ease;
+    }
+
+    .hero-content:hover {
+        transform: translateY(-5px);
     }
 
     .hero-title {
@@ -111,6 +145,8 @@
         margin-bottom: 1.5rem;
         color: var(--text-color);
         line-height: 1.2;
+        letter-spacing: -0.5px;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
     }
 
     .hero-title .highlight {
@@ -120,6 +156,8 @@
         -webkit-text-fill-color: transparent;
         position: relative;
         display: inline-block;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        font-weight: 800;
     }
 
     .hero-title .highlight::after {
@@ -131,7 +169,7 @@
         bottom: 5px;
         left: 0;
         z-index: -1;
-        opacity: 0.3;
+        opacity: 0.4;
         border-radius: 10px;
     }
 
@@ -144,17 +182,34 @@
     }
 
     .hero-btn {
-        padding: 0.8rem 2rem;
+        padding: 0.9rem 2.2rem;
         font-size: 1.1rem;
         font-weight: 600;
         border-radius: 50px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
+        box-shadow: 0 8px 20px rgba(var(--primary-color-rgb), 0.2);
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+        transition: all 0.6s ease;
     }
 
     .hero-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(var(--primary-color-rgb), 0.3);
+    }
+
+    .hero-btn:hover::before {
+        left: 100%;
     }
 
     .stats-container {
@@ -181,40 +236,59 @@
     /* Hero Cards Container */
     .hero-cards-container {
         position: relative;
-        height: 500px;
-        perspective: 1000px;
+        height: 550px;
+        perspective: 1200px;
         width: 100%;
-        max-width: 500px;
+        max-width: 550px;
+        margin: 0 auto;
     }
 
     /* Hero Cards */
     .hero-card {
         position: absolute;
-        width: 280px;
-        height: 380px;
+        width: 300px;
+        height: 400px;
         border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-        transition: all 0.5s ease;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
         transform-style: preserve-3d;
         backface-visibility: hidden;
+        z-index: 1;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        perspective: 1000px;
+    }
+
+    .card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .tilt-card {
+        will-change: transform;
     }
 
     .hero-card:hover {
-        transform: translateY(-10px) scale(1.02) rotate(2deg);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
         z-index: 10;
+    }
+
+    .hero-card:hover .card-inner {
+        transform: translateY(-15px) scale(1.05);
     }
 
     .hero-card .card-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.5s ease;
+        transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
 
     .hero-card:hover .card-img {
-        transform: scale(1.1);
+        transform: scale(1.12);
     }
 
     .hero-card .card-overlay {
@@ -222,28 +296,44 @@
         bottom: 0;
         left: 0;
         right: 0;
-        padding: 25px;
-        background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+        padding: 30px;
+        background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
         color: white;
         transform: translateY(10px);
-        opacity: 0.9;
-        transition: all 0.3s ease;
+        opacity: 0.95;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
 
     .hero-card:hover .card-overlay {
         transform: translateY(0);
         opacity: 1;
+        padding-bottom: 35px;
     }
 
     .hero-card .card-overlay h4 {
         font-weight: 700;
-        margin-bottom: 5px;
-        font-size: 1.4rem;
+        margin-bottom: 8px;
+        font-size: 1.5rem;
+        letter-spacing: 0.5px;
+        transform: translateY(5px);
+        transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .hero-card:hover .card-overlay h4 {
+        transform: translateY(0);
     }
 
     .hero-card .card-overlay p {
-        font-size: 0.95rem;
-        opacity: 0.9;
+        font-size: 1rem;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) 0.1s;
+    }
+
+    .hero-card:hover .card-overlay p {
+        opacity: 1;
+        transform: translateY(0);
     }
 
     .card-shine {
@@ -255,37 +345,43 @@
         background: linear-gradient(
             135deg,
             rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0.1) 50%,
+            rgba(255, 255, 255, 0.2) 25%,
+            rgba(255, 255, 255, 0.3) 50%,
+            rgba(255, 255, 255, 0.2) 75%,
             rgba(255, 255, 255, 0) 100%
         );
         z-index: 5;
-        transform: translateY(100%);
-        transition: transform 0.5s ease;
+        transform: translateY(100%) rotate(5deg) scale(1.5);
+        transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        pointer-events: none;
     }
 
     .hero-card:hover .card-shine {
-        transform: translateY(-100%);
+        transform: translateY(-100%) rotate(5deg) scale(1.5);
     }
 
     .card-1 {
         top: 0;
         left: 0;
         z-index: 3;
-        transform: rotate(-5deg);
+        transform: rotate(-5deg) translateZ(20px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
     }
 
     .card-2 {
-        top: 50px;
-        left: 100px;
+        top: 35px;
+        left: 130px;
         z-index: 2;
-        transform: rotate(3deg);
+        transform: rotate(3deg) translateZ(10px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
     }
 
     .card-3 {
-        top: 100px;
-        left: 200px;
+        top: 70px;
+        left: 260px;
         z-index: 1;
-        transform: rotate(-2deg);
+        transform: rotate(-2deg) translateZ(0);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     }
 
     .float-animation-delay {
@@ -522,7 +618,7 @@
 
     /* Blog Cards */
     .blog-card {
-        transition: all 0.3s ease;
+        transition: all 0.1s ease;
     }
 
     .blog-card:hover {
@@ -666,22 +762,49 @@
 
     /* Animations */
     @keyframes float {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-20px); }
-        100% { transform: translateY(0px); }
+        0% { transform: translateY(0px) rotate(0deg); }
+        25% { transform: translateY(-15px) rotate(1deg); }
+        50% { transform: translateY(-20px) rotate(0deg); }
+        75% { transform: translateY(-10px) rotate(-1deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
     }
 
     .float-animation {
-        animation: float 6s ease-in-out infinite;
+        animation: float 8s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
     }
 
     .float-animation-delay {
-        animation: float 6s ease-in-out infinite;
+        animation: float 8s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
         animation-delay: 2s;
     }
 
     /* Responsive Adjustments */
+    @media (max-width: 1200px) {
+        .hero-title {
+            font-size: 3rem;
+        }
+
+        .hero-card {
+            width: 280px;
+            height: 380px;
+        }
+
+        .card-2 {
+            left: 110px;
+            top: 30px;
+        }
+
+        .card-3 {
+            left: 220px;
+            top: 60px;
+        }
+    }
+
     @media (max-width: 992px) {
+        .hero-section {
+            min-height: 650px;
+        }
+
         .hero-title {
             font-size: 2.5rem;
         }
@@ -690,19 +813,85 @@
             font-size: 1.2rem;
         }
 
-        .hero-image-container {
-            height: 400px;
+        .hero-cards-container {
+            height: 500px;
+            transform: scale(0.9);
+            transform-origin: center top;
             margin-top: 2rem;
+        }
+
+        .card-1 {
+            top: 0;
+            left: 20px;
+        }
+
+        .card-2 {
+            top: 30px;
+            left: 100px;
+        }
+
+        .card-3 {
+            top: 60px;
+            left: 180px;
         }
     }
 
     @media (max-width: 768px) {
         .hero-section {
             min-height: auto;
+            padding: 60px 0 80px;
         }
 
-        .hero-image-container {
-            height: 300px;
+        .hero-cards-container {
+            height: 450px;
+            transform: scale(0.8);
+            margin-top: 3rem;
+        }
+
+        .card-1 {
+            top: 0;
+            left: 40px;
+        }
+
+        .card-2 {
+            top: 25px;
+            left: 110px;
+        }
+
+        .card-3 {
+            top: 50px;
+            left: 180px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+
+        .hero-section {
+            padding: 50px 0 70px;
+        }
+
+        .hero-cards-container {
+            height: 400px;
+            transform: scale(0.7);
+            margin-top: 2rem;
+        }
+
+        .card-1 {
+            top: 0;
+            left: 50px;
+        }
+
+        .card-2 {
+            top: 20px;
+            left: 110px;
+        }
+
+        .card-3 {
+            top: 40px;
+            left: 170px;
         }
     }
 </style>
@@ -719,11 +908,11 @@
     <i class="fas fa-shopping-cart"></i>
 </a>
 <!-- Hero Section -->
-<section class="hero-section position-relative overflow-hidden">
+<section class="hero-section position-relative overflow-hidden loading" id="heroSection">
     <div class="hero-bg-shapes">
-        <div class="shape shape-1"></div>
-        <div class="shape shape-2"></div>
-        <div class="shape shape-3"></div>
+        <div class="shape shape-1" data-parallax-depth="0.2"></div>
+        <div class="shape shape-2" data-parallax-depth="0.4"></div>
+        <div class="shape shape-3" data-parallax-depth="0.3"></div>
     </div>
     <div class="container position-relative">
         <div class="row align-items-center">
@@ -733,11 +922,15 @@
                         <i class="fas fa-star me-1"></i> Premium Handcrafted Products
                     </div>
                     <h1 class="hero-title animate__animated animate__fadeInUp animate__delay-1s">
-                        Handcrafted Artistry, <span class="highlight">Delivered to You</span>
+                        Handcrafted Artistry,
+                        <span class="highlight">Delivered to You</span>
                     </h1>
                     <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-2s">
                         Discover unique handmade crafts, paintings, jewelry, and customizable gifts that tell a story and bring joy to your space.
                     </p>
+                    <div class="badge bg-light text-dark mt-2 mb-3 animate__animated animate__fadeInUp animate__delay-2s">
+                        <i class="fas fa-check-circle text-success me-1"></i> Free shipping on orders over $50
+                    </div>
                     <div class="d-flex flex-wrap gap-3 mt-4 animate__animated animate__fadeInUp animate__delay-3s">
                         <a href="{% url 'products:product_list' %}" class="btn btn-primary btn-lg hero-btn">
                             <i class="fas fa-shopping-bag me-2"></i>Shop Collection
@@ -748,68 +941,282 @@
                     </div>
 
                     <!-- Stats -->
-                    <div class="row mt-5 stats-container animate__animated animate__fadeInUp animate__delay-4s">
+                    <div class="row mt-5 stats-container animate__animated animate__fadeInUp animate__delay-3s">
                         <div class="col-4">
                             <div class="stat-item">
-                                <h3 class="fw-bold mb-0 counter">500</h3>
-                                <p class="text-muted">Unique Products</p>
+                                <h3 class="fw-bold mb-0 counter stat-number">500</h3>
+                                <p class="text-muted fw-medium">Unique Products</p>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="stat-item">
-                                <h3 class="fw-bold mb-0 counter">50</h3>
-                                <p class="text-muted">Artisans</p>
+                                <h3 class="fw-bold mb-0 counter stat-number">50</h3>
+                                <p class="text-muted fw-medium">Artisans</p>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="stat-item">
-                                <h3 class="fw-bold mb-0 counter">10000</h3>
-                                <p class="text-muted">Happy Customers</p>
+                                <h3 class="fw-bold mb-0 counter stat-number">10000</h3>
+                                <p class="text-muted fw-medium">Happy Customers</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 d-flex justify-content-center">
-                <div class="hero-cards-container animate__animated animate__fadeIn animate__delay-2s">
+            <div class="col-lg-6 d-flex justify-content-center align-items-center">
+                <div class="hero-cards-container animate__animated animate__fadeIn animate__delay-1s">
                     <!-- Modern Card Design -->
-                    <div class="card hero-card card-1 float-animation">
-                        <div class="card-body p-0">
-                            <img src="https://images.unsplash.com/photo-1579762593175-20226054cad0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1236&q=80" alt="Handmade Jewelry" class="card-img">
-                            <div class="card-overlay">
-                                <h4>Handcrafted Jewelry</h4>
-                                <p class="mb-0">Unique designs</p>
+                    <div class="card hero-card card-1" data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-perspective="1000" tabindex="0" role="button" aria-label="Handcrafted Jewelry">
+                        <div class="card-inner">
+                            <div class="card-body p-0">
+                                <img src="https://images.unsplash.com/photo-1579762593175-20226054cad0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1236&q=80" alt="Handmade Jewelry" class="card-img" loading="lazy">
+                                <div class="card-overlay">
+                                    <h4 class="fw-bold">Handcrafted Jewelry</h4>
+                                    <p class="mb-0 fw-medium">Unique designs</p>
+                                </div>
                             </div>
+                            <div class="card-shine"></div>
                         </div>
-                        <div class="card-shine"></div>
                     </div>
 
-                    <div class="card hero-card card-2 float-animation-delay">
-                        <div class="card-body p-0">
-                            <img src="https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Paintings" class="card-img">
-                            <div class="card-overlay">
-                                <h4>Artistic Paintings</h4>
-                                <p class="mb-0">Express yourself</p>
+                    <div class="card hero-card card-2" data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-perspective="1000" tabindex="0" role="button" aria-label="Artistic Paintings">
+                        <div class="card-inner">
+                            <div class="card-body p-0">
+                                <img src="https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Paintings" class="card-img" loading="lazy">
+                                <div class="card-overlay">
+                                    <h4 class="fw-bold">Artistic Paintings</h4>
+                                    <p class="mb-0 fw-medium">Express yourself</p>
+                                </div>
                             </div>
+                            <div class="card-shine"></div>
                         </div>
-                        <div class="card-shine"></div>
                     </div>
 
-                    <div class="card hero-card card-3 float-animation">
-                        <div class="card-body p-0">
-                            <img src="https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Custom Gifts" class="card-img">
-                            <div class="card-overlay">
-                                <h4>Personalized Gifts</h4>
-                                <p class="mb-0">Made with love</p>
+                    <div class="card hero-card card-3" data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-perspective="1000" tabindex="0" role="button" aria-label="Personalized Gifts">
+                        <div class="card-inner">
+                            <div class="card-body p-0">
+                                <img src="https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Custom Gifts" class="card-img" loading="lazy">
+                                <div class="card-overlay">
+                                    <h4 class="fw-bold">Personalized Gifts</h4>
+                                    <p class="mb-0 fw-medium">Made with love</p>
+                                </div>
                             </div>
+                            <div class="card-shine"></div>
                         </div>
-                        <div class="card-shine"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<script>
+    // Remove loading state after page loads
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            document.getElementById('heroSection').classList.remove('loading');
+
+            // Add animation class to elements for better performance
+            document.querySelectorAll('.hero-card').forEach(function(card, index) {
+                setTimeout(function() {
+                    card.classList.add('loaded');
+
+                    // Lazy load images with fade-in effect
+                    const img = card.querySelector('.card-img');
+                    if (img) {
+                        // Check if image is already loaded
+                        if (img.complete) {
+                            img.classList.add('loaded');
+                        } else {
+                            img.addEventListener('load', function() {
+                                img.classList.add('loaded');
+                            });
+                        }
+                    }
+                }, 100 * index);
+            });
+        }, 500);
+    });
+
+    // Add support for reduced motion
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+        document.documentElement.classList.add('reduced-motion');
+    }
+
+    // Add parallax effect to hero section with performance optimization
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    window.addEventListener('scroll', function() {
+        lastScrollY = window.scrollY;
+
+        if (!ticking) {
+            window.requestAnimationFrame(function() {
+                updateParallax(lastScrollY);
+                ticking = false;
+            });
+
+            ticking = true;
+        }
+    });
+
+    function updateParallax(scrollPosition) {
+        const heroSection = document.querySelector('.hero-section');
+        const shapes = document.querySelectorAll('.hero-bg-shapes .shape');
+        const cards = document.querySelectorAll('.hero-card');
+
+        if (scrollPosition < 800) {
+            // Parallax for shapes
+            shapes.forEach(function(shape, index) {
+                const depth = parseFloat(shape.getAttribute('data-parallax-depth')) || 0.1;
+                const yPos = scrollPosition * depth;
+                shape.style.transform = `translateY(${yPos}px)`;
+            });
+
+            // Subtle parallax for cards
+            if (!prefersReducedMotion) {
+                cards.forEach(function(card, index) {
+                    const depth = 0.05 - (index * 0.01);
+                    const yPos = scrollPosition * depth;
+                    const currentTransform = card.style.transform || '';
+
+                    // Only apply if card is in viewport
+                    const rect = card.getBoundingClientRect();
+                    if (rect.top < window.innerHeight && rect.bottom > 0) {
+                        // Extract existing transform values and add parallax
+                        if (currentTransform.includes('translateY')) {
+                            // Already has transform, don't modify
+                        } else {
+                            card.style.transform = `${currentTransform} translateY(${yPos}px)`;
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    // Add tilt effect to cards if vanilla-tilt.js is not already included
+    if (typeof VanillaTilt === 'undefined') {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.0/dist/vanilla-tilt.min.js';
+        script.async = true;
+        document.head.appendChild(script);
+
+        script.onload = function() {
+            initTilt();
+            addCardInteractions();
+        };
+    } else {
+        initTilt();
+        addCardInteractions();
+    }
+
+    function initTilt() {
+        const cards = document.querySelectorAll('.hero-card');
+        const isDarkMode = document.body.classList.contains('dark-mode');
+
+        if (typeof VanillaTilt !== 'undefined') {
+            // Different settings for dark mode
+            if (isDarkMode) {
+                VanillaTilt.init(cards, {
+                    max: 12,
+                    speed: 400,
+                    glare: true,
+                    "max-glare": 0.5,
+                    scale: 1.05,
+                    perspective: 1000
+                });
+            } else {
+                VanillaTilt.init(cards, {
+                    max: 10,
+                    speed: 400,
+                    glare: true,
+                    "max-glare": 0.3
+                });
+            }
+        }
+    }
+
+    // Add keyboard interactions for accessibility
+    function addCardInteractions() {
+        const cards = document.querySelectorAll('.hero-card');
+
+        cards.forEach(card => {
+            // Add keyboard interaction
+            card.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    // Simulate click or add your desired action
+                    const category = card.getAttribute('aria-label');
+                    if (category === 'Handcrafted Jewelry') {
+                        window.location.href = '{% url "products:product_list_by_category" "jewelry" %}';
+                    } else if (category === 'Artistic Paintings') {
+                        window.location.href = '{% url "products:product_list_by_category" "painting" %}';
+                    } else if (category === 'Personalized Gifts') {
+                        window.location.href = '{% url "products:product_list_by_category" "gifts" %}';
+                    }
+                }
+            });
+
+            // Add click interaction
+            card.addEventListener('click', function() {
+                const category = card.getAttribute('aria-label');
+                if (category === 'Handcrafted Jewelry') {
+                    window.location.href = '{% url "products:product_list_by_category" "jewelry" %}';
+                } else if (category === 'Artistic Paintings') {
+                    window.location.href = '{% url "products:product_list_by_category" "painting" %}';
+                } else if (category === 'Personalized Gifts') {
+                    window.location.href = '{% url "products:product_list_by_category" "gifts" %}';
+                }
+            });
+        });
+    }
+
+    // Re-initialize tilt when theme changes
+    document.addEventListener('themeChanged', function(e) {
+        if (typeof VanillaTilt !== 'undefined') {
+            VanillaTilt.destroy();
+            initTilt();
+        }
+    });
+
+    // Add intersection observer for scroll-triggered animations
+    if ('IntersectionObserver' in window) {
+        const options = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const element = entry.target;
+
+                    // Add animation class when element enters viewport
+                    if (element.classList.contains('hero-card')) {
+                        element.classList.add('loaded');
+
+                        // Also load the image
+                        const img = element.querySelector('.card-img');
+                        if (img) {
+                            img.classList.add('loaded');
+                        }
+                    }
+
+                    // Stop observing after animation is triggered
+                    observer.unobserve(element);
+                }
+            });
+        }, options);
+
+        // Observe all hero cards
+        document.querySelectorAll('.hero-card').forEach(card => {
+            observer.observe(card);
+        });
+    }
+</script>
 
 <!-- Product Showcase Carousel -->
 <section class="py-5">
@@ -1717,28 +2124,61 @@
 <section class="py-5">
     <div class="container">
         <div class="newsletter-section">
+            <div class="floating-shapes">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+            </div>
+            <div class="decorative-dots"></div>
+            <div class="decorative-circle"></div>
             <div class="row justify-content-center">
                 <div class="col-lg-8 text-center">
-                    <h2 class="newsletter-title">Join Our Creative Community</h2>
-                    <p class="lead mb-4">Subscribe to our newsletter for exclusive offers, new product alerts, and artisan stories.</p>
-                    <form method="post" action="{% url 'home' %}" class="newsletter-form row g-3 justify-content-center">
+                    <span class="badge bg-white text-primary mb-4 px-4 py-2 rounded-pill fw-bold animate__animated animate__fadeInDown">
+                        <i class="fas fa-envelope-open-text me-2"></i>Stay Connected
+                    </span>
+                    <h2 class="newsletter-title animate__animated animate__fadeInUp">Join Our Creative Community</h2>
+                    <p class="lead mb-5 animate__animated animate__fadeInUp animate__delay-1s" style="font-size: 1.25rem; max-width: 80%; margin: 0 auto;">Subscribe to our newsletter for exclusive offers, new product alerts, and artisan stories.</p>
+                    <form method="post" action="{% url 'home' %}" class="newsletter-form animate__animated animate__fadeInUp animate__delay-2s">
                         {% csrf_token %}
-                        <div class="col-md-8">
+                        <div class="input-group mb-3">
                             {{ newsletter_form.email }}
-                            {% if newsletter_form.email.errors %}
-                            <div class="invalid-feedback d-block text-white">
-                                {{ newsletter_form.email.errors.0 }}
-                            </div>
-                            {% endif %}
-                        </div>
-                        <div class="col-md-4">
-                            <button type="submit" class="btn btn-light w-100">
+                            <button type="submit" class="btn">
                                 <i class="fas fa-paper-plane me-2"></i>Subscribe
                             </button>
                         </div>
+                        {% if newsletter_form.email.errors %}
+                        <div class="invalid-feedback d-block text-white mb-3">
+                            {{ newsletter_form.email.errors.0 }}
+                        </div>
+                        {% endif %}
+                        {% if messages %}
+                        {% for message in messages %}
+                        {% if 'newsletter' in message.tags %}
+                        <div class="success-message mt-3">
+                            <i class="fas fa-check-circle me-2"></i>{{ message }}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
                     </form>
-                    <div class="mt-4">
-                        <small class="text-white-50">By subscribing, you agree to receive marketing emails from VarnikaKart. Don't worry, we respect your privacy and you can unsubscribe at any time.</small>
+                    <div class="mt-4 d-flex justify-content-center animate__animated animate__fadeInUp animate__delay-3s">
+                        <div class="benefits-list d-flex flex-wrap justify-content-center gap-3">
+                            <div class="benefit-item">
+                                <i class="fas fa-gift me-2"></i>
+                                <span>Exclusive Offers</span>
+                            </div>
+                            <div class="benefit-item">
+                                <i class="fas fa-bell me-2"></i>
+                                <span>New Arrivals</span>
+                            </div>
+                            <div class="benefit-item">
+                                <i class="fas fa-user-shield me-2"></i>
+                                <span>Privacy Protected</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 animate__animated animate__fadeIn animate__delay-4s">
+                        <small class="text-white-50" style="font-size: 0.9rem; max-width: 80%; display: inline-block;">By subscribing, you agree to receive marketing emails from VarnikaKart. Don't worry, we respect your privacy and you can unsubscribe at any time.</small>
                     </div>
                 </div>
             </div>
@@ -1930,13 +2370,45 @@
         // Add hover effects to hero cards with 3D tilt effect
         const heroCards = document.querySelectorAll('.hero-card');
 
+        // Parallax Effect for Hero Section
+        const heroSection = document.getElementById('heroSection');
+        const parallaxElements = document.querySelectorAll('[data-parallax-depth]');
+
+        if (heroSection && parallaxElements.length > 0) {
+            heroSection.addEventListener('mousemove', function(e) {
+                const { left, top, width, height } = heroSection.getBoundingClientRect();
+                const x = (e.clientX - left) / width - 0.5;
+                const y = (e.clientY - top) / height - 0.5;
+
+                parallaxElements.forEach(el => {
+                    const depth = parseFloat(el.getAttribute('data-parallax-depth')) || 0.1;
+                    const moveX = x * depth * 100;
+                    const moveY = y * depth * 100;
+                    el.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                });
+            });
+
+            heroSection.addEventListener('mouseleave', function() {
+                parallaxElements.forEach(el => {
+                    el.style.transform = 'translate(0, 0)';
+                    el.style.transition = 'transform 0.5s ease-out';
+                });
+            });
+        }
+
         heroCards.forEach(card => {
+            const cardInner = card.querySelector('.card-inner');
+            const depth = parseFloat(card.getAttribute('data-tilt-depth')) || 10;
+
             // Mouse enter effect - dim other cards
             card.addEventListener('mouseenter', function() {
                 heroCards.forEach(c => {
                     if (c !== card) {
                         c.style.opacity = '0.7';
-                        c.style.transform = c.style.transform.replace('rotate', 'rotate(0deg) scale(0.95)');
+                        const inner = c.querySelector('.card-inner');
+                        if (inner) {
+                            inner.style.transform = 'scale(0.95)';
+                        }
                     }
                 });
             });
@@ -1945,43 +2417,32 @@
             card.addEventListener('mouseleave', function() {
                 heroCards.forEach(c => {
                     c.style.opacity = '1';
-                    // Restore original transforms
-                    if (c.classList.contains('card-1')) {
-                        c.style.transform = 'rotate(-5deg)';
-                    } else if (c.classList.contains('card-2')) {
-                        c.style.transform = 'rotate(3deg)';
-                    } else if (c.classList.contains('card-3')) {
-                        c.style.transform = 'rotate(-2deg)';
+                    const inner = c.querySelector('.card-inner');
+                    if (inner) {
+                        inner.style.transform = '';
                     }
                 });
             });
 
             // 3D tilt effect on mousemove
-            card.addEventListener('mousemove', function(e) {
-                const cardRect = card.getBoundingClientRect();
-                const cardCenterX = cardRect.left + cardRect.width / 2;
-                const cardCenterY = cardRect.top + cardRect.height / 2;
-                const mouseX = e.clientX - cardCenterX;
-                const mouseY = e.clientY - cardCenterY;
+            if (cardInner) {
+                card.addEventListener('mousemove', function(e) {
+                    const { left, top, width, height } = card.getBoundingClientRect();
+                    const x = (e.clientX - left) / width - 0.5;
+                    const y = (e.clientY - top) / height - 0.5;
 
-                // Calculate rotation based on mouse position
-                const rotateY = (mouseX / (cardRect.width / 2)) * 5; // Max 5 degrees
-                const rotateX = -(mouseY / (cardRect.height / 2)) * 5; // Max 5 degrees
+                    const tiltX = y * depth;
+                    const tiltY = -x * depth;
 
-                // Apply the transform
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
-            });
+                    cardInner.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateZ(10px)`;
+                });
 
-            // Reset transform on mouse leave
-            card.addEventListener('mouseleave', function() {
-                if (card.classList.contains('card-1')) {
-                    card.style.transform = 'rotate(-5deg)';
-                } else if (card.classList.contains('card-2')) {
-                    card.style.transform = 'rotate(3deg)';
-                } else if (card.classList.contains('card-3')) {
-                    card.style.transform = 'rotate(-2deg)';
-                }
-            });
+                // Reset transform on mouse leave
+                card.addEventListener('mouseleave', function() {
+                    cardInner.style.transform = '';
+                    cardInner.style.transition = 'transform 0.5s ease-out';
+                });
+            }
         });
 
         // Counter animation for stats

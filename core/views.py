@@ -56,7 +56,7 @@ def home(request):
         form = NewsletterForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Thank you for subscribing to our newsletter!')
+            messages.success(request, 'Thank you for subscribing to our newsletter!', extra_tags='newsletter')
             return redirect('home')
     else:
         form = NewsletterForm()
