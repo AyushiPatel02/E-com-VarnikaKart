@@ -350,10 +350,14 @@ function applyDarkMode() {
         // Apply dark mode class to body
         if (shouldBeDark) {
             document.body.classList.add(darkModeConfig.darkClass);
-            console.log('Dark mode enabled - all text should be white');
+            document.documentElement.style.setProperty('--text-color', '#ffffff');
+            document.documentElement.style.setProperty('--icon-color', '#ffffff');
+            console.log('Dark mode enabled - all text and icons should be white');
         } else {
             document.body.classList.remove(darkModeConfig.darkClass);
-            console.log('Light mode enabled - all text should be black');
+            document.documentElement.style.setProperty('--text-color', '#000000');
+            document.documentElement.style.setProperty('--icon-color', '#000000');
+            console.log('Light mode enabled - all text and icons should be black');
         }
 
         // Switch to dark variant of theme if needed
@@ -470,8 +474,516 @@ function getCurrentTheme() {
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', initDarkMode);
 
+/**
+ * Initialize dark mode advanced features
+ */
+function initDarkModeAdvancedFeatures() {
+    // Only initialize if dark mode is active
+    if (!darkModeState.isDarkMode) return;
+
+    console.log('Initializing dark mode advanced features');
+
+    // Initialize particle effect if particles.js is available
+    initParticleEffect();
+
+    // Initialize custom cursor effect
+    initCustomCursor();
+
+    // Initialize scroll animations
+    initScrollAnimations();
+
+    // Initialize 3D card effects
+    init3DCardEffects();
+
+    // Initialize glass morphism effects
+    initGlassMorphism();
+
+    // Initialize advanced text color handling
+    initAdvancedTextColorHandling();
+}
+
+/**
+ * Initialize particle effect for dark mode
+ */
+function initParticleEffect() {
+    // Check if particles.js is available
+    if (typeof particlesJS === 'undefined') {
+        console.log('particles.js not available, skipping particle effect');
+        return;
+    }
+
+    // Create container for particles
+    const particlesContainer = document.createElement('div');
+    particlesContainer.id = 'particles-js';
+    particlesContainer.className = 'particles-js';
+    document.body.appendChild(particlesContainer);
+
+    // Configure particles
+    particlesJS('particles-js', {
+        particles: {
+            number: {
+                value: 50,
+                density: {
+                    enable: true,
+                    value_area: 800
+                }
+            },
+            color: {
+                value: '#ffffff'
+            },
+            shape: {
+                type: 'circle',
+                stroke: {
+                    width: 0,
+                    color: '#000000'
+                }
+            },
+            opacity: {
+                value: 0.2,
+                random: true,
+                anim: {
+                    enable: true,
+                    speed: 1,
+                    opacity_min: 0.1,
+                    sync: false
+                }
+            },
+            size: {
+                value: 3,
+                random: true,
+                anim: {
+                    enable: true,
+                    speed: 2,
+                    size_min: 0.3,
+                    sync: false
+                }
+            },
+            line_linked: {
+                enable: true,
+                distance: 150,
+                color: '#ffffff',
+                opacity: 0.1,
+                width: 1
+            },
+            move: {
+                enable: true,
+                speed: 1,
+                direction: 'none',
+                random: true,
+                straight: false,
+                out_mode: 'out',
+                bounce: false,
+                attract: {
+                    enable: false,
+                    rotateX: 600,
+                    rotateY: 1200
+                }
+            }
+        },
+        interactivity: {
+            detect_on: 'canvas',
+            events: {
+                onhover: {
+                    enable: true,
+                    mode: 'grab'
+                },
+                onclick: {
+                    enable: true,
+                    mode: 'push'
+                },
+                resize: true
+            },
+            modes: {
+                grab: {
+                    distance: 140,
+                    line_linked: {
+                        opacity: 0.3
+                    }
+                },
+                push: {
+                    particles_nb: 3
+                }
+            }
+        },
+        retina_detect: true
+    });
+}
+
+/**
+ * Initialize custom cursor effect for dark mode
+ */
+function initCustomCursor() {
+    // Only apply to desktop
+    if (window.innerWidth < 992) return;
+
+    // Create cursor elements
+    const cursorDot = document.createElement('div');
+    cursorDot.className = 'cursor-dot';
+    document.body.appendChild(cursorDot);
+
+    const cursorOutline = document.createElement('div');
+    cursorOutline.className = 'cursor-outline';
+    document.body.appendChild(cursorOutline);
+
+    // Add custom-cursor class to body
+    document.body.classList.add('custom-cursor');
+
+    // Update cursor position on mouse move
+    document.addEventListener('mousemove', (e) => {
+        // Only update if dark mode is active
+        if (!darkModeState.isDarkMode) return;
+
+        cursorDot.style.left = `${e.clientX}px`;
+        cursorDot.style.top = `${e.clientY}px`;
+
+        // Add slight delay to outline for smooth effect
+        setTimeout(() => {
+            cursorOutline.style.left = `${e.clientX}px`;
+            cursorOutline.style.top = `${e.clientY}px`;
+        }, 50);
+    });
+
+    // Add hover effect for interactive elements
+    const interactiveElements = document.querySelectorAll('a, button, .btn, .nav-link, .card, .product-card');
+    interactiveElements.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            cursorDot.style.width = '15px';
+            cursorDot.style.height = '15px';
+            cursorOutline.style.width = '40px';
+            cursorOutline.style.height = '40px';
+            cursorOutline.style.borderColor = 'var(--primary-color)';
+        });
+
+        el.addEventListener('mouseleave', () => {
+            cursorDot.style.width = '10px';
+            cursorDot.style.height = '10px';
+            cursorOutline.style.width = '30px';
+            cursorOutline.style.height = '30px';
+            cursorOutline.style.borderColor = 'rgba(var(--primary-color-rgb), 0.5)';
+        });
+    });
+}
+
+/**
+ * Initialize scroll animations for dark mode
+ */
+function initScrollAnimations() {
+    // Add fade-in-up class to elements that should animate on scroll
+    const animateElements = document.querySelectorAll('.card, .product-card, .section-title, .hero-content, .feature-card');
+    animateElements.forEach(el => {
+        el.classList.add('fade-in-up');
+    });
+
+    // Create intersection observer
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    // Observe elements
+    animateElements.forEach(el => {
+        observer.observe(el);
+    });
+}
+
+/**
+ * Initialize 3D card effects for dark mode
+ */
+function init3DCardEffects() {
+    // Add 3D effect to cards
+    const cards = document.querySelectorAll('.card, .product-card');
+    cards.forEach(card => {
+        // Add 3D classes
+        card.classList.add('card-3d');
+
+        // Create inner wrapper if not exists
+        let inner = card.querySelector('.card-3d-inner');
+        if (!inner) {
+            inner = document.createElement('div');
+            inner.className = 'card-3d-inner';
+
+            // Move all children to inner wrapper
+            while (card.firstChild) {
+                inner.appendChild(card.firstChild);
+            }
+
+            card.appendChild(inner);
+        }
+
+        // Add 3D effect on mouse move
+        card.addEventListener('mousemove', (e) => {
+            // Only apply if dark mode is active
+            if (!darkModeState.isDarkMode) return;
+
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = (y - centerY) / 10;
+            const rotateY = (centerX - x) / 10;
+
+            inner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        // Reset on mouse leave
+        card.addEventListener('mouseleave', () => {
+            inner.style.transform = 'rotateX(0) rotateY(0)';
+        });
+    });
+}
+
+/**
+ * Initialize glass morphism effects for dark mode
+ */
+function initGlassMorphism() {
+    // Add glass effect to elements
+    const glassElements = document.querySelectorAll('.navbar, .dropdown-menu, .modal-content, .offcanvas');
+    glassElements.forEach(el => {
+        el.classList.add('glass-effect');
+    });
+}
+
+/**
+ * Handle dark mode change event
+ */
+function handleDarkModeChange(event) {
+    const isDarkMode = event.detail.isDarkMode;
+
+    // Initialize or remove advanced features based on dark mode state
+    if (isDarkMode) {
+        initDarkModeAdvancedFeatures();
+    } else {
+        // Remove advanced features
+        removeDarkModeAdvancedFeatures();
+    }
+}
+
+/**
+ * Remove dark mode advanced features
+ */
+function removeDarkModeAdvancedFeatures() {
+    // Remove particle effect
+    const particlesContainer = document.getElementById('particles-js');
+    if (particlesContainer) {
+        particlesContainer.remove();
+    }
+
+    // Remove custom cursor
+    const cursorDot = document.querySelector('.cursor-dot');
+    const cursorOutline = document.querySelector('.cursor-outline');
+    if (cursorDot) cursorDot.remove();
+    if (cursorOutline) cursorOutline.remove();
+    document.body.classList.remove('custom-cursor');
+
+    // Remove glass effect
+    const glassElements = document.querySelectorAll('.glass-effect');
+    glassElements.forEach(el => {
+        el.classList.remove('glass-effect');
+    });
+
+    // Reset 3D card effects
+    const cards = document.querySelectorAll('.card-3d');
+    cards.forEach(card => {
+        const inner = card.querySelector('.card-3d-inner');
+        if (inner) {
+            inner.style.transform = 'none';
+        }
+    });
+}
+
+// Listen for dark mode change events
+document.addEventListener('darkModeChanged', handleDarkModeChange);
+
+// Initialize advanced features if dark mode is active on load
+document.addEventListener('DOMContentLoaded', () => {
+    if (darkModeState.isDarkMode) {
+        initDarkModeAdvancedFeatures();
+    }
+});
+
+/**
+ * Initialize advanced text color handling for dark mode
+ * This function ensures proper text color contrast on all elements
+ */
+function initAdvancedTextColorHandling() {
+    console.log('Initializing advanced text color handling for dark mode');
+
+    // Create a MutationObserver to watch for DOM changes
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            // Process added nodes
+            if (mutation.addedNodes && mutation.addedNodes.length > 0) {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === 1) { // Element node
+                        processElementForDarkMode(node);
+                    }
+                });
+            }
+
+            // Process attribute changes
+            if (mutation.type === 'attributes') {
+                if (mutation.attributeName === 'style' ||
+                    mutation.attributeName === 'class') {
+                    processElementForDarkMode(mutation.target);
+                }
+            }
+        });
+    });
+
+    // Start observing the document with the configured parameters
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style', 'class']
+    });
+
+    // Process all existing elements
+    processElementForDarkMode(document.body);
+
+    // Add event listener for dynamically loaded content
+    document.addEventListener('DOMContentLoaded', () => {
+        processElementForDarkMode(document.body);
+    });
+
+    // Add event listener for AJAX loaded content
+    window.addEventListener('load', () => {
+        processElementForDarkMode(document.body);
+    });
+}
+
+/**
+ * Process an element for dark mode text color handling
+ * @param {Element} element - The element to process
+ */
+function processElementForDarkMode(element) {
+    // Skip if dark mode is not active
+    if (!darkModeState.isDarkMode) return;
+
+    // Skip if element is not valid
+    if (!element || !element.nodeType || element.nodeType !== 1) return;
+
+    // Process the element
+    applyDarkModeTextColor(element);
+
+    // Process all child elements
+    const children = element.querySelectorAll('*');
+    children.forEach(child => {
+        applyDarkModeTextColor(child);
+    });
+}
+
+/**
+ * Apply dark mode text color to an element based on its background
+ * @param {Element} element - The element to process
+ */
+function applyDarkModeTextColor(element) {
+    // Skip if element is not valid
+    if (!element || !element.nodeType || element.nodeType !== 1) return;
+
+    // Get computed style
+    const style = window.getComputedStyle(element);
+    const backgroundColor = style.backgroundColor;
+
+    // Skip if background is transparent
+    if (backgroundColor === 'transparent' || backgroundColor === 'rgba(0, 0, 0, 0)') return;
+
+    // Parse background color
+    const rgb = parseRGB(backgroundColor);
+    if (!rgb) return;
+
+    // Calculate luminance (perceived brightness)
+    // Using the formula: 0.299*R + 0.587*G + 0.114*B
+    const luminance = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+
+    // Set data attribute for debugging
+    element.setAttribute('data-luminance', luminance.toFixed(2));
+
+    // Apply text color based on luminance
+    // Threshold of 0.5 is a good starting point (0 = black, 1 = white)
+    if (luminance > 0.5) {
+        // Light background, use dark text
+        element.style.setProperty('color', 'var(--text-on-light)', 'important');
+
+        // Add data attribute for styling hooks
+        element.setAttribute('data-dark-mode-bg', 'light');
+    } else {
+        // Dark background, use light text
+        element.style.setProperty('color', 'var(--text-on-dark)', 'important');
+
+        // Add data attribute for styling hooks
+        element.setAttribute('data-dark-mode-bg', 'dark');
+    }
+}
+
+/**
+ * Parse RGB color string into components
+ * @param {string} color - CSS color string (rgb, rgba, hex)
+ * @returns {Object|null} - Object with r, g, b properties or null if parsing failed
+ */
+function parseRGB(color) {
+    // Handle rgb/rgba format
+    let match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/);
+    if (match) {
+        return {
+            r: parseInt(match[1], 10),
+            g: parseInt(match[2], 10),
+            b: parseInt(match[3], 10)
+        };
+    }
+
+    // Handle hex format
+    match = color.match(/#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i);
+    if (match) {
+        return {
+            r: parseInt(match[1], 16),
+            g: parseInt(match[2], 16),
+            b: parseInt(match[3], 16)
+        };
+    }
+
+    // Handle shorthand hex format
+    match = color.match(/#([0-9a-f])([0-9a-f])([0-9a-f])/i);
+    if (match) {
+        return {
+            r: parseInt(match[1] + match[1], 16),
+            g: parseInt(match[2] + match[2], 16),
+            b: parseInt(match[3] + match[3], 16)
+        };
+    }
+
+    // Handle named colors (simplified, add more as needed)
+    const namedColors = {
+        'white': { r: 255, g: 255, b: 255 },
+        'black': { r: 0, g: 0, b: 0 },
+        'red': { r: 255, g: 0, b: 0 },
+        'green': { r: 0, g: 128, b: 0 },
+        'blue': { r: 0, g: 0, b: 255 },
+        'yellow': { r: 255, g: 255, b: 0 },
+        'gray': { r: 128, g: 128, b: 128 },
+        'grey': { r: 128, g: 128, b: 128 }
+    };
+
+    if (namedColors[color.toLowerCase()]) {
+        return namedColors[color.toLowerCase()];
+    }
+
+    return null;
+}
+
 // Export functions for external use
 window.darkMode = {
     toggle: toggleDarkMode,
-    reset: resetToAutoMode
+    reset: resetToAutoMode,
+    initAdvancedFeatures: initDarkModeAdvancedFeatures,
+    removeAdvancedFeatures: removeDarkModeAdvancedFeatures,
+    initAdvancedTextColorHandling: initAdvancedTextColorHandling
 };

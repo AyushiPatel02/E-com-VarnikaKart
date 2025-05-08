@@ -348,9 +348,13 @@ function applyTheme(themeName) {
         if (isDarkModeActive) {
             // In dark mode, text should be white regardless of theme
             root.style.setProperty('--text-color', '#ffffff');
+            root.style.setProperty('--icon-color', '#ffffff');
+            console.log('Dark mode active: Setting text and icons to white');
         } else {
             // In light mode, text should be black regardless of theme
             root.style.setProperty('--text-color', '#000000');
+            root.style.setProperty('--icon-color', '#000000');
+            console.log('Light mode active: Setting text and icons to black');
         }
 
         // Apply text-related colors with better contrast
