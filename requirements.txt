@@ -1,0 +1,14 @@
+Django>=5.2.1
+django-allauth>=65.8.0
+Pillow>=10.0.0  # For image handling and optimization
+django-crispy-forms>=2.0  # For better form rendering
+django-debug-toolbar  # For development debugging
+python-dotenv>=1.0.0  # For environment variables
+
+# Performance optimization
+cssmin>=0.2.0  # For CSS minification
+jsmin>=3.0.0  # For JS minification
+whitenoise>=6.5.0  # For serving static files
+
+# Payment integration
+razorpay>=1.4.0  # For payment processing

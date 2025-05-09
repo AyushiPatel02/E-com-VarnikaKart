@@ -1,0 +1,297 @@
+/**
+ * Enhanced Animations for VarnikaKart
+ * This file contains improved animations and transitions
+ */
+
+/* ===== SMOOTH TRANSITIONS ===== */
+
+/* Base transition for all elements */
+.smooth-transition {
+    transition: all 0.3s ease;
+}
+
+/* Smooth page transitions */
+.page-transition {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Staggered animations for lists */
+.staggered-item {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.staggered-item.visible {
+    animation: staggerFadeIn 0.5s ease forwards;
+}
+
+.staggered-item:nth-child(1) { animation-delay: 0.1s; }
+.staggered-item:nth-child(2) { animation-delay: 0.2s; }
+.staggered-item:nth-child(3) { animation-delay: 0.3s; }
+.staggered-item:nth-child(4) { animation-delay: 0.4s; }
+.staggered-item:nth-child(5) { animation-delay: 0.5s; }
+.staggered-item:nth-child(6) { animation-delay: 0.6s; }
+.staggered-item:nth-child(7) { animation-delay: 0.7s; }
+.staggered-item:nth-child(8) { animation-delay: 0.8s; }
+
+@keyframes staggerFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== HOVER EFFECTS ===== */
+
+/* Hover lift effect */
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover glow effect */
+.hover-glow {
+    transition: box-shadow 0.3s ease;
+}
+
+.hover-glow:hover {
+    box-shadow: 0 0 15px rgba(var(--primary-color-rgb), 0.5);
+}
+
+/* Hover scale effect */
+.hover-scale {
+    transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+/* Hover color shift */
+.hover-color-shift {
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.hover-color-shift:hover {
+    color: var(--primary-color);
+    background-color: rgba(var(--primary-color-rgb), 0.1);
+}
+
+/* ===== BUTTON ANIMATIONS ===== */
+
+/* Pulse animation for buttons */
+.btn-pulse {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-pulse:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.btn-pulse:active:after {
+    width: 300px;
+    height: 300px;
+    opacity: 0;
+}
+
+/* Button hover animation */
+.btn-hover-slide {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn-hover-slide:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.7s ease;
+    z-index: -1;
+}
+
+.btn-hover-slide:hover:before {
+    left: 100%;
+}
+
+/* ===== SCROLL ANIMATIONS ===== */
+
+/* Fade in on scroll */
+.fade-in-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Slide in from left */
+.slide-in-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.slide-in-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Slide in from right */
+.slide-in-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.slide-in-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Zoom in on scroll */
+.zoom-in-scroll {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.zoom-in-scroll.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* ===== SPECIAL EFFECTS ===== */
+
+/* Shimmer effect */
+.shimmer {
+    position: relative;
+    overflow: hidden;
+}
+
+.shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.2) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    to {
+        left: 100%;
+    }
+}
+
+/* Floating animation */
+.floating {
+    animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* Rotating animation */
+.rotating {
+    animation: rotating 10s linear infinite;
+}
+
+@keyframes rotating {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Pulsing animation */
+.pulsing {
+    animation: pulsing 2s ease-in-out infinite;
+}
+
+@keyframes pulsing {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* ===== DARK MODE SPECIFIC ANIMATIONS ===== */
+
+/* Dark mode glow effect */
+body.dark-mode .dark-glow {
+    box-shadow: 0 0 10px rgba(var(--primary-color-rgb), 0.3);
+    transition: box-shadow 0.3s ease;
+}
+
+body.dark-mode .dark-glow:hover {
+    box-shadow: 0 0 20px rgba(var(--primary-color-rgb), 0.6);
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

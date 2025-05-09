@@ -1,0 +1,275 @@
+/**
+ * Accessibility Improvements for VarnikaKart
+ * Enhances website accessibility for all users
+ */
+
+/* ===== FOCUS STYLES ===== */
+
+/* Improved focus styles */
+:focus {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Focus styles for dark mode */
+body.dark-mode :focus {
+    outline-color: #ffffff;
+}
+
+/* Skip to content link */
+.skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 8px 15px;
+    z-index: 9999;
+    transition: top 0.3s ease;
+}
+
+.skip-to-content:focus {
+    top: 0;
+}
+
+/* ===== TEXT READABILITY ===== */
+
+/* Minimum text size for readability */
+body {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* Improved text contrast */
+body {
+    --text-contrast-ratio: 1;
+}
+
+body.high-contrast {
+    --text-contrast-ratio: 1.2;
+}
+
+/* Apply contrast ratio to text */
+p, h1, h2, h3, h4, h5, h6, span, a, button, input, select, textarea {
+    color: calc(var(--text-contrast-ratio) * var(--text-color));
+}
+
+/* Ensure sufficient color contrast */
+.text-muted {
+    color: #6c757d !important;
+}
+
+body.dark-mode .text-muted {
+    color: #a0a0a0 !important;
+}
+
+/* ===== KEYBOARD NAVIGATION ===== */
+
+/* Visible focus indicators for keyboard navigation */
+body.keyboard-navigation :focus {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.5);
+}
+
+/* Improved button focus */
+button:focus, 
+.btn:focus {
+    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.5);
+}
+
+/* Improved link focus */
+a:focus {
+    text-decoration: underline;
+}
+
+/* ===== FORM ACCESSIBILITY ===== */
+
+/* Larger form controls for better touch targets */
+input, 
+select, 
+textarea, 
+.form-control, 
+.form-select {
+    min-height: 44px;
+    padding: 10px 12px;
+}
+
+/* Improved checkbox and radio button styles */
+.form-check-input {
+    width: 1.25em;
+    height: 1.25em;
+    margin-top: 0.125em;
+}
+
+/* Better form validation messages */
+.form-text {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.invalid-feedback {
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
+/* ===== ARIA SUPPORT ===== */
+
+/* Hide elements with aria-hidden="true" */
+[aria-hidden="true"] {
+    display: none !important;
+}
+
+/* Style for current page in navigation */
+[aria-current="page"] {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* Style for expanded/collapsed elements */
+[aria-expanded="true"] .expand-icon::before {
+    content: "\f077"; /* FontAwesome chevron-up */
+}
+
+[aria-expanded="false"] .expand-icon::before {
+    content: "\f078"; /* FontAwesome chevron-down */
+}
+
+/* ===== REDUCED MOTION ===== */
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Class for manually enabling reduced motion */
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+}
+
+/* ===== HIGH CONTRAST MODE ===== */
+
+/* High contrast mode styles */
+body.high-contrast {
+    --primary-color: #0000ff;
+    --text-color: #000000;
+    --background-color: #ffffff;
+    --link-color: #0000ff;
+    --border-color: #000000;
+}
+
+body.high-contrast.dark-mode {
+    --primary-color: #ffff00;
+    --text-color: #ffffff;
+    --background-color: #000000;
+    --link-color: #ffff00;
+    --border-color: #ffffff;
+}
+
+/* Improved contrast for buttons */
+body.high-contrast .btn-primary {
+    background-color: #0000ff;
+    color: #ffffff;
+    border: 2px solid #000000;
+}
+
+body.high-contrast.dark-mode .btn-primary {
+    background-color: #ffff00;
+    color: #000000;
+    border: 2px solid #ffffff;
+}
+
+/* ===== SCREEN READER SUPPORT ===== */
+
+/* Screen reader only text */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Screen reader only, but focusable */
+.sr-only-focusable:not(:focus) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* ===== FONT SIZE CONTROLS ===== */
+
+/* Font size adjustment controls */
+.font-size-controls {
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+}
+
+.font-size-btn {
+    background: none;
+    border: 1px solid var(--border-color);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.font-size-btn:hover {
+    background-color: rgba(var(--primary-color-rgb), 0.1);
+}
+
+/* Font size classes */
+body.font-size-larger {
+    font-size: 18px;
+}
+
+body.font-size-largest {
+    font-size: 20px;
+}
+
+/* ===== RESPONSIVE ACCESSIBILITY ===== */
+
+@media (max-width: 767.98px) {
+    /* Larger touch targets on mobile */
+    button, 
+    .btn, 
+    .nav-link, 
+    a.card, 
+    .dropdown-item {
+        min-height: 44px;
+        padding: 10px 15px;
+    }
+    
+    /* Increased spacing for mobile */
+    .form-group, 
+    .mb-3 {
+        margin-bottom: 1.5rem !important;
+    }
+}

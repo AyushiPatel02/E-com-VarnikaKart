@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load product_tags %}
+
+{% block title %}Payment Successful - VarnikaKart{% endblock %}
+
+{% block extra_css %}
+<style>
+    .success-card {
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    
+    .success-header {
+        background-color: var(--success-color);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+    
+    .success-animation {
+        width: 150px;
+        height: 150px;
+        margin: 0 auto 1.5rem;
+    }
+    
+    .order-details {
+        padding: 2rem;
+    }
+    
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+    
+    .detail-label {
+        color: var(--text-color-muted);
+    }
+    
+    .detail-value {
+        font-weight: 600;
+    }
+    
+    .action-buttons {
+        margin-top: 2rem;
+        display: flex;
+        gap: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+        .action-buttons {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card success-card">
+                <div class="success-header">
+                    <div class="success-animation">
+                        <lottie-player src="https://assets9.lottiefiles.com/packages/lf20_jbrw3hcz.json" background="transparent" speed="1" loop autoplay></lottie-player>
+                    </div>
+                    <h2 class="mb-2">Payment Successful!</h2>
+                    <p class="mb-0">Your order has been placed successfully.</p>
+                </div>
+                
+                <div class="order-details">
+                    <h4 class="mb-4">Order Details</h4>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Order Number</span>
+                        <span class="detail-value">{{ order.order_number }}</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Date</span>
+                        <span class="detail-value">{{ order.created_at|date:"F d, Y" }}</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Payment Method</span>
+                        <span class="detail-value">{{ order.get_payment_method_display }}</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Shipping Address</span>
+                        <span class="detail-value">
+                            {{ order.address_line_1 }}, 
+                            {% if order.address_line_2 %}{{ order.address_line_2 }}, {% endif %}
+                            {{ order.city }}, {{ order.state }} - {{ order.postal_code }}
+                        </span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Order Total</span>
+                        <span class="detail-value">₹{{ order.order_total }}</span>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-primary">
+                            <i class="fas fa-receipt me-2"></i> View Order Details
+                        </a>
+                        <a href="{% url 'products:product_list' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-shopping-bag me-2"></i> Continue Shopping
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <p>Need help with your order? <a href="{% url 'contact' %}">Contact our support team</a>.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Confetti animation
+        setTimeout(() => {
+            const confettiCount = 200;
+            const colors = ['#ff6b6b', '#4ecdc4', '#f7b733', '#6ab04c'];
+            
+            for (let i = 0; i < confettiCount; i++) {
+                createConfetti(colors[Math.floor(Math.random() * colors.length)]);
+            }
+        }, 500);
+        
+        function createConfetti(color) {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            confetti.style.width = Math.random() * 10 + 5 + 'px';
+            confetti.style.height = Math.random() * 5 + 3 + 'px';
+            confetti.style.backgroundColor = color;
+            confetti.style.opacity = Math.random() + 0.5;
+            confetti.style.borderRadius = '50%';
+            confetti.style.zIndex = '1000';
+            confetti.style.top = '-10px';
+            confetti.style.left = Math.random() * window.innerWidth + 'px';
+            confetti.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+            
+            document.body.appendChild(confetti);
+            
+            const animationDuration = Math.random() * 3 + 2;
+            
+            confetti.animate([
+                { transform: 'translate3d(0, 0, 0) rotate(0)', opacity: 1 },
+                { transform: 'translate3d(' + (Math.random() * 100 - 50) + 'px, ' + window.innerHeight + 'px, 0) rotate(' + Math.random() * 360 + 'deg)', opacity: 0 }
+            ], {
+                duration: animationDuration * 1000,
+                easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
+            });
+            
+            setTimeout(() => {
+                document.body.removeChild(confetti);
+            }, animationDuration * 1000);
+        }
+    });
+</script>
+{% endblock %}

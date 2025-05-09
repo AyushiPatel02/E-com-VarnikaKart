@@ -181,78 +181,61 @@ body.dark-mode .alert {
 }
 
 /* Enhanced text visibility in dark mode with proper contrast - ALL TEXT ELEMENTS */
-body.dark-mode a,
-body.dark-mode p,
-body.dark-mode span,
-body.dark-mode div,
+body.dark-mode a:not(.btn):not(.badge),
+body.dark-mode p:not(.card-text):not(.feature-card p),
+body.dark-mode span:not(.feature-card span),
+body.dark-mode div:not(.feature-card div):not(.feature-icon):not(.card-body):not([class*="bg-white"]):not([class*="bg-light"]),
 body.dark-mode li,
 body.dark-mode td,
 body.dark-mode th,
 body.dark-mode small,
 body.dark-mode strong,
 body.dark-mode em,
-body.dark-mode label,
-body.dark-mode .text-dark,
-body.dark-mode .text-body,
-body.dark-mode button,
-body.dark-mode input,
-body.dark-mode select,
-body.dark-mode textarea,
-body.dark-mode option,
-body.dark-mode blockquote,
-body.dark-mode cite,
-body.dark-mode code,
-body.dark-mode pre,
-body.dark-mode .dropdown-item,
-body.dark-mode .list-group-item,
-body.dark-mode .card-text,
-body.dark-mode .card-title,
-body.dark-mode .card-subtitle,
-body.dark-mode .card-header,
-body.dark-mode .card-footer,
+body.dark-mode label:not(.feature-card label),
+body.dark-mode .text-dark:not(.feature-card .text-dark),
+body.dark-mode .text-body:not(.feature-card .text-body),
+body.dark-mode button:not(.feature-card button),
+body.dark-mode input:not(.feature-card input),
+body.dark-mode select:not(.feature-card select),
+body.dark-mode textarea:not(.feature-card textarea),
+body.dark-mode option:not(.feature-card option),
+body.dark-mode blockquote:not(.feature-card blockquote),
+body.dark-mode cite:not(.feature-card cite),
+body.dark-mode code:not(.feature-card code),
+body.dark-mode pre:not(.feature-card pre),
+body.dark-mode .dropdown-item:not(.feature-card .dropdown-item),
+body.dark-mode .list-group-item:not(.feature-card .list-group-item),
+body.dark-mode .card-text:not(.feature-card .card-text),
+body.dark-mode .card-title:not(.feature-card .card-title),
+body.dark-mode .card-subtitle:not(.feature-card .card-subtitle),
+body.dark-mode .card-header:not(.feature-card .card-header),
+body.dark-mode .card-footer:not(.feature-card .card-footer),
 body.dark-mode .modal-title,
 body.dark-mode .nav-link,
 body.dark-mode .navbar-brand,
 body.dark-mode .breadcrumb-item,
 body.dark-mode .page-link,
-body.dark-mode .form-label,
-body.dark-mode .form-check-label,
-body.dark-mode .input-group-text,
-body.dark-mode .form-text,
-body.dark-mode .form-control,
-body.dark-mode .form-select,
-body.dark-mode .form-control-plaintext,
-body.dark-mode .form-control-color,
-body.dark-mode .form-range,
-body.dark-mode .form-floating,
-body.dark-mode .form-check,
-body.dark-mode .form-switch,
-body.dark-mode .form-file,
-body.dark-mode .form-file-text,
-body.dark-mode .form-file-button,
-body.dark-mode .form-file-label,
-body.dark-mode .form-file-input,
-body.dark-mode .form-file-name,
-body.dark-mode .form-file-button,
-body.dark-mode .form-file-text,
-body.dark-mode .form-file-label,
-body.dark-mode .form-file-input,
-body.dark-mode .form-file-name,
-body.dark-mode .form-file-button,
-body.dark-mode .form-file-text,
-body.dark-mode .form-file-label,
-body.dark-mode .form-file-input,
-body.dark-mode .form-file-name,
-body.dark-mode .form-file-button,
-body.dark-mode i,
-body.dark-mode .fa,
-body.dark-mode .fas,
-body.dark-mode .far,
-body.dark-mode .fab,
-body.dark-mode .fal,
-body.dark-mode .fad,
-body.dark-mode svg,
-body.dark-mode .icon {
+body.dark-mode .form-label:not(.feature-card .form-label),
+body.dark-mode .form-check-label:not(.feature-card .form-check-label),
+body.dark-mode .input-group-text:not(.feature-card .input-group-text),
+body.dark-mode .form-text:not(.feature-card .form-text),
+body.dark-mode .form-control:not(.feature-card .form-control):not(.newsletter-section .form-control):not(.newsletter-form .form-control),
+body.dark-mode .form-select:not(.feature-card .form-select),
+body.dark-mode .form-control-plaintext:not(.feature-card .form-control-plaintext),
+body.dark-mode .form-control-color:not(.feature-card .form-control-color),
+body.dark-mode .form-range:not(.feature-card .form-range),
+body.dark-mode .form-floating:not(.feature-card .form-floating),
+body.dark-mode .form-check:not(.feature-card .form-check),
+body.dark-mode .form-switch:not(.feature-card .form-switch),
+body.dark-mode i:not(.feature-card i):not(.feature-icon i),
+body.dark-mode .fa:not(.feature-card .fa):not(.feature-icon .fa),
+body.dark-mode .fas:not(.feature-card .fas):not(.feature-icon .fas),
+body.dark-mode .far:not(.feature-card .far):not(.feature-icon .far),
+body.dark-mode .fab:not(.feature-card .fab):not(.feature-icon .fab),
+body.dark-mode .fal:not(.feature-card .fal):not(.feature-icon .fal),
+body.dark-mode .fad:not(.feature-card .fad):not(.feature-icon .fad),
+body.dark-mode svg:not(.feature-card svg):not(.feature-icon svg),
+body.dark-mode .icon:not(.feature-card .icon):not(.feature-icon .icon) {
     color: #ffffff !important;
 }
 
@@ -650,11 +633,29 @@ body .border-end {
 }
 
 /* Dark mode transitions */
-body, body.dark-mode, body *, body.dark-mode * {
+body, body.dark-mode {
     transition: background-color 0.3s ease,
                 color 0.3s ease,
                 border-color 0.3s ease,
                 box-shadow 0.3s ease;
+}
+
+/* Only apply transitions to specific elements to improve performance */
+body .navbar,
+body .card,
+body .btn,
+body .form-control,
+body .dropdown-menu,
+body.dark-mode .navbar,
+body.dark-mode .card,
+body.dark-mode .btn,
+body.dark-mode .form-control,
+body.dark-mode .dropdown-menu {
+    transition: background-color 0.3s ease,
+                color 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease,
+                transform 0.3s ease;
 }
 
 /* Dark mode for specific components */
@@ -664,10 +665,30 @@ body.dark-mode .top-bar {
 
 body.dark-mode .pro-navbar {
     background-color: #121212 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+body.dark-mode .pro-navbar .nav-link,
+body.dark-mode .pro-navbar .navbar-brand,
+body.dark-mode .pro-navbar .dropdown-toggle {
+    color: #ffffff !important;
+}
+
+body.dark-mode .pro-navbar.navbar-fixed {
+    background-color: rgba(18, 18, 18, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+}
+
+body.dark-mode .pro-navbar .navbar-toggler {
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 body.dark-mode .category-navbar {
     background-color: #121212 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
 
 /* Newsletter Section Improvements */
@@ -763,7 +784,16 @@ body.dark-mode .feature-card {
 
 body.dark-mode .feature-card h4.feature-title,
 body.dark-mode .feature-card .feature-title,
-body.dark-mode .feature-card p {
+body.dark-mode .feature-card p,
+body.dark-mode .feature-card h1,
+body.dark-mode .feature-card h2,
+body.dark-mode .feature-card h3,
+body.dark-mode .feature-card h4,
+body.dark-mode .feature-card h5,
+body.dark-mode .feature-card h6,
+body.dark-mode .feature-card span,
+body.dark-mode .feature-card div:not(.feature-icon),
+body.dark-mode .feature-card a:not(.btn) {
     color: #000000 !important;
     font-weight: 600 !important;
 }
@@ -773,9 +803,17 @@ body.dark-mode .feature-card .feature-icon {
     height: 80px !important;
     border-radius: 20px !important;
     margin-bottom: 1.5rem !important;
+    background-color: var(--primary-color) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
-body.dark-mode .feature-card .feature-icon i {
+body.dark-mode .feature-card .feature-icon i,
+body.dark-mode .feature-card .feature-icon .fa,
+body.dark-mode .feature-card .feature-icon .fas,
+body.dark-mode .feature-card .feature-icon .far,
+body.dark-mode .feature-card .feature-icon .fab {
     color: #ffffff !important;
     font-size: 2rem !important;
 }
@@ -788,10 +826,17 @@ body.dark-mode .product-card {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
     height: 100% !important;
     width: 100% !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+body.dark-mode .product-card:hover {
+    transform: translateY(-10px) !important;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2) !important;
 }
 
 body.dark-mode .product-card .card-body {
     padding: 1.5rem !important;
+    background-color: #1e1e1e !important;
 }
 
 body.dark-mode .product-card .card-title {
@@ -807,9 +852,20 @@ body.dark-mode .product-card .card-text {
 }
 
 body.dark-mode .product-card .card-footer {
-    background-color: transparent !important;
+    background-color: #1e1e1e !important;
     border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
     padding: 1rem 1.5rem !important;
+}
+
+body.dark-mode .product-card img,
+body.dark-mode .product-card .card-img-top {
+    transition: transform 0.5s ease !important;
+    object-fit: cover !important;
+}
+
+body.dark-mode .product-card:hover img,
+body.dark-mode .product-card:hover .card-img-top {
+    transform: scale(1.05) !important;
 }
 
 /* Dark mode for filter sidebar */
@@ -1481,15 +1537,38 @@ body.dark-mode .card.bg-light {
     color: #000000 !important;
 }
 
-body.dark-mode .card[style*="background-color: white"] *,
-body.dark-mode .card[style*="background-color: #fff"] *,
-body.dark-mode .card[style*="background-color: #ffffff"] *,
-body.dark-mode .card[style*="background: white"] *,
-body.dark-mode .card[style*="background: #fff"] *,
-body.dark-mode .card[style*="background: #ffffff"] *,
-body.dark-mode .card.bg-white *,
-body.dark-mode .card.bg-light * {
+body.dark-mode .card[style*="background-color: white"] *:not(.feature-icon):not(.feature-icon *),
+body.dark-mode .card[style*="background-color: #fff"] *:not(.feature-icon):not(.feature-icon *),
+body.dark-mode .card[style*="background-color: #ffffff"] *:not(.feature-icon):not(.feature-icon *),
+body.dark-mode .card[style*="background: white"] *:not(.feature-icon):not(.feature-icon *),
+body.dark-mode .card[style*="background: #fff"] *:not(.feature-icon):not(.feature-icon *),
+body.dark-mode .card[style*="background: #ffffff"] *:not(.feature-icon):not(.feature-icon *),
+body.dark-mode .card.bg-white *:not(.feature-icon):not(.feature-icon *),
+body.dark-mode .card.bg-light *:not(.feature-icon):not(.feature-icon *) {
     color: #000000 !important;
+}
+
+/* Fix for feature icons in white cards */
+body.dark-mode .card[style*="background-color: white"] .feature-icon,
+body.dark-mode .card[style*="background-color: #fff"] .feature-icon,
+body.dark-mode .card[style*="background-color: #ffffff"] .feature-icon,
+body.dark-mode .card[style*="background: white"] .feature-icon,
+body.dark-mode .card[style*="background: #fff"] .feature-icon,
+body.dark-mode .card[style*="background: #ffffff"] .feature-icon,
+body.dark-mode .card.bg-white .feature-icon,
+body.dark-mode .card.bg-light .feature-icon {
+    background-color: var(--primary-color) !important;
+}
+
+body.dark-mode .card[style*="background-color: white"] .feature-icon *,
+body.dark-mode .card[style*="background-color: #fff"] .feature-icon *,
+body.dark-mode .card[style*="background-color: #ffffff"] .feature-icon *,
+body.dark-mode .card[style*="background: white"] .feature-icon *,
+body.dark-mode .card[style*="background: #fff"] .feature-icon *,
+body.dark-mode .card[style*="background: #ffffff"] .feature-icon *,
+body.dark-mode .card.bg-white .feature-icon *,
+body.dark-mode .card.bg-light .feature-icon * {
+    color: #ffffff !important;
 }
 
 /* Force all white background areas to have black text and icons in dark mode */
@@ -1617,14 +1696,37 @@ body.dark-mode section.py-5.bg-light .feature-icon .fab {
 }
 
 /* Global rule to ensure all text in white cards is black, regardless of theme */
-.card,
-.card h1, .card h2, .card h3, .card h4, .card h5, .card h6,
-.card p, .card span, .card div:not(.feature-icon):not(.card-img-overlay):not([class*="bg-"]),
-.card .card-title, .card .card-text, .card .card-body,
-.card a:not(.btn):not(.badge), .card label, .card small,
-.card strong, .card em, .card b, .card i:not(.fa):not(.fas):not(.far):not(.fab),
-.card .list-group-item, .card .dropdown-item {
+.card.bg-white,
+.card.bg-light,
+.card[style*="background-color: white"],
+.card[style*="background-color: #fff"],
+.card[style*="background-color: #ffffff"],
+.card[style*="background: white"],
+.card[style*="background: #fff"],
+.card[style*="background: #ffffff"],
+.feature-card {
+    background-color: #ffffff !important;
     color: #000000 !important;
+}
+
+.card.bg-white *,
+.card.bg-light *,
+.card[style*="background-color: white"] *,
+.card[style*="background-color: #fff"] *,
+.card[style*="background-color: #ffffff"] *,
+.card[style*="background: white"] *,
+.card[style*="background: #fff"] *,
+.card[style*="background: #ffffff"] *,
+.feature-card * {
+    color: #000000 !important;
+}
+
+/* Exception for feature icons */
+.feature-card .feature-icon,
+.feature-card .feature-icon *,
+.card .feature-icon,
+.card .feature-icon * {
+    color: #ffffff !important;
 }
 
 /* Exception for icons in feature cards */
@@ -4455,11 +4557,26 @@ body.dark-mode ::placeholder {
     }
 }
 
+/* Apply glow animation only to important interactive elements */
 body.dark-mode .btn-primary:hover,
-body.dark-mode .feature-icon,
-body.dark-mode .nav-link.active,
-body.dark-mode .card:hover {
+body.dark-mode .feature-icon {
     animation: darkModeGlow 2s infinite;
+}
+
+/* For other elements, use a simpler hover effect */
+body.dark-mode .nav-link.active {
+    box-shadow: 0 0 10px rgba(var(--primary-color-rgb), 0.7);
+}
+
+/* Disable animation for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    body.dark-mode .btn-primary:hover,
+    body.dark-mode .feature-icon,
+    body.dark-mode .nav-link.active,
+    body.dark-mode .card:hover {
+        animation: none !important;
+        transition: none !important;
+    }
 }
 
 /* Dark mode-specific image adjustments */
