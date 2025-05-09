@@ -78,7 +78,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
-    'core.middleware.SuperuserRequiredMiddleware',  # Custom middleware to protect admin pages
+
+    # Custom middleware
+    'core.middleware.SuperuserRequiredMiddleware',  # Protect admin pages
+    'core.middleware.UserActivityMiddleware',  # Track user activity
+    'core.middleware.CartSessionMiddleware',  # Handle cart sessions
+    'core.middleware.MobileDetectionMiddleware',  # Detect mobile devices
 ]
 
 # WhiteNoise configuration

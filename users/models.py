@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from core.email_utils import send_welcome_email
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
@@ -50,6 +51,10 @@ def create_user_profile_and_wishlist(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
         Wishlist.objects.create(user=instance)
+
+        # Send welcome email to new user
+        if instance.email:
+            send_welcome_email(instance)
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
