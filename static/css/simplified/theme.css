@@ -1,0 +1,85 @@
+/* 
+ * VarnikaKart Theme CSS
+ * Theme-specific styling and color schemes
+ */
+
+/* Default theme - Canvas Bloom */
+:root {
+  /* Main colors */
+  --primary-color: #7e9a9a;
+  --secondary-color: #a4c3b2;
+  --accent-color: #efd9ce;
+  --text-color: #2c3e50;
+  --light-text: #ffffff;
+  --dark-text: #333333;
+  
+  /* Background colors */
+  --bg-light: #f6f6f6;
+  --bg-white: #ffffff;
+  --bg-navbar: #e8f0f0;
+  
+  /* Border colors */
+  --border-color: #d0e0e0;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Jewelry Elegance Theme */
+.theme-jewelry-elegance {
+  --primary-color: #9c7c38;
+  --secondary-color: #c0a080;
+  --accent-color: #f0e6d8;
+  --text-color: #3c2c1c;
+  --bg-navbar: #f5f0e8;
+  --border-color: #e0d0c0;
+}
+
+/* Artisan Craft Theme */
+.theme-artisan-craft {
+  --primary-color: #5d4037;
+  --secondary-color: #8d6e63;
+  --accent-color: #d7ccc8;
+  --text-color: #3e2723;
+  --bg-navbar: #efebe9;
+  --border-color: #d7ccc8;
+}
+
+/* Modern Minimalist Theme */
+.theme-modern-minimalist {
+  --primary-color: #546e7a;
+  --secondary-color: #78909c;
+  --accent-color: #cfd8dc;
+  --text-color: #263238;
+  --bg-navbar: #eceff1;
+  --border-color: #cfd8dc;
+}
+
+/* Festive Celebration Theme */
+.theme-festive-celebration {
+  --primary-color: #ad1457;
+  --secondary-color: #ec407a;
+  --accent-color: #f8bbd0;
+  --text-color: #880e4f;
+  --bg-navbar: #fce4ec;
+  --border-color: #f8bbd0;
+}
+
+/* Dark Mode Theme */
+.theme-dark-mode {
+  --primary-color: #bb86fc;
+  --secondary-color: #03dac6;
+  --accent-color: #cf6679;
+  --text-color: #e2e2e2;
+  --light-text: #ffffff;
+  --dark-text: #e2e2e2;
+  --bg-light: #121212;
+  --bg-white: #1e1e1e;
+  --bg-navbar: #2d2d2d;
+  --border-color: #333333;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
