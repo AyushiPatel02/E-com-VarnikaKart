@@ -82,12 +82,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     dropdownItems.forEach(item => {
         const dropdownMenu = item.querySelector('.dropdown-menu');
-
+        
         if (window.innerWidth >= 992) { // Only for desktop
             item.addEventListener('mouseenter', function() {
+                // Close any other open menus first
+                document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                    if (menu !== dropdownMenu) menu.classList.remove('show');
+                });
                 dropdownMenu.classList.add('show');
             });
-
+            
             item.addEventListener('mouseleave', function() {
                 dropdownMenu.classList.remove('show');
             });
