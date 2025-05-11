@@ -135,13 +135,13 @@
             <div class="mb-4">
                 {% if product.discount_price %}
                 <div class="d-flex align-items-center">
-                    <h3 class="text-danger me-3">${{ product.discount_price }}</h3>
-                    <h5 class="text-decoration-line-through text-muted">${{ product.price }}</h5>
+                    <h3 class="text-danger me-3">₹{{ product.discount_price }}</h3>
+                    <h5 class="text-decoration-line-through text-muted">₹{{ product.price }}</h5>
                     {% get_discount_percentage product as discount_percentage %}
                     <span class="badge bg-danger ms-3">{{ discount_percentage }}% OFF</span>
                 </div>
                 {% else %}
-                <h3>${{ product.price }}</h3>
+                <h3>₹{{ product.price }}</h3>
                 {% endif %}
             </div>
 
@@ -289,13 +289,13 @@
                 <!-- Shipping Tab -->
                 <div class="tab-pane fade" id="shipping" role="tabpanel" aria-labelledby="shipping-tab">
                     <h4>Shipping Information</h4>
-                    <p>We offer standard shipping that typically takes 3-5 business days. For orders over $50, shipping is free!</p>
+                    <p>We offer standard shipping that typically takes 3-5 business days across India. For orders over ₹1000, shipping is free!</p>
 
                     <h4 class="mt-4">Return Policy</h4>
                     <p>If you're not completely satisfied with your purchase, you can return it within 30 days for a full refund. Please note that the item must be in its original condition and packaging.</p>
 
-                    <h4 class="mt-4">International Shipping</h4>
-                    <p>We currently ship to select countries. International shipping typically takes 7-14 business days, and customs fees may apply.</p>
+                    <h4 class="mt-4">Shipping Coverage</h4>
+                    <p>We currently ship to all major cities and towns across India. Remote locations may require additional 2-3 days for delivery.</p>
                 </div>
             </div>
         </div>
@@ -324,13 +324,13 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 {% if related.discount_price %}
                                 <div>
-                                    <span class="text-decoration-line-through text-muted">${{ related.price }}</span>
-                                    <span class="fw-bold text-danger">${{ related.discount_price }}</span>
+                                    <span class="text-decoration-line-through text-muted">₹{{ related.price }}</span>
+                                    <span class="fw-bold text-danger">₹{{ related.discount_price }}</span>
                                 </div>
                                 {% get_discount_percentage related as discount_percentage %}
                                 <span class="badge bg-danger">{{ discount_percentage }}% OFF</span>
                                 {% else %}
-                                <span class="fw-bold">${{ related.price }}</span>
+                                <span class="fw-bold">₹{{ related.price }}</span>
                                 {% endif %}
                             </div>
                         </div>

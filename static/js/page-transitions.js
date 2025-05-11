@@ -7,25 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize page transition system
     initPageTransitions();
 
-    // Show loading overlay on initial page load
-    showPageLoadingProgress();
-
-    // Hide overlay when page is fully loaded
-    window.addEventListener('load', function() {
-        // Ensure progress bar completes
-        completeLoadingProgress();
-
-        // Hide overlay after a short delay
-        setTimeout(() => {
-            hidePageTransitionOverlay();
-        }, 500);
-    });
-
-    // Fallback: Hide overlay after 3 seconds even if page isn't fully loaded
-    setTimeout(() => {
-        completeLoadingProgress();
-        hidePageTransitionOverlay();
-    }, 3000);
+    // Note: Initial loading is now handled by preloader.js
+    // This file now focuses on transitions between pages after initial load
 });
 
 /**
@@ -34,6 +17,13 @@ document.addEventListener('DOMContentLoaded', function() {
 function initPageTransitions() {
     // Add event listeners to all links for page transitions
     document.querySelectorAll('a:not([target="_blank"]):not([href^="#"]):not([href^="javascript:"]):not([href^="mailto:"]):not([href^="tel:"])').forEach(link => {
+        // Check if the link already has a click handler for transitions
+        if (link.getAttribute('data-has-transition-handler') === 'true') {
+            return;
+        }
+
+        link.setAttribute('data-has-transition-handler', 'true');
+
         link.addEventListener('click', function(e) {
             // Skip if modifier keys are pressed
             if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -41,35 +31,87 @@ function initPageTransitions() {
             // Skip if it's an external link
             if (this.hostname !== window.location.hostname) return;
 
+            // Skip if it's a dropdown toggle
+            if (this.getAttribute('data-bs-toggle') === 'dropdown') return;
+
+            // Skip if it's a tab toggle
+            if (this.getAttribute('data-bs-toggle') === 'tab') return;
+
+            // Skip if it's a modal toggle
+            if (this.getAttribute('data-bs-toggle') === 'modal') return;
+
+            // Get the href attribute
+            const href = this.getAttribute('href');
+
+            // Skip if href is empty or undefined
+            if (!href) return;
+
             // Show transition overlay
             e.preventDefault();
-            const href = this.getAttribute('href');
-            showPageTransitionOverlay();
 
-            // Navigate after a short delay
+            // Log navigation for debugging
+            console.log('Page transitions: Navigating to:', href);
+
+            // Use preloader.js showPreloader if available, otherwise use local function
+            if (window.preloaderFunctions && typeof window.preloaderFunctions.showPreloader === 'function') {
+                window.preloaderFunctions.showPreloader();
+            } else {
+                showPageTransitionOverlay();
+            }
+
+            // Navigate after a delay to ensure preloader is visible
             setTimeout(() => {
                 window.location.href = href;
-            }, 300);
+            }, 500);
         });
     });
 
     // Add event listeners to forms for page transitions
     document.querySelectorAll('form:not([target="_blank"])').forEach(form => {
+        // Check if the form already has a submit handler for transitions
+        if (form.getAttribute('data-has-transition-handler') === 'true') {
+            return;
+        }
+
+        form.setAttribute('data-has-transition-handler', 'true');
+
         form.addEventListener('submit', function(e) {
             // Skip AJAX forms
             if (this.dataset.ajax === 'true') return;
 
+            // Skip search forms with empty input
+            if (this.querySelector('input[type="search"]')) {
+                const searchInput = this.querySelector('input[type="search"]');
+                if (!searchInput.value.trim()) {
+                    return;
+                }
+            }
+
+            // Log form submission for debugging
+            console.log('Form submission with transition');
+
             // Show transition overlay
-            showPageTransitionOverlay();
+            if (window.preloaderFunctions && typeof window.preloaderFunctions.showPreloader === 'function') {
+                window.preloaderFunctions.showPreloader();
+            } else {
+                showPageTransitionOverlay();
+            }
         });
     });
 
     // Handle browser back/forward buttons
     window.addEventListener('popstate', function() {
-        showPageTransitionOverlay();
-        setTimeout(() => {
-            hidePageTransitionOverlay();
-        }, 300);
+        if (window.preloaderFunctions && typeof window.preloaderFunctions.showPreloader === 'function') {
+            window.preloaderFunctions.showPreloader();
+            setTimeout(() => {
+                window.preloaderFunctions.hidePreloader();
+            }, 800);
+        } else {
+            showPageTransitionOverlay();
+            setTimeout(() => {
+                hidePageTransitionOverlay();
+            }, 800);
+        }
     });
 }
 
@@ -343,5 +385,9 @@ window.pageTransitions = {
     showOverlay: showPageTransitionOverlay,
     hideOverlay: hidePageTransitionOverlay,
     showLoadingSpinner: showLoadingSpinner,
-    showProductSkeletons: showProductSkeletons
+    showProductSkeletons: showProductSkeletons,
+    resetLoadingProgress: resetLoadingProgress,
+    completeLoadingProgress: completeLoadingProgress,
+    updateLoadingMessage: updateLoadingMessage,
+    applyContentFadeIn: applyContentFadeIn
 };

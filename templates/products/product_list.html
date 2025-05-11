@@ -83,8 +83,10 @@
     .filter-sidebar {
         position: sticky;
         top: 20px;
+        z-index: 1050;
     }
 
+    /* Filter card styles */
     .filter-card {
         background-color: white;
         border-radius: var(--card-border-radius);
@@ -99,16 +101,69 @@
         box-shadow: var(--card-hover-shadow);
     }
 
+    /* Filter options */
+    .filter-option {
+        padding: 8px 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .filter-option input[type="checkbox"],
+    .filter-option input[type="radio"] {
+        margin-right: 10px;
+        cursor: pointer;
+        width: 18px;
+        height: 18px;
+    }
+
+    .filter-option label {
+        cursor: pointer;
+        margin-bottom: 0;
+        flex-grow: 1;
+    }
+
+    /* Filter header */
     .filter-header {
         background: var(--primary-gradient);
         color: white;
         padding: 15px 20px;
         font-weight: 600;
         font-size: 1.1rem;
-        position: relative;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    /* Reset filters button */
+    .reset-filters-btn {
+        background: transparent;
+        color: white;
+        border: 1px solid rgba(255,255,255,0.5);
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 0.85rem;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .reset-filters-btn:hover {
+        background: rgba(255,255,255,0.2);
+        border-color: white;
+    }
+
+    /* Close button */
+    .filter-header .btn-outline-light {
+        padding: 4px 8px;
+        line-height: 1;
+        border-color: rgba(255,255,255,0.5);
+    }
+
+    .filter-header .btn-outline-light:hover {
+        background-color: rgba(255,255,255,0.2);
     }
 
     .filter-body {
@@ -1622,7 +1677,7 @@
         box-shadow: 0 0 0 rgba(0,0,0,0);
         position: fixed;
         top: 0;
-        left: -100%;
+        left: -320px; /* Start off-screen */
         height: 100vh;
         width: 320px;
         background-color: white;
@@ -1950,52 +2005,144 @@
         border: none;
     }
 
-    /* Mobile Responsive Adjustments */
+    /* Mobile Filter Sidebar - Complete Rewrite */
+    .filter-sidebar {
+        background-color: white;
+        transition: all 0.3s ease;
+    }
+
+    /* Desktop styles */
+    @media (min-width: 992px) {
+        .filter-sidebar {
+            position: fixed;
+            left: -320px;
+            width: 320px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .filter-sidebar.expanded {
+            left: 0;
+        }
+
+        .filter-pull-btn {
+            display: block;
+        }
+
+        .filter-sidebar-overlay.active {
+            display: block;
+        }
+
+        .products-main-content {
+            transition: all 0.3s ease;
+        }
+
+        .products-main-content.shifted {
+            margin-left: 320px;
+            width: calc(100% - 320px);
+        }
+    }
+
+    /* Mobile styles */
     @media (max-width: 991.98px) {
         .filter-sidebar {
-            position: static;
-            z-index: 100;
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 85%;
+            max-width: 300px;
+            height: 100vh;
+            z-index: 9999;
             background-color: white;
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            overflow-y: auto;
+            padding-bottom: 60px;
         }
 
-        .filter-sidebar.collapsed {
-            width: auto;
-            position: absolute;
+        .filter-sidebar.expanded {
             left: 0;
-            top: auto; /* Keep at the same vertical position */
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transform: translateX(-100%);
-            opacity: 0;
-            pointer-events: none;
         }
 
-        .filter-sidebar.collapsed .filter-header {
-            transform: translateX(100%);
-            opacity: 1;
-            pointer-events: auto;
-            position: absolute;
-            top: 0; /* Keep at top of the collapsed sidebar */
-            right: -50px;
-            width: 50px;
-            height: 50px;
-            border-radius: 0 5px 5px 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, var(--bs-primary) 0%, #6610f2 100%);
-        }
-
-        .filter-sidebar.collapsed .filter-header span,
-        .filter-sidebar.collapsed .filter-header #saveFilterBtn,
-        .filter-sidebar.collapsed .filter-header #resetFiltersBtn {
+        .filter-sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 9998;
             display: none;
         }
 
-        .filter-sidebar.collapsed #toggleFilterBtn {
-            margin: 0;
-            transform: rotate(180deg);
+        .filter-sidebar-overlay.active {
+            display: block;
         }
+
+        body.filter-open {
+            overflow: hidden;
+        }
+    }
+
+    /* Filter pull button */
+    .filter-pull-btn {
+        position: fixed;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        z-index: 9990;
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        border-radius: 0 4px 4px 0;
+        padding: 15px 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        box-shadow: 3px 0 8px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .filter-pull-btn:hover {
+        padding-right: 18px;
+        box-shadow: 5px 0 15px rgba(0,0,0,0.25);
+    }
+
+    .filter-pull-btn i {
+        font-size: 1.2rem;
+    }
+
+    .filter-pull-btn span {
+        writing-mode: vertical-lr;
+        transform: rotate(180deg);
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-top: 5px;
+    }
+
+    @media (max-width: 991.98px) {
+        .filter-pull-btn {
+            bottom: 80px;
+            left: 20px;
+            top: auto;
+            transform: none;
+            border-radius: 50px;
+            padding: 10px 20px;
+            flex-direction: row;
+        }
+
+        .filter-pull-btn:hover {
+            transform: translateY(-3px);
+            padding-right: 20px;
+        }
+
+        .filter-pull-btn span {
+            writing-mode: horizontal-tb;
+            transform: none;
+            margin-top: 0;
+        }
+    }
 
         .filters-collapsed .products-main-content {
             width: 100%;
@@ -2080,11 +2227,8 @@
         }
 
         .filter-sidebar {
-            display: none;
-        }
-
-        .filter-sidebar.show {
-            display: block;
+            width: 90%;
+            max-width: 300px;
         }
 
         .recently-viewed-item {
@@ -2255,6 +2399,8 @@
     <script>
         // Set initial view on page load
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM fully loaded');
+
             // Check saved view preference
             const savedViewType = localStorage.getItem('productViewTypePreference');
             if (savedViewType === 'list') {
@@ -2263,42 +2409,111 @@
                 toggleGridView();
             }
 
-            // Create filter sidebar overlay if it doesn't exist
-            if (!document.querySelector('.filter-sidebar-overlay')) {
-                const overlay = document.createElement('div');
-                overlay.className = 'filter-sidebar-overlay';
-                overlay.addEventListener('click', function() {
-                    toggleFilterSidebar();
-                });
-                document.body.appendChild(overlay);
-            }
-
-            // Create filter pull button if it doesn't exist
-            if (!document.querySelector('.filter-pull-btn')) {
-                const pullBtn = document.createElement('button');
-                pullBtn.className = 'filter-pull-btn';
-                pullBtn.innerHTML = '<i class="fas fa-filter"></i><span>Filters</span>';
-                pullBtn.addEventListener('click', function() {
-                    toggleFilterSidebar();
-                });
-                document.body.appendChild(pullBtn);
-            }
-
-            // Check saved filter sidebar state
-            const filterSidebarState = localStorage.getItem('filterSidebarState');
-            if (filterSidebarState === 'expanded') {
-                toggleFilterSidebar(true);
-            }
+            // Initialize filter sidebar components
+            setTimeout(function() {
+                initFilterSidebar();
+                console.log('Filter sidebar initialized');
+            }, 100);
 
             // Add event listener for filter toggle button
             const toggleFilterBtn = document.getElementById('toggleFilterBtn');
             if (toggleFilterBtn) {
-                toggleFilterBtn.addEventListener('click', function() {
+                toggleFilterBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
                     toggleFilterSidebar();
                 });
             }
 
-            // Add event listener for reset filters button
+            // Add event listener for window resize
+            window.addEventListener('resize', handleWindowResize);
+        });
+
+        // Initialize filter sidebar components
+        function initFilterSidebar() {
+            console.log('Initializing filter sidebar');
+
+            // Create filter sidebar overlay
+            let overlay = document.querySelector('.filter-sidebar-overlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.className = 'filter-sidebar-overlay';
+                document.body.appendChild(overlay);
+                console.log('Filter overlay created');
+            }
+
+            // Add click event to overlay
+            overlay.addEventListener('click', function() {
+                toggleFilterSidebar();
+            });
+
+            // Create filter pull button
+            let pullBtn = document.querySelector('.filter-pull-btn');
+            if (!pullBtn) {
+                pullBtn = document.createElement('button');
+                pullBtn.className = 'filter-pull-btn';
+                pullBtn.innerHTML = '<i class="fas fa-filter"></i><span>Filters</span>';
+                document.body.appendChild(pullBtn);
+                console.log('Filter pull button created');
+            }
+
+            // Add click event to pull button
+            pullBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                toggleFilterSidebar();
+            });
+
+            // Add click events to all filter checkboxes and labels
+            document.querySelectorAll('.filter-option input[type="checkbox"], .filter-option input[type="radio"]').forEach(input => {
+                input.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    console.log('Filter input clicked:', this.id);
+                });
+            });
+
+            document.querySelectorAll('.filter-option label').forEach(label => {
+                label.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    console.log('Filter label clicked:', this.htmlFor);
+                });
+            });
+
+            // Check if we should auto-expand the filter sidebar on desktop
+            if (window.innerWidth >= 992) {
+                // Auto-expand filter sidebar on desktop if previously expanded
+                const wasExpanded = localStorage.getItem('filterSidebarExpanded') === 'true';
+                if (wasExpanded) {
+                    setTimeout(function() {
+                        toggleFilterSidebar();
+                    }, 300);
+                }
+            }
+        }
+
+        // Handle window resize
+        function handleWindowResize() {
+            const filterSidebar = document.querySelector('.filter-sidebar');
+            const mainContent = document.querySelector('.products-main-content');
+            const isExpanded = filterSidebar && filterSidebar.classList.contains('expanded');
+
+            // If on desktop
+            if (window.innerWidth >= 992) {
+                // Reset body styles
+                document.body.classList.remove('filter-open');
+
+                // Handle main content shifting based on sidebar state
+                if (mainContent && isExpanded) {
+                    mainContent.classList.add('shifted');
+                }
+            } else {
+                // On mobile, make sure main content is not shifted
+                if (mainContent) {
+                    mainContent.classList.remove('shifted');
+                }
+            }
+        }
+
+        // Add event listener for reset filters button
+        document.addEventListener('DOMContentLoaded', function() {
             const resetFiltersBtn = document.getElementById('resetFiltersBtn');
             if (resetFiltersBtn) {
                 resetFiltersBtn.addEventListener('click', function(e) {
@@ -2307,16 +2522,16 @@
                     resetAllFilters();
                 });
             }
+        });
 
-            // Add keyboard shortcut for toggling filters (Alt+F)
+        // Add keyboard shortcut for toggling filters (Alt+F)
+        document.addEventListener('DOMContentLoaded', function() {
             document.addEventListener('keydown', function(e) {
                 if (e.altKey && e.key === 'f') {
                     e.preventDefault();
                     toggleFilterSidebar();
                 }
             });
-
-            // Close button is already added in the filter header
         });
 
         // Reset all filters function
@@ -2358,43 +2573,76 @@
             }
         }
 
-        // Filter sidebar toggle function - Enhanced version
-        function toggleFilterSidebar(initialLoad = false) {
+        // Enhanced filter sidebar toggle function
+        function toggleFilterSidebar() {
+            console.log('Toggle filter sidebar called');
+
+            // Get elements
             const filterSidebar = document.querySelector('.filter-sidebar');
             const filterOverlay = document.querySelector('.filter-sidebar-overlay');
+            const mainContent = document.querySelector('.products-main-content');
+
+            if (!filterSidebar) {
+                console.error('Filter sidebar not found');
+                return;
+            }
+
+            // Check if sidebar is currently expanded
             const isExpanded = filterSidebar.classList.contains('expanded');
 
             if (isExpanded) {
-                // Hide filters
+                // Hide sidebar
                 filterSidebar.classList.remove('expanded');
-                filterOverlay.classList.remove('active');
-                document.body.style.overflow = '';
-                localStorage.setItem('filterSidebarState', 'hidden');
 
-                if (!initialLoad && typeof showToast === 'function') {
-                    showToast('Filters hidden', 'info');
+                // Hide overlay
+                if (filterOverlay) {
+                    filterOverlay.classList.remove('active');
                 }
+
+                // Enable scrolling
+                document.body.classList.remove('filter-open');
+
+                // Unshift main content on desktop
+                if (window.innerWidth >= 992 && mainContent) {
+                    mainContent.classList.remove('shifted');
+                }
+
+                // Save state to localStorage
+                localStorage.setItem('filterSidebarExpanded', 'false');
+
+                console.log('Filter sidebar hidden');
             } else {
-                // Show filters
+                // Show sidebar
                 filterSidebar.classList.add('expanded');
-                filterOverlay.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Prevent scrolling when sidebar is open
-                localStorage.setItem('filterSidebarState', 'expanded');
 
-                if (!initialLoad && typeof showToast === 'function') {
-                    showToast('Filters expanded', 'info');
+                // Show overlay
+                if (filterOverlay) {
+                    filterOverlay.classList.add('active');
                 }
+
+                // Disable scrolling on mobile
+                if (window.innerWidth < 992) {
+                    document.body.classList.add('filter-open');
+                }
+
+                // Shift main content on desktop
+                if (window.innerWidth >= 992 && mainContent) {
+                    mainContent.classList.add('shifted');
+                }
+
+                // Save state to localStorage
+                localStorage.setItem('filterSidebarExpanded', 'true');
+
+                console.log('Filter sidebar expanded');
             }
 
-            // Announce to screen readers
-            const announcement = document.createElement('div');
-            announcement.setAttribute('aria-live', 'polite');
-            announcement.classList.add('sr-only');
-            announcement.textContent = isExpanded ? 'Filters hidden' : 'Filters expanded';
-            document.body.appendChild(announcement);
-            setTimeout(() => {
-                document.body.removeChild(announcement);
-            }, 1000);
+            // Prevent default behavior and event propagation
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            return false;
         }
 
         // Direct toggle functions for inline onclick handlers
@@ -2471,7 +2719,7 @@
                             <button type="button" class="reset-filters-btn" id="resetFiltersBtn" title="Reset all filters">
                                 <i class="fas fa-undo-alt me-1"></i>Reset
                             </button>
-                            <button type="button" class="btn btn-sm btn-outline-light ms-1" onclick="toggleFilterSidebar()" title="Close filters">
+                            <button type="button" class="btn btn-sm btn-outline-light ms-1" onclick="toggleFilterSidebar(); return false;" title="Close filters">
                                 <i class="fas fa-times"></i>
                             </button>
                         </div>
@@ -2603,7 +2851,7 @@
                                         <div class="price-input">
                                             <label for="min_price" class="form-label small">Min Price</label>
                                             <div class="input-group input-group-sm">
-                                                <span class="input-group-text">$</span>
+                                                <span class="input-group-text">₹</span>
                                                 <input type="number" class="form-control" id="min_price" name="min_price" value="{{ min_price|default:0 }}" min="0">
                                             </div>
                                         </div>
@@ -2611,17 +2859,17 @@
                                         <div class="price-input">
                                             <label for="max_price" class="form-label small">Max Price</label>
                                             <div class="input-group input-group-sm">
-                                                <span class="input-group-text">$</span>
+                                                <span class="input-group-text">₹</span>
                                                 <input type="number" class="form-control" id="max_price" name="max_price" value="{{ max_price|default:1000 }}" min="0">
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="price-presets mt-3">
-                                        <button type="button" class="btn btn-sm btn-outline-secondary price-preset" data-min="0" data-max="500">Under $500</button>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary price-preset" data-min="500" data-max="1000">$500 - $1000</button>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary price-preset" data-min="1000" data-max="2000">$1000 - $2000</button>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary price-preset" data-min="2000" data-max="5000">$2000+</button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary price-preset" data-min="0" data-max="500">Under ₹500</button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary price-preset" data-min="500" data-max="1000">₹500 - ₹1000</button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary price-preset" data-min="1000" data-max="2000">₹1000 - ₹2000</button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary price-preset" data-min="2000" data-max="5000">₹2000+</button>
                                     </div>
 
                                     <button type="submit" class="btn btn-primary btn-sm w-100 mt-4">
@@ -3362,10 +3610,10 @@
 
                             <div class="product-price-wrapper">
                                 {% if product.discount_price %}
-                                <span class="product-price">${{ product.discount_price }}</span>
-                                <span class="product-price-original">${{ product.price }}</span>
+                                <span class="product-price">₹{{ product.discount_price }}</span>
+                                <span class="product-price-original">₹{{ product.price }}</span>
                                 {% else %}
-                                <span class="product-price">${{ product.price }}</span>
+                                <span class="product-price">₹{{ product.price }}</span>
                                 {% endif %}
                             </div>
 
@@ -3532,7 +3780,7 @@
             </div>
 
             <!-- Floating Filter Button (Mobile Only) -->
-            <button class="floating-filter-btn d-lg-none" onclick="toggleFilterSidebar()">
+            <button class="floating-filter-btn d-lg-none" onclick="toggleFilterSidebar(); return false;">
                 <i class="fas fa-filter"></i>
                 <span>Filters</span>
             </button>

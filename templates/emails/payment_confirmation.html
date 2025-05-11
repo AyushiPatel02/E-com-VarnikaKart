@@ -14,35 +14,35 @@
             padding: 0;
             background-color: #f9f9f9;
         }
-        
+
         .container {
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
             background-color: #ffffff;
         }
-        
+
         .header {
             text-align: center;
             padding: 20px 0;
             border-bottom: 1px solid #eee;
         }
-        
+
         .logo {
             font-size: 24px;
             font-weight: bold;
             color: #ff6b6b;
         }
-        
+
         .payment-info {
             padding: 20px 0;
             border-bottom: 1px solid #eee;
         }
-        
+
         .payment-details {
             margin-bottom: 20px;
         }
-        
+
         .payment-success {
             text-align: center;
             padding: 20px;
@@ -50,31 +50,31 @@
             border-radius: 5px;
             margin: 20px 0;
         }
-        
+
         .payment-success-icon {
             font-size: 48px;
             color: #6ab04c;
             margin-bottom: 10px;
         }
-        
+
         .order-summary {
             padding: 20px 0;
             border-bottom: 1px solid #eee;
         }
-        
+
         .order-total {
             text-align: right;
             padding: 10px 0;
             font-weight: bold;
         }
-        
+
         .footer {
             text-align: center;
             padding: 20px 0;
             font-size: 12px;
             color: #999;
         }
-        
+
         .button {
             display: inline-block;
             padding: 10px 20px;
@@ -84,11 +84,11 @@
             border-radius: 4px;
             margin-top: 10px;
         }
-        
+
         .social-links {
             margin-top: 20px;
         }
-        
+
         .social-links a {
             display: inline-block;
             margin: 0 5px;
@@ -103,52 +103,52 @@
             <div class="logo">VarnikaKart</div>
             <p>Handcrafted Artistry, Delivered to You</p>
         </div>
-        
+
         <div class="payment-info">
             <h2>Payment Successful!</h2>
             <p>Dear {{ order.full_name }},</p>
-            
+
             <div class="payment-success">
                 <div class="payment-success-icon">✓</div>
                 <h3>Thank You for Your Payment</h3>
                 <p>We've successfully received your payment for order #{{ order.order_number }}.</p>
             </div>
-            
+
             <div class="payment-details">
                 <p><strong>Payment ID:</strong> {{ payment.payment_id }}</p>
                 <p><strong>Payment Method:</strong> {{ payment.payment_method }}</p>
                 <p><strong>Amount Paid:</strong> ₹{{ payment.amount_paid }}</p>
                 <p><strong>Payment Date:</strong> {{ payment.created_at|date:"F d, Y" }}</p>
             </div>
-            
+
             <p>Your order is now confirmed and will be processed shortly. We'll send you another email when your order ships.</p>
         </div>
-        
+
         <div class="order-summary">
             <h3>Order Summary</h3>
             <p><strong>Order Number:</strong> {{ order.order_number }}</p>
             <p><strong>Order Date:</strong> {{ order.created_at|date:"F d, Y" }}</p>
-            
+
             <div class="order-total">
                 <p>Total Amount: ₹{{ order.order_total }}</p>
             </div>
-            
+
             <p>You can view your order details by clicking the button below:</p>
-            
+
             <a href="http://varnikakart.com/orders/order/{{ order.id }}/" class="button">View Order Details</a>
         </div>
-        
+
         <div class="footer">
-            <p>If you have any questions about your payment or order, please contact our customer service team at <a href="mailto:support@varnikakart.com">support@varnikakart.com</a> or call us at +91 9876543210.</p>
-            
+            <p>If you have any questions about your payment or order, please contact our customer service team at <a href="mailto:support@varnikakart.com">support@varnikakart.com</a> or call us at +91 6393260995.</p>
+
             <div class="social-links">
                 <a href="https://facebook.com/varnikakart">Facebook</a> |
                 <a href="https://instagram.com/varnikakart">Instagram</a> |
                 <a href="https://twitter.com/varnikakart">Twitter</a>
             </div>
-            
+
             <p>&copy; 2025 VarnikaKart. All rights reserved.</p>
-            <p>123 Craft Street, Artisan City, India</p>
+            <p>123 Craft Street, Connaught Place, New Delhi, 110001, India</p>
         </div>
     </div>
 </body>
