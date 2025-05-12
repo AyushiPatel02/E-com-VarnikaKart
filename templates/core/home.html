@@ -1249,7 +1249,7 @@
             </div>
             <div class="col-md-3 mb-4">
                 <div class="feature-card text-center h-100">
-                    <div class="feature-icon mx-auto" style="background: linear-gradient(135deg, #6cdfcb 0%, #4ecdc4 100%);">
+                    <div class="feature-icon mx-auto" >
                         <i class="fas fa-users"></i>
                     </div>
                     <h4 class="feature-title">Artisan Support</h4>
@@ -2333,71 +2333,7 @@
     </div>
 </section>
 
-<!-- Newsletter Section -->
-<section class="py-5">
-    <div class="container">
-        <div class="newsletter-section">
-            <div class="floating-shapes">
-                <div class="shape shape-1"></div>
-                <div class="shape shape-2"></div>
-                <div class="shape shape-3"></div>
-            </div>
-            <div class="decorative-dots"></div>
-            <div class="decorative-circle"></div>
-            <div class="row justify-content-center">
-                <div class="col-lg-8 text-center">
-                    <span class="badge bg-white text-primary mb-4 px-4 py-2 rounded-pill fw-bold animate__animated animate__fadeInDown">
-                        <i class="fas fa-envelope-open-text me-2"></i>Stay Connected
-                    </span>
-                    <h2 class="newsletter-title animate__animated animate__fadeInUp">Join Our Creative Community</h2>
-                    <p class="lead mb-5 animate__animated animate__fadeInUp animate__delay-1s" style="font-size: 1.25rem; max-width: 80%; margin: 0 auto;">Subscribe to our newsletter for exclusive offers, new product alerts, and artisan stories.</p>
-                    <form method="post" action="{% url 'home' %}" class="newsletter-form animate__animated animate__fadeInUp animate__delay-2s">
-                        {% csrf_token %}
-                        <div class="input-group mb-3">
-                            {{ newsletter_form.email }}
-                            <button type="submit" class="btn">
-                                <i class="fas fa-paper-plane me-2"></i>Subscribe
-                            </button>
-                        </div>
-                        {% if newsletter_form.email.errors %}
-                        <div class="invalid-feedback d-block text-white mb-3">
-                            {{ newsletter_form.email.errors.0 }}
-                        </div>
-                        {% endif %}
-                        {% if messages %}
-                        {% for message in messages %}
-                        {% if 'newsletter' in message.tags %}
-                        <div class="success-message mt-3">
-                            <i class="fas fa-check-circle me-2"></i>{{ message }}
-                        </div>
-                        {% endif %}
-                        {% endfor %}
-                        {% endif %}
-                    </form>
-                    <div class="mt-4 d-flex justify-content-center animate__animated animate__fadeInUp animate__delay-3s">
-                        <div class="benefits-list d-flex flex-wrap justify-content-center gap-3">
-                            <div class="benefit-item">
-                                <i class="fas fa-gift me-2"></i>
-                                <span>Exclusive Offers</span>
-                            </div>
-                            <div class="benefit-item">
-                                <i class="fas fa-bell me-2"></i>
-                                <span>New Arrivals</span>
-                            </div>
-                            <div class="benefit-item">
-                                <i class="fas fa-user-shield me-2"></i>
-                                <span>Privacy Protected</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-4 animate__animated animate__fadeIn animate__delay-4s">
-                        <small class="text-white-50" style="font-size: 0.9rem; max-width: 80%; display: inline-block;">By subscribing, you agree to receive marketing emails from VarnikaKart. Don't worry, we respect your privacy and you can unsubscribe at any time.</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+
 
 <!-- Personalized Gifts Section -->
 <section class="py-5 bg-white">
