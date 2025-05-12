@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment Cancelled - VarnikaKart{% endblock %}
+
+{% block extra_css %}
+<style>
+    .cancel-card {
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    
+    .cancel-header {
+        background-color: var(--danger-color);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+    
+    .cancel-animation {
+        width: 150px;
+        height: 150px;
+        margin: 0 auto 1.5rem;
+    }
+    
+    .cancel-body {
+        padding: 2rem;
+        text-align: center;
+    }
+    
+    .action-buttons {
+        margin-top: 2rem;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+    }
+    
+    .help-section {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+    
+    .help-item {
+        margin-bottom: 1rem;
+    }
+    
+    .help-item i {
+        color: var(--primary-color);
+        margin-right: 0.5rem;
+    }
+    
+    @media (max-width: 768px) {
+        .action-buttons {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card cancel-card">
+                <div class="cancel-header">
+                    <div class="cancel-animation">
+                        <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_qpwbiyxf.json" background="transparent" speed="1" loop autoplay></lottie-player>
+                    </div>
+                    <h2 class="mb-2">Payment Cancelled</h2>
+                    <p class="mb-0">Your payment was not completed.</p>
+                </div>
+                
+                <div class="cancel-body">
+                    <p class="mb-4">We noticed that your payment process was cancelled or encountered an error. Don't worry, your order is still saved and you can try again.</p>
+                    
+                    <div class="action-buttons">
+                        <a href="{% url 'orders:checkout' %}" class="btn btn-primary">
+                            <i class="fas fa-redo me-2"></i> Try Again
+                        </a>
+                        <a href="{% url 'orders:cart' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-shopping-cart me-2"></i> Return to Cart
+                        </a>
+                    </div>
+                    
+                    <div class="help-section mt-4">
+                        <h5 class="mb-3">Need Help?</h5>
+                        
+                        <div class="help-item">
+                            <i class="fas fa-info-circle"></i>
+                            <span>If you're experiencing issues with payment, please check your card details and try again.</span>
+                        </div>
+                        
+                        <div class="help-item">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Make sure your card has sufficient balance and is enabled for online transactions.</span>
+                        </div>
+                        
+                        <div class="help-item">
+                            <i class="fas fa-headset"></i>
+                            <span>For assistance, contact our support team at <a href="mailto:support@varnikakart.com">support@varnikakart.com</a> or call us at +91 9876543210.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+{% endblock %}

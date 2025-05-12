@@ -10,486 +10,316 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Custom Admin CSS -->
-    <link rel="stylesheet" href="{% static 'admin/css/custom_admin.css' %}">
-    <link rel="stylesheet" href="{% static 'admin/css/super_admin.css' %}">
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #4e73df;
-            --primary-dark: #224abe;
-            --secondary-color: #6c757d;
-            --success-color: #1cc88a;
-            --info-color: #36b9cc;
-            --warning-color: #f6c23e;
-            --danger-color: #e74a3b;
-            --light-color: #f8f9fc;
-            --dark-color: #5a5c69;
-            --white-color: #ffffff;
-            --body-bg: #f8f9fc;
-            --card-border-radius: 0.75rem;
-            --transition-speed: 0.3s;
-            --box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
-            --box-shadow-sm: 0 0.125rem 0.25rem 0 rgba(58, 59, 69, 0.1);
-            --box-shadow-hover: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.2);
-        }
-
         body {
-            font-family: 'Nunito', sans-serif;
-            background: linear-gradient(135deg, rgba(78, 115, 223, 0.05) 0%, rgba(78, 115, 223, 0.1) 100%);
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
         }
-
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
+        .glass-card {
+            background: rgba(255,255,255,0.18);
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            border: 1px solid rgba(255,255,255,0.18);
+            max-width: 1100px;
             width: 100%;
-            height: 100%;
-            background: url('{% static "img/login-bg.jpg" %}') center/cover no-repeat;
-            opacity: 0.05;
-            z-index: -1;
-        }
-
-        .login-container {
-            width: 100%;
-            max-width: 900px;
-            padding: 1rem;
             display: flex;
-            flex-direction: row;
-        }
-
-        .login-image {
-            flex: 1;
-            background: url('{% static "img/login-side.jpg" %}') center/cover no-repeat;
-            border-radius: 0.75rem 0 0 0.75rem;
+            overflow: hidden;
             position: relative;
-            display: none;
         }
-
-        .login-image::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(78, 115, 223, 0.8) 0%, rgba(34, 74, 190, 0.8) 100%);
-            border-radius: 0.75rem 0 0 0.75rem;
-            opacity: 0.8;
-        }
-
-        .login-image-content {
-            position: relative;
-            z-index: 1;
-            color: white;
-            padding: 3rem;
-            height: 100%;
+        .glass-left {
+            flex: 1.2;
+            background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
+            color: #fff;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: flex-start;
+            padding: 4rem 3rem;
+            position: relative;
         }
-
-        .login-image-title {
-            font-size: 2.5rem;
+        .glass-left .svg-hero {
+            width: 80px;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite alternate;
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-18px); }
+        }
+        .glass-left h1 {
+            font-size: 2.8rem;
             font-weight: 800;
             margin-bottom: 1rem;
+            letter-spacing: -1px;
         }
-
-        .login-image-subtitle {
-            font-size: 1.25rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
+        .glass-left p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            margin-bottom: 2.5rem;
         }
-
-        .login-features {
+        .glass-features {
             list-style: none;
             padding: 0;
             margin: 0;
         }
-
-        .login-features li {
+        .glass-features li {
             display: flex;
             align-items: center;
-            margin-bottom: 1rem;
-            font-size: 1rem;
+            margin-bottom: 1.2rem;
+            font-size: 1.1rem;
+            font-weight: 500;
         }
-
-        .login-features li i {
+        .glass-features li i {
             margin-right: 1rem;
-            width: 24px;
-            height: 24px;
-            background-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255,255,255,0.2);
             border-radius: 50%;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
         }
-
-        .login-card {
-            background: white;
-            border-radius: 0.75rem;
-            box-shadow: var(--box-shadow);
-            overflow: hidden;
-            animation: fadeInUp 0.5s ease-out;
+        .glass-right {
             flex: 1;
-            max-width: 450px;
-            margin: 0 auto;
-        }
-
-        .login-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: 2rem 1.5rem;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: rgba(255,255,255,0.7);
+            padding: 3rem 2.5rem;
             position: relative;
-            overflow: hidden;
         }
-
-        .login-header::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('{% static "img/pattern.png" %}') center/cover repeat;
-            opacity: 0.1;
-            z-index: 0;
+        .glass-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
         }
-
-        .login-header-content {
-            position: relative;
-            z-index: 1;
+        .glass-logo svg {
+            width: 48px;
+            height: 48px;
+            margin-right: 0.75rem;
         }
-
-        .login-brand-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            display: inline-block;
-            width: 80px;
-            height: 80px;
-            line-height: 80px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-        }
-
-        .login-brand-text {
-            font-size: 1.75rem;
+        .glass-logo span {
+            font-size: 2rem;
             font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.25rem;
+            background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-
-        .login-subtitle {
-            font-size: 0.875rem;
-            opacity: 0.8;
+        .glass-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            text-align: center;
         }
-
-        .login-body {
-            padding: 2rem;
-        }
-
         .form-floating {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
         }
-
         .form-floating input {
-            height: 60px;
-            border-radius: 0.5rem;
-            border: 1px solid #d1d3e2;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
             font-size: 1rem;
-            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            padding: 1rem 1.25rem;
+            background: #f8fafc;
+            color: #1e293b;
         }
-
         .form-floating input:focus {
-            border-color: #bac8f3;
-            box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
+            background: #fff;
         }
-
+        .show-password {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #64748b;
+            z-index: 2;
+        }
         .form-check {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
         }
-
-        .form-check-input:checked {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
         .login-btn {
-            padding: 0.75rem 1rem;
+            padding: 1rem 1.5rem;
             font-weight: 600;
             font-size: 1rem;
-            border-radius: 0.5rem;
-            background-color: var(--primary-color);
+            border-radius: 12px;
+            background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
+            color: #fff;
             border: none;
-            transition: all 0.2s;
+            width: 100%;
+            transition: all 0.3s;
+            box-shadow: 0 10px 15px -3px rgba(99,102,241,0.2);
         }
-
-        .login-btn:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-3px);
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        .login-btn:active {
+            transform: scale(0.98);
         }
-
         .login-footer {
             text-align: center;
             margin-top: 1.5rem;
         }
-
         .login-footer a {
-            color: var(--primary-color);
+            color: #6366f1;
             text-decoration: none;
             font-weight: 600;
-            transition: color 0.2s;
         }
-
-        .login-footer a:hover {
-            color: var(--primary-dark);
-            text-decoration: underline;
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 2rem 0 1rem 0;
+            color: #64748b;
+            font-size: 0.9rem;
         }
-
-        .alert {
-            border-radius: 0.5rem;
-            margin-bottom: 1.5rem;
-            padding: 1rem;
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e2e8f0;
         }
-
-        .alert-danger {
-            background-color: rgba(231, 74, 59, 0.1);
-            color: var(--danger-color);
-            border-left: 4px solid var(--danger-color);
-            border-top: none;
-            border-right: none;
-            border-bottom: none;
-        }
-
-        .alert-success {
-            background-color: rgba(28, 200, 138, 0.1);
-            color: var(--success-color);
-            border-left: 4px solid var(--success-color);
-            border-top: none;
-            border-right: none;
-            border-bottom: none;
-        }
-
+        .divider::before { margin-right: 1rem; }
+        .divider::after { margin-left: 1rem; }
         .back-links {
             display: flex;
             justify-content: space-between;
             margin-top: 1.5rem;
         }
-
         .back-link {
-            color: #6c757d;
+            color: #64748b;
             text-decoration: none;
-            font-size: 0.875rem;
-            transition: color 0.2s;
+            font-size: 0.95rem;
+            font-weight: 500;
             display: inline-flex;
             align-items: center;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            transition: all 0.2s;
         }
-
-        .back-link i {
-            margin-right: 0.5rem;
-        }
-
         .back-link:hover {
-            color: var(--primary-color);
+            color: #6366f1;
+            background: rgba(99,102,241,0.07);
         }
-
         .invalid-feedback {
-            color: var(--danger-color);
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
+            color: #ef4444;
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+            font-weight: 500;
         }
-
         .copyright {
             text-align: center;
-            margin-top: 1.5rem;
-            color: #6c757d;
-            font-size: 0.875rem;
+            margin-top: 2rem;
+            color: #64748b;
+            font-size: 0.95rem;
+            font-weight: 500;
         }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes fadeInRight {
-            from {
-                opacity: 0;
-                transform: translateX(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @media (min-width: 992px) {
-            .login-image {
-                display: block;
-                animation: fadeInLeft 0.5s ease-out;
-            }
-
-            .login-card {
-                animation: fadeInRight 0.5s ease-out;
-                border-radius: 0 0.75rem 0.75rem 0;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .login-body {
-                padding: 1.5rem;
-            }
+        @media (max-width: 991px) {
+            .glass-card { flex-direction: column; max-width: 500px; }
+            .glass-left { display: none; }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-image">
-            <div class="login-image-content">
-                <div class="login-image-title">VarnikaKart</div>
-                <div class="login-image-subtitle">Manage your e-commerce platform with our powerful admin panel</div>
-
-                <ul class="login-features">
-                    <li><i class="fas fa-check"></i> Comprehensive Dashboard</li>
-                    <li><i class="fas fa-check"></i> Real-time Analytics</li>
-                    <li><i class="fas fa-check"></i> Order Management</li>
-                    <li><i class="fas fa-check"></i> Inventory Control</li>
-                    <li><i class="fas fa-check"></i> Customer Insights</li>
-                </ul>
-            </div>
+    <div class="glass-card">
+        <div class="glass-left">
+            <svg class="svg-hero" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="32" cy="32" r="32" fill="#fff" fill-opacity="0.08"/>
+                <path d="M32 12L52 24V40L32 52L12 40V24L32 12Z" fill="#fff" fill-opacity="0.15"/>
+                <path d="M32 18L46 27V37L32 46L18 37V27L32 18Z" fill="#fff" fill-opacity="0.25"/>
+            </svg>
+            <h1>VarnikaKart</h1>
+            <p>Empower your e-commerce journey with a secure, creative, and intuitive admin portal.</p>
+            <ul class="glass-features">
+                <li><i class="fas fa-chart-line"></i> Real-time Analytics Dashboard</li>
+                <li><i class="fas fa-shopping-cart"></i> Seamless Order Management</li>
+                <li><i class="fas fa-box"></i> Complete Inventory Control</li>
+                <li><i class="fas fa-users"></i> Customer Relationship Tools</li>
+                <li><i class="fas fa-cog"></i> Customizable Settings</li>
+            </ul>
         </div>
-
-        <div class="login-card">
-            <div class="login-header">
-                <div class="login-header-content">
-                    <div class="login-brand-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <div class="login-brand-text">VarnikaKart</div>
-                    <div class="login-subtitle">{% trans "Super Admin Portal" %}</div>
-                </div>
+        <div class="glass-right">
+            <div class="glass-logo">
+                <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="16" fill="#6366f1"/><path d="M16 8L24 13V21L16 26L8 21V13L16 8Z" fill="#fff" fill-opacity="0.7"/></svg>
+                <span>VarnikaKart</span>
             </div>
-
-            <div class="login-body">
+            <div class="glass-title">{% trans "Super Admin Portal" %}</div>
+            <form method="post" action="{% url 'superadmin_login' %}" autocomplete="on">
+                {% csrf_token %}
                 {% if messages %}
                     {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }}" role="alert">
-                            {{ message }}
-                        </div>
+                        <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
                     {% endfor %}
                 {% endif %}
-
-                <form method="post" action="{% url 'superadmin_login' %}">
-                    {% csrf_token %}
-
-                    {% if form.non_field_errors %}
-                        <div class="alert alert-danger" role="alert">
-                            {% for error in form.non_field_errors %}
-                                {{ error }}
-                            {% endfor %}
-                        </div>
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+                <div class="form-floating position-relative">
+                    <input type="text" name="username" id="{{ form.username.id_for_label }}" class="form-control" placeholder="{% trans 'Username or Email' %}" required autofocus autocomplete="username">
+                    <label for="{{ form.username.id_for_label }}">{% trans "Username or Email" %}</label>
+                    {% if form.username.errors %}
+                        <div class="invalid-feedback d-block">{% for error in form.username.errors %}{{ error }}{% endfor %}</div>
                     {% endif %}
-
-                    <div class="form-floating mb-3">
-                        {{ form.username }}
-                        <label for="{{ form.username.id_for_label }}">{% trans "Username or Email" %}</label>
-                        {% if form.username.errors %}
-                            <div class="invalid-feedback d-block">
-                                {% for error in form.username.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-floating mb-3">
-                        {{ form.password }}
-                        <label for="{{ form.password.id_for_label }}">{% trans "Password" %}</label>
-                        {% if form.password.errors %}
-                            <div class="invalid-feedback d-block">
-                                {% for error in form.password.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-check mb-3">
-                        {{ form.remember_me }}
-                        <label class="form-check-label" for="{{ form.remember_me.id_for_label }}">
-                            {% trans "Remember me" %}
-                        </label>
-                    </div>
-
-                    {% if next %}
-                        <input type="hidden" name="next" value="{{ next }}">
+                </div>
+                <div class="form-floating position-relative">
+                    <input type="password" name="password" id="password-input" class="form-control" placeholder="{% trans 'Password' %}" required autocomplete="current-password">
+                    <label for="password-input">{% trans "Password" %}</label>
+                    <span class="show-password" onclick="togglePassword()" aria-label="Show or hide password" tabindex="0"><i class="fas fa-eye"></i></span>
+                    {% if form.password.errors %}
+                        <div class="invalid-feedback d-block">{% for error in form.password.errors %}{{ error }}{% endfor %}</div>
                     {% endif %}
-
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary login-btn">
-                            <i class="fas fa-sign-in-alt me-2"></i>{% trans "Login" %}
-                        </button>
-                    </div>
-
-                    <div class="login-footer">
-                        <a href="{% url 'password_reset' %}">{% trans "Forgot Password?" %}</a>
-                    </div>
-
-                    <div class="back-links">
-                        <a href="{% url 'home' %}" class="back-link">
-                            <i class="fas fa-home"></i>{% trans "Back to Home" %}
-                        </a>
-                        <a href="{% url 'account_login' %}" class="back-link">
-                            <i class="fas fa-user"></i>{% trans "User Login" %}
-                        </a>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div class="text-center mt-3">
-            <small class="text-muted">
-                &copy; {% now "Y" %} VarnikaKart. {% trans "All rights reserved." %}
-            </small>
+                </div>
+                <div class="form-check">
+                    {{ form.remember_me }}
+                    <label class="form-check-label" for="{{ form.remember_me.id_for_label }}">{% trans "Remember me" %}</label>
+                </div>
+                {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+                <button type="submit" class="login-btn"><i class="fas fa-sign-in-alt me-2"></i>{% trans "Sign In" %}</button>
+                <div class="login-footer">
+                    <a href="{% url 'password_reset' %}">{% trans "Forgot your password?" %}</a>
+                </div>
+                <div class="divider">{% trans "or" %}</div>
+                <div class="back-links">
+                    <a href="{% url 'home' %}" class="back-link"><i class="fas fa-home"></i>{% trans "Back to Home" %}</a>
+                    <a href="{% url 'account_login' %}" class="back-link"><i class="fas fa-user"></i>{% trans "User Login" %}</a>
+                </div>
+            </form>
         </div>
     </div>
-
-    <!-- Bootstrap JS Bundle with Popper -->
+    <!-- <div class="copyright">&copy; {% now "Y" %} VarnikaKart. {% trans "All rights reserved." %}</div> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function togglePassword() {
+            const input = document.getElementById('password-input');
+            const icon = document.querySelector('.show-password i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const usernameInput = document.querySelector('input[name="username"]');
+            if (usernameInput) {
+                setTimeout(() => { usernameInput.focus(); }, 500);
+            }
+        });
+    </script>
 </body>
 </html>

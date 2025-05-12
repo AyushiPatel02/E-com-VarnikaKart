@@ -380,10 +380,8 @@ function applyDarkMode() {
             }
         }
 
-        // Force text color update by triggering a small reflow
-        document.body.style.display = 'none';
-        document.body.offsetHeight; // Force reflow
-        document.body.style.display = '';
+        // Apply specific fixes for dark mode
+        applyDarkModeSpecificFixes(shouldBeDark);
 
         // Dispatch a custom event for other scripts to react to mode change
         document.dispatchEvent(new CustomEvent('darkModeChanged', {
@@ -397,6 +395,242 @@ function applyDarkMode() {
             removeDarkModeTransition(overlay);
         }, 300);
     }, 100);
+}
+
+/**
+ * Apply specific fixes for dark mode
+ * @param {boolean} isDarkMode - Whether dark mode is active
+ */
+function applyDarkModeSpecificFixes(isDarkMode) {
+    console.log('Applying specific fixes for ' + (isDarkMode ? 'dark' : 'light') + ' mode');
+
+    // Force text color update by triggering a small reflow
+    document.body.style.display = 'none';
+    document.body.offsetHeight; // Force reflow
+    document.body.style.display = '';
+
+    // Fix feature cards
+    fixFeatureCards(isDarkMode);
+
+    // Fix product cards
+    fixProductCards(isDarkMode);
+
+    // Fix navbar
+    fixNavbar(isDarkMode);
+
+    // Fix footer
+    fixFooter(isDarkMode);
+
+    // Fix newsletter section
+    fixNewsletterSection(isDarkMode);
+
+    // Fix buttons
+    fixButtons(isDarkMode);
+
+    // Force browser to repaint by adding and removing a class
+    document.body.classList.add('dark-mode-refreshing');
+    setTimeout(() => {
+        document.body.classList.remove('dark-mode-refreshing');
+    }, 50);
+}
+
+/**
+ * Fix feature cards for dark/light mode
+ * @param {boolean} isDarkMode - Whether dark mode is active
+ */
+function fixFeatureCards(isDarkMode) {
+    const featureCards = document.querySelectorAll('.feature-card');
+    featureCards.forEach(card => {
+        // Force card to repaint
+        card.style.display = 'none';
+        card.offsetHeight;
+        card.style.display = '';
+
+        // Always ensure feature cards have white background and black text
+        card.style.backgroundColor = '#ffffff';
+
+        // Fix text colors
+        const cardTexts = card.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span, a:not(.btn)');
+        cardTexts.forEach(text => {
+            if (!text.closest('.feature-icon')) {
+                text.style.color = '#000000';
+            }
+        });
+
+        // Fix feature icon
+        const featureIcon = card.querySelector('.feature-icon');
+        if (featureIcon) {
+            // Get primary color from CSS variables
+            const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
+            featureIcon.style.backgroundColor = primaryColor;
+
+            // Fix icon color
+            const iconElements = featureIcon.querySelectorAll('i, .fa, .fas, .far, .fab');
+            iconElements.forEach(icon => {
+                icon.style.color = '#ffffff';
+            });
+        }
+    });
+}
+
+/**
+ * Fix product cards for dark/light mode
+ * @param {boolean} isDarkMode - Whether dark mode is active
+ */
+function fixProductCards(isDarkMode) {
+    const productCards = document.querySelectorAll('.product-card');
+    productCards.forEach(card => {
+        // Force card to repaint
+        card.style.display = 'none';
+        card.offsetHeight;
+        card.style.display = '';
+
+        // Set background color based on mode
+        if (isDarkMode) {
+            card.style.backgroundColor = '#1e1e1e';
+
+            // Fix card body and footer
+            const cardBody = card.querySelector('.card-body');
+            const cardFooter = card.querySelector('.card-footer');
+
+            if (cardBody) cardBody.style.backgroundColor = '#1e1e1e';
+            if (cardFooter) cardFooter.style.backgroundColor = '#1e1e1e';
+
+            // Fix text colors
+            const cardTexts = card.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span, a:not(.btn)');
+            cardTexts.forEach(text => {
+                text.style.color = '#ffffff';
+            });
+        } else {
+            card.style.backgroundColor = '#ffffff';
+
+            // Fix card body and footer
+            const cardBody = card.querySelector('.card-body');
+            const cardFooter = card.querySelector('.card-footer');
+
+            if (cardBody) cardBody.style.backgroundColor = '#ffffff';
+            if (cardFooter) cardFooter.style.backgroundColor = '#ffffff';
+
+            // Fix text colors
+            const cardTexts = card.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span, a:not(.btn)');
+            cardTexts.forEach(text => {
+                text.style.color = '#000000';
+            });
+        }
+    });
+}
+
+/**
+ * Fix navbar for dark/light mode
+ * @param {boolean} isDarkMode - Whether dark mode is active
+ */
+function fixNavbar(isDarkMode) {
+    const navbar = document.querySelector('.pro-navbar');
+    if (navbar) {
+        // Force navbar to repaint
+        navbar.style.display = 'none';
+        navbar.offsetHeight;
+        navbar.style.display = '';
+
+        // Set background color based on mode
+        if (isDarkMode) {
+            navbar.style.backgroundColor = '#121212';
+
+            // Fix text colors
+            const navLinks = navbar.querySelectorAll('.nav-link, .navbar-brand, .dropdown-toggle');
+            navLinks.forEach(link => {
+                link.style.color = '#ffffff';
+            });
+        } else {
+            // Get nav background color from CSS variables
+            const navBgColor = getComputedStyle(document.documentElement).getPropertyValue('--nav-bg-color').trim();
+            if (navBgColor) {
+                navbar.style.backgroundColor = navBgColor;
+            }
+
+            // Fix text colors
+            const navLinks = navbar.querySelectorAll('.nav-link, .navbar-brand, .dropdown-toggle');
+            navLinks.forEach(link => {
+                link.style.color = '#000000';
+            });
+        }
+    }
+}
+
+/**
+ * Fix footer for dark/light mode
+ * @param {boolean} isDarkMode - Whether dark mode is active
+ */
+function fixFooter(isDarkMode) {
+    const footer = document.querySelector('.footer');
+    if (footer) {
+        // Force footer to repaint
+        footer.style.display = 'none';
+        footer.offsetHeight;
+        footer.style.display = '';
+
+        // Fix text colors
+        const footerTexts = footer.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span, a:not(.btn)');
+        footerTexts.forEach(text => {
+            text.style.color = isDarkMode ? '#ffffff' : '#000000';
+        });
+    }
+}
+
+/**
+ * Fix newsletter section for dark/light mode
+ * @param {boolean} isDarkMode - Whether dark mode is active
+ */
+function fixNewsletterSection(isDarkMode) {
+    const newsletterSection = document.querySelector('.newsletter-section');
+    if (newsletterSection) {
+        // Force section to repaint
+        newsletterSection.style.display = 'none';
+        newsletterSection.offsetHeight;
+        newsletterSection.style.display = '';
+
+        // Fix text colors
+        const sectionTexts = newsletterSection.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span, label');
+        sectionTexts.forEach(text => {
+            text.style.color = isDarkMode ? '#ffffff' : '#000000';
+        });
+    }
+}
+
+/**
+ * Fix buttons for dark/light mode
+ * @param {boolean} isDarkMode - Whether dark mode is active
+ */
+function fixButtons(isDarkMode) {
+    // Get primary color from CSS variables
+    const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
+    const buttonTextColor = getComputedStyle(document.documentElement).getPropertyValue('--button-text-color').trim();
+
+    // Fix primary buttons
+    const primaryButtons = document.querySelectorAll('.btn-primary');
+    primaryButtons.forEach(button => {
+        button.style.backgroundColor = primaryColor;
+        button.style.borderColor = primaryColor;
+        button.style.color = buttonTextColor;
+    });
+
+    // Fix outline buttons
+    const outlineButtons = document.querySelectorAll('.btn-outline-primary');
+    outlineButtons.forEach(button => {
+        button.style.borderColor = primaryColor;
+        button.style.color = primaryColor;
+
+        // Add hover effect
+        button.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = primaryColor;
+            this.style.color = buttonTextColor;
+        });
+
+        button.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = 'transparent';
+            this.style.color = primaryColor;
+        });
+    });
 }
 
 /**

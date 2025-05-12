@@ -47,10 +47,10 @@
                                     </td>
                                     <td>
                                         {% if item.product.discount_price %}
-                                        <span class="text-danger">${{ item.product.discount_price }}</span>
-                                        <small class="text-decoration-line-through text-muted d-block">${{ item.product.price }}</small>
+                                        <span class="text-danger">₹{{ item.product.discount_price }}</span>
+                                        <small class="text-decoration-line-through text-muted d-block">₹{{ item.product.price }}</small>
                                         {% else %}
-                                        ${{ item.product.price }}
+                                        ₹{{ item.product.price }}
                                         {% endif %}
                                     </td>
                                     <td>
@@ -61,7 +61,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="fw-bold item-total" data-cart-item-id="{{ item.id }}">${{ item.get_cost }}</span>
+                                        <span class="fw-bold item-total" data-cart-item-id="{{ item.id }}">₹{{ item.get_cost }}</span>
                                     </td>
                                     <td>
                                         <a href="{% url 'orders:cart_remove' item.product.id %}" class="btn btn-sm btn-outline-danger">
@@ -93,20 +93,20 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-2">
                         <span>Subtotal:</span>
-                        <span id="cart-subtotal">${{ cart.get_total_price }}</span>
+                        <span id="cart-subtotal">₹{{ cart.get_total_price }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span>Shipping:</span>
                         <span>Free</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
-                        <span>Tax (18%):</span>
-                        <span id="cart-tax">${{ cart.get_total_price|floatformat:2|multiply:0.18 }}</span>
+                        <span>GST (18%):</span>
+                        <span id="cart-tax">₹{{ cart.get_total_price|floatformat:2|multiply:0.18 }}</span>
                     </div>
                     <hr>
                     <div class="d-flex justify-content-between mb-3">
                         <span class="fw-bold">Total:</span>
-                        <span class="fw-bold fs-5" id="cart-total">${{ cart.get_total_price|floatformat:2|add:cart.get_total_price|floatformat:2|multiply:0.18 }}</span>
+                        <span class="fw-bold fs-5" id="cart-total">₹{{ cart.get_total_price|floatformat:2|add:cart.get_total_price|floatformat:2|multiply:0.18 }}</span>
                     </div>
                     <a href="{% url 'orders:checkout' %}" class="btn btn-primary w-100">
                         Proceed to Checkout

@@ -405,6 +405,18 @@ function applyTheme(themeName) {
             root.style.setProperty('--primary-color-rgb', `${primaryRgb.r}, ${primaryRgb.g}, ${primaryRgb.b}`);
         }
 
+        // Extract RGB values from secondary color for use in rgba()
+        const secondaryRgb = hexToRgb(theme.colors.secondary);
+        if (secondaryRgb) {
+            root.style.setProperty('--secondary-color-rgb', `${secondaryRgb.r}, ${secondaryRgb.g}, ${secondaryRgb.b}`);
+        }
+
+        // Extract RGB values from accent color for use in rgba()
+        const accentRgb = hexToRgb(theme.colors.accent);
+        if (accentRgb) {
+            root.style.setProperty('--accent-color-rgb', `${accentRgb.r}, ${accentRgb.g}, ${accentRgb.b}`);
+        }
+
         console.log('Applied CSS variables to root');
 
         // Update theme name in the UI
@@ -443,10 +455,8 @@ function applyTheme(themeName) {
         applyThemeEffects(themeName);
         console.log('Applied theme effects');
 
-        // Force text color update by triggering a small reflow
-        document.body.style.display = 'none';
-        document.body.offsetHeight; // Force reflow
-        document.body.style.display = '';
+        // Force refresh of all elements with theme-dependent styling
+        refreshThemeStyles();
 
         // Remove the transition overlay after theme is applied
         setTimeout(() => {
@@ -463,6 +473,125 @@ function applyTheme(themeName) {
             console.log('Dispatched themeChanged event');
         }, 300);
     }, 100);
+}
+
+// Function to refresh theme styles on all elements
+function refreshThemeStyles() {
+    // Force text color update by triggering a small reflow
+    document.body.style.display = 'none';
+    document.body.offsetHeight; // Force reflow
+    document.body.style.display = '';
+
+    // Apply theme styles to specific sections that might need special handling
+    refreshNavbarStyles();
+    refreshCardStyles();
+    refreshButtonStyles();
+    refreshFooterStyles();
+
+    // Force browser to repaint by adding and removing a class
+    document.body.classList.add('theme-refreshing');
+    setTimeout(() => {
+        document.body.classList.remove('theme-refreshing');
+    }, 50);
+}
+
+// Refresh navbar styles
+function refreshNavbarStyles() {
+    const navbar = document.querySelector('.pro-navbar');
+    if (navbar) {
+        // Force navbar to repaint
+        navbar.style.display = 'none';
+        navbar.offsetHeight;
+        navbar.style.display = '';
+
+        // Apply theme colors to navbar
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        if (isDarkMode) {
+            navbar.style.backgroundColor = '#121212';
+        } else {
+            const root = document.documentElement;
+            const navBgColor = getComputedStyle(root).getPropertyValue('--nav-bg-color').trim();
+            if (navBgColor) {
+                navbar.style.backgroundColor = navBgColor;
+            }
+        }
+    }
+}
+
+// Refresh card styles
+function refreshCardStyles() {
+    const cards = document.querySelectorAll('.card, .product-card, .feature-card');
+    cards.forEach(card => {
+        // Force card to repaint
+        card.style.display = 'none';
+        card.offsetHeight;
+        card.style.display = '';
+
+        // Ensure proper text colors in cards
+        const cardTexts = card.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span, a:not(.btn)');
+        const isDarkMode = document.body.classList.contains('dark-mode');
+
+        // Check if this is a light card in dark mode
+        const isLightCard = card.classList.contains('bg-white') ||
+                           card.classList.contains('bg-light') ||
+                           card.classList.contains('feature-card') ||
+                           window.getComputedStyle(card).backgroundColor.includes('255, 255, 255');
+
+        if (isDarkMode && isLightCard) {
+            // Light card in dark mode should have black text
+            cardTexts.forEach(text => {
+                if (!text.closest('.feature-icon')) {
+                    text.style.color = '#000000';
+                }
+            });
+        } else if (isDarkMode && !isLightCard) {
+            // Dark card in dark mode should have white text
+            cardTexts.forEach(text => {
+                text.style.color = '#ffffff';
+            });
+        } else {
+            // Light mode - all cards should have black text
+            cardTexts.forEach(text => {
+                if (!text.closest('.feature-icon')) {
+                    text.style.color = '#000000';
+                }
+            });
+        }
+    });
+}
+
+// Refresh button styles
+function refreshButtonStyles() {
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(button => {
+        // Force button to repaint
+        button.style.display = 'none';
+        button.offsetHeight;
+        button.style.display = '';
+    });
+}
+
+// Refresh footer styles
+function refreshFooterStyles() {
+    const footer = document.querySelector('.footer');
+    if (footer) {
+        // Force footer to repaint
+        footer.style.display = 'none';
+        footer.offsetHeight;
+        footer.style.display = '';
+
+        // Apply theme colors to footer
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        if (isDarkMode) {
+            footer.style.backgroundColor = '#000000';
+        } else {
+            const root = document.documentElement;
+            const footerBgColor = getComputedStyle(root).getPropertyValue('--footer-bg-color').trim();
+            if (footerBgColor) {
+                footer.style.backgroundColor = footerBgColor;
+            }
+        }
+    }
 }
 
 // Create a transition overlay for smooth theme switching

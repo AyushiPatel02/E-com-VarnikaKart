@@ -4,6 +4,14 @@
 {% block extrastyle %}
 {{ block.super }}
 <style>
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
     .dashboard {
         display: flex;
         flex-wrap: wrap;
@@ -131,35 +139,89 @@
 
     .welcome-message {
         margin-bottom: 2rem;
+        padding: 2rem;
+        background: linear-gradient(135deg, rgba(94, 96, 206, 0.05) 0%, rgba(94, 96, 206, 0.01) 100%);
+        border-radius: var(--card-border-radius);
+        border-left: 4px solid var(--primary-color);
+        box-shadow: var(--box-shadow-sm);
+        animation: fadeIn 0.5s ease-in-out;
     }
 
     .welcome-message h2 {
-        font-size: 1.75rem;
+        font-size: 1.85rem;
         font-weight: 700;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
         color: var(--dark-color);
+        display: flex;
+        align-items: center;
+    }
+
+    .welcome-message h2::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 30px;
+        background: var(--gradient-primary);
+        margin-right: 1rem;
+        border-radius: 4px;
     }
 
     .welcome-message p {
-        color: #6c757d;
+        color: var(--secondary-color);
         margin-bottom: 0;
+        font-size: 1.1rem;
+        padding-left: calc(8px + 1rem);
     }
 
     .recent-actions {
         background: white;
-        border-radius: 0.5rem;
-        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--box-shadow);
         overflow: hidden;
+        transition: all var(--transition-speed);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .recent-actions:hover {
+        box-shadow: var(--box-shadow-hover);
+        transform: translateY(-5px);
+        border-color: rgba(94, 96, 206, 0.2);
     }
 
     .recent-actions h3 {
         margin: 0;
-        padding: 1rem 1.25rem;
+        padding: 1.25rem 1.5rem;
         font-size: 1.25rem;
         font-weight: 700;
         color: var(--dark-color);
-        background: var(--light-color);
+        background: linear-gradient(to right, var(--light-color), #ffffff);
         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    .recent-actions h3::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease;
+    }
+
+    .recent-actions:hover h3::after {
+        transform: scaleX(1);
+    }
+
+    .recent-actions h3 i {
+        color: var(--primary-color);
+        margin-right: 0.75rem;
+        font-size: 1.35rem;
     }
 
     #recent-actions-module {
@@ -179,22 +241,88 @@
         border: none;
     }
 
-    #recent-actions-module ul {
+    .actionlist {
         margin: 0;
         padding: 0;
         list-style: none;
     }
 
-    #recent-actions-module ul li {
-        margin-bottom: 0.5rem;
-        padding-bottom: 0.5rem;
+    .action-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+        padding: 0.5rem;
         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+        border-radius: 0.5rem;
     }
 
-    #recent-actions-module ul li:last-child {
+    .action-item:last-child {
         margin-bottom: 0;
-        padding-bottom: 0;
         border-bottom: none;
+    }
+
+    .action-item:hover {
+        background-color: rgba(94, 96, 206, 0.05);
+    }
+
+    .action-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+
+    .action-add .action-icon {
+        background-color: rgba(56, 176, 0, 0.1);
+        color: var(--success-color);
+    }
+
+    .action-change .action-icon {
+        background-color: rgba(72, 202, 228, 0.1);
+        color: var(--info-color);
+    }
+
+    .action-delete .action-icon {
+        background-color: rgba(208, 0, 0, 0.1);
+        color: var(--danger-color);
+    }
+
+    .action-content {
+        flex: 1;
+    }
+
+    .action-title {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .action-title a {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .action-title a:hover {
+        color: var(--primary-dark);
+    }
+
+    .action-meta {
+        display: flex;
+        font-size: 0.8rem;
+        color: var(--secondary-color);
+    }
+
+    .action-type {
+        margin-right: 1rem;
+    }
+
+    .action-time {
+        margin-left: auto;
     }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -216,7 +344,7 @@
     </div>
 
     <div class="dashboard-stats">
-        <div class="stat-card stat-card-primary">
+        <div class="stat-card stat-card-primary slide-in-up" style="animation-delay: 0.1s;">
             <div class="stat-icon">
                 <i class="fas fa-users"></i>
             </div>
@@ -225,7 +353,7 @@
                 <p>Total Users</p>
             </div>
         </div>
-        <div class="stat-card stat-card-success">
+        <div class="stat-card stat-card-success slide-in-up" style="animation-delay: 0.2s;">
             <div class="stat-icon">
                 <i class="fas fa-shopping-cart"></i>
             </div>
@@ -234,7 +362,7 @@
                 <p>Total Orders</p>
             </div>
         </div>
-        <div class="stat-card stat-card-info">
+        <div class="stat-card stat-card-info slide-in-up" style="animation-delay: 0.3s;">
             <div class="stat-icon">
                 <i class="fas fa-box"></i>
             </div>
@@ -243,7 +371,7 @@
                 <p>Total Products</p>
             </div>
         </div>
-        <div class="stat-card stat-card-warning">
+        <div class="stat-card stat-card-warning slide-in-up" style="animation-delay: 0.4s;">
             <div class="stat-icon">
                 <i class="fas fa-money-bill-wave"></i>
             </div>
@@ -257,7 +385,7 @@
     <div class="dashboard">
         {% if app_list %}
             {% for app in app_list %}
-                <div class="dashboard-card">
+                <div class="dashboard-card slide-in-up" style="animation-delay: {{ forloop.counter|add:4 }}00ms;">
                     <div class="dashboard-card-header">
                         <h3>
                             <i class="fas {% if app.name == 'Authentication and Authorization' %}fa-users-cog{% elif app.name == 'Core' %}fa-home{% elif app.name == 'Products' %}fa-box{% elif app.name == 'Orders' %}fa-shopping-cart{% elif app.name == 'Users' %}fa-users{% else %}fa-cogs{% endif %} me-2"></i>
@@ -265,20 +393,20 @@
                         </h3>
                     </div>
                     <div class="dashboard-card-body">
-                        <ul>
+                        <ul class="dashboard-list">
                             {% for model in app.models %}
-                                <li>
+                                <li class="dashboard-list-item">
                                     {% if model.admin_url %}
-                                        <a href="{{ model.admin_url }}">
+                                        <a href="{{ model.admin_url }}" class="dashboard-link">
                                             <i class="fas {% if 'user' in model.object_name|lower %}fa-user{% elif 'group' in model.object_name|lower %}fa-users{% elif 'product' in model.object_name|lower %}fa-box{% elif 'order' in model.object_name|lower %}fa-shopping-cart{% elif 'category' in model.object_name|lower %}fa-tags{% elif 'review' in model.object_name|lower %}fa-star{% elif 'address' in model.object_name|lower %}fa-map-marker-alt{% elif 'payment' in model.object_name|lower %}fa-credit-card{% elif 'wishlist' in model.object_name|lower %}fa-heart{% else %}fa-circle{% endif %}"></i>
-                                            {{ model.name }}
+                                            <span>{{ model.name }}</span>
                                         </a>
                                     {% else %}
-                                        {{ model.name }}
+                                        <span class="dashboard-text">{{ model.name }}</span>
                                     {% endif %}
 
                                     {% if model.add_url %}
-                                        <a href="{{ model.add_url }}" class="addlink" style="margin-left: 0.5rem; font-size: 0.8rem;">
+                                        <a href="{{ model.add_url }}" class="dashboard-add-link" title="Add {{ model.name }}">
                                             <i class="fas fa-plus"></i>
                                         </a>
                                     {% endif %}
@@ -293,30 +421,39 @@
         {% endif %}
     </div>
 
-    <div class="recent-actions">
+    <div class="recent-actions slide-in-up" style="animation-delay: 0.8s;">
         <h3><i class="fas fa-history me-2"></i>{% trans 'Recent actions' %}</h3>
         {% load log %}
         {% get_admin_log 10 as admin_log for_user user %}
         {% if not admin_log %}
             <div id="recent-actions-module" style="padding: 1.25rem;">
-                <p>{% trans 'None available' %}</p>
+                <p class="text-center text-muted">{% trans 'No recent actions found' %}</p>
             </div>
         {% else %}
             <div id="recent-actions-module">
                 <ul class="actionlist">
                     {% for entry in admin_log %}
-                        <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
-                            {% if entry.is_deletion or not entry.get_admin_url %}
-                                {{ entry.object_repr }}
-                            {% else %}
-                                <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
-                            {% endif %}
-                            <br>
-                            {% if entry.content_type %}
-                                <span class="mini quiet">{% filter capfirst %}{{ entry.content_type.name }}{% endfilter %}</span>
-                            {% else %}
-                                <span class="mini quiet">{% trans 'Unknown content' %}</span>
-                            {% endif %}
+                        <li class="action-item {% if entry.is_addition %}action-add{% endif %}{% if entry.is_change %}action-change{% endif %}{% if entry.is_deletion %}action-delete{% endif %}">
+                            <div class="action-icon">
+                                <i class="fas {% if entry.is_addition %}fa-plus-circle{% elif entry.is_change %}fa-edit{% elif entry.is_deletion %}fa-trash-alt{% else %}fa-circle{% endif %}"></i>
+                            </div>
+                            <div class="action-content">
+                                <div class="action-title">
+                                    {% if entry.is_deletion or not entry.get_admin_url %}
+                                        {{ entry.object_repr }}
+                                    {% else %}
+                                        <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                                    {% endif %}
+                                </div>
+                                <div class="action-meta">
+                                    {% if entry.content_type %}
+                                        <span class="action-type">{% filter capfirst %}{{ entry.content_type.name }}{% endfilter %}</span>
+                                    {% else %}
+                                        <span class="action-type">{% trans 'Unknown content' %}</span>
+                                    {% endif %}
+                                    <span class="action-time">{{ entry.action_time|timesince }} ago</span>
+                                </div>
+                            </div>
                         </li>
                     {% endfor %}
                 </ul>
