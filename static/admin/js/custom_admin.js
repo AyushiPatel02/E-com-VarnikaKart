@@ -1,27 +1,40 @@
 // VarnikaKart Custom Admin Panel JavaScript
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Sidebar Toggle
-    const sidebarToggle = document.querySelector('.sidebar-toggle');
+    // Sidebar is always open in super admin
     const sidebar = document.querySelector('.sidebar');
     const mainContent = document.querySelector('.main-content');
 
-    if (sidebarToggle) {
-        sidebarToggle.addEventListener('click', function() {
-            sidebar.classList.toggle('collapsed');
-            mainContent.classList.toggle('expanded');
-
-            // Save state to localStorage
-            localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
-        });
-
-        // Check localStorage for sidebar state
-        const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-        if (sidebarCollapsed) {
-            sidebar.classList.add('collapsed');
-            mainContent.classList.add('expanded');
-        }
+    // Remove any collapsed state that might be set
+    if (sidebar && sidebar.classList.contains('collapsed')) {
+        sidebar.classList.remove('collapsed');
     }
+
+    // Remove any expanded state from main content
+    if (mainContent && mainContent.classList.contains('expanded')) {
+        mainContent.classList.remove('expanded');
+    }
+
+    // Clear any stored sidebar state
+    localStorage.removeItem('sidebarCollapsed');
+
+    // Add subtle animation to nav links
+    const navLinks = document.querySelectorAll('.sidebar .nav-link');
+    navLinks.forEach((link, index) => {
+        link.style.transitionDelay = `${0.05 * index}s`;
+
+        // Add hover effect for icons
+        const icon = link.querySelector('i');
+        if (icon) {
+            link.addEventListener('mouseenter', () => {
+                icon.style.transform = 'scale(1.2)';
+            });
+
+            link.addEventListener('mouseleave', () => {
+                icon.style.transform = 'scale(1)';
+            });
+        }
+    });
 
     // Mobile Sidebar Toggle
     const mobileToggle = document.querySelector('.mobile-toggle');

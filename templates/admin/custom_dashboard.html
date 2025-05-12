@@ -36,6 +36,32 @@
             <div class="flex-grow-1 ms-3">
                 <h4 class="mb-1">Welcome back, {{ request.user.get_full_name|default:request.user.username }}!</h4>
                 <p class="text-muted mb-0">Here's what's happening with your store today.</p>
+
+                <!-- Quick Stats Summary -->
+                <div class="quick-stats mt-3">
+                    <div class="row g-2">
+                        <div class="col-auto">
+                            <span class="badge rounded-pill bg-primary-subtle text-primary">
+                                <i class="fas fa-shopping-cart me-1"></i> {{ order_count }} Orders
+                            </span>
+                        </div>
+                        <div class="col-auto">
+                            <span class="badge rounded-pill bg-success-subtle text-success">
+                                <i class="fas fa-rupee-sign me-1"></i> ₹{{ revenue }} Revenue
+                            </span>
+                        </div>
+                        <div class="col-auto">
+                            <span class="badge rounded-pill bg-info-subtle text-info">
+                                <i class="fas fa-users me-1"></i> {{ user_count }} Customers
+                            </span>
+                        </div>
+                        <div class="col-auto">
+                            <span class="badge rounded-pill bg-warning-subtle text-warning">
+                                <i class="fas fa-box me-1"></i> {{ product_count }} Products
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="flex-shrink-0">
                 <div class="dropdown">
@@ -453,156 +479,80 @@
         {{ cancelled_orders_count }}
     ];
 
+    // Let the enhanced charts be handled by admin_enhanced.js
+    // This will ensure consistent styling across the admin panel
+</script>
+
+<!-- Add some custom dashboard-specific scripts -->
+<script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Sales Chart
-        const salesCtx = document.getElementById('salesChart').getContext('2d');
-        const salesChart = new Chart(salesCtx, {
-            type: 'line',
-            data: {
-                labels: salesData.map(item => item.month),
-                datasets: [{
-                    label: 'Sales',
-                    data: salesData.map(item => item.total),
-                    backgroundColor: 'rgba(78, 115, 223, 0.05)',
-                    borderColor: 'rgba(78, 115, 223, 1)',
-                    pointBackgroundColor: 'rgba(78, 115, 223, 1)',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: 'rgba(78, 115, 223, 1)',
-                    borderWidth: 2,
-                    pointRadius: 3,
-                    pointHoverRadius: 5,
-                    tension: 0.3,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return `₹${context.raw.toFixed(2)}`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return '₹' + value;
-                            }
-                        }
-                    }
+        // Add hover effects to stat cards
+        const statCards = document.querySelectorAll('.stat-card');
+        statCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                const icon = this.querySelector('.stat-icon i');
+                if (icon) {
+                    icon.style.transform = 'scale(1.2) rotate(10deg)';
+                    icon.style.opacity = '0.3';
                 }
-            }
+            });
+
+            card.addEventListener('mouseleave', function() {
+                const icon = this.querySelector('.stat-icon i');
+                if (icon) {
+                    icon.style.transform = '';
+                    icon.style.opacity = '0.2';
+                }
+            });
         });
 
-        // Revenue Sources Chart
-        const revenueSourcesCtx = document.getElementById('revenueSourcesChart').getContext('2d');
-        const revenueSourcesChart = new Chart(revenueSourcesCtx, {
-            type: 'doughnut',
-            data: {
-                labels: revenueSourcesData.map(item => item.category),
-                datasets: [{
-                    data: revenueSourcesData.map(item => item.total),
-                    backgroundColor: [
-                        'rgba(78, 115, 223, 0.8)',
-                        'rgba(28, 200, 138, 0.8)',
-                        'rgba(54, 185, 204, 0.8)',
-                        'rgba(246, 194, 62, 0.8)',
-                        'rgba(231, 74, 59, 0.8)'
-                    ],
-                    borderColor: [
-                        'rgba(78, 115, 223, 1)',
-                        'rgba(28, 200, 138, 1)',
-                        'rgba(54, 185, 204, 1)',
-                        'rgba(246, 194, 62, 1)',
-                        'rgba(231, 74, 59, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const label = context.label || '';
-                                const value = context.raw;
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const percentage = Math.round((value / total) * 100);
-                                return `${label}: ₹${value} (${percentage}%)`;
-                            }
-                        }
-                    }
-                },
-                cutout: '70%'
-            }
-        });
+        // Add notification for low stock products
+        const lowStockCount = {{ low_stock_products|length }};
+        if (lowStockCount > 0) {
+            setTimeout(() => {
+                showNotification(`You have ${lowStockCount} products with low stock levels.`, 'warning');
+            }, 2000);
+        }
 
-        // Order Status Chart
-        const orderStatusCtx = document.getElementById('orderStatusChart').getContext('2d');
-        const orderStatusChart = new Chart(orderStatusCtx, {
-            type: 'pie',
-            data: {
-                labels: ['Pending', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'],
-                datasets: [{
-                    data: ordersStatusData,
-                    backgroundColor: [
-                        'rgba(246, 194, 62, 0.8)',
-                        'rgba(54, 185, 204, 0.8)',
-                        'rgba(78, 115, 223, 0.8)',
-                        'rgba(28, 200, 138, 0.8)',
-                        'rgba(231, 74, 59, 0.8)'
-                    ],
-                    borderColor: [
-                        'rgba(246, 194, 62, 1)',
-                        'rgba(54, 185, 204, 1)',
-                        'rgba(78, 115, 223, 1)',
-                        'rgba(28, 200, 138, 1)',
-                        'rgba(231, 74, 59, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const label = context.label || '';
-                                const value = context.raw;
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const percentage = Math.round((value / total) * 100);
-                                return `${label}: ${value} (${percentage}%)`;
-                            }
-                        }
-                    }
+        // Add notification for pending orders
+        const pendingOrdersCount = {{ pending_orders_count }};
+        if (pendingOrdersCount > 0) {
+            setTimeout(() => {
+                showNotification(`You have ${pendingOrdersCount} pending orders to process.`, 'info');
+            }, 3500);
+        }
+
+        // Add pulse animation to important metrics
+        const addPulseAnimation = () => {
+            const importantMetrics = document.querySelectorAll('.stat-value');
+            importantMetrics.forEach(metric => {
+                metric.classList.add('pulse-animation');
+                setTimeout(() => {
+                    metric.classList.remove('pulse-animation');
+                }, 2000);
+            });
+        };
+
+        // Pulse important metrics every 30 seconds
+        addPulseAnimation();
+        setInterval(addPulseAnimation, 30000);
+
+        // Add CSS for pulse animation if it doesn't exist
+        if (!document.querySelector('#pulse-animation-style')) {
+            const style = document.createElement('style');
+            style.id = 'pulse-animation-style';
+            style.textContent = `
+                @keyframes pulse {
+                    0% { transform: scale(1); }
+                    50% { transform: scale(1.05); }
+                    100% { transform: scale(1); }
                 }
-            }
-        });
+                .pulse-animation {
+                    animation: pulse 1s ease-in-out;
+                }
+            `;
+            document.head.appendChild(style);
+        }
     });
 </script>
 {% endblock %}

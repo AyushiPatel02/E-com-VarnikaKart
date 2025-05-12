@@ -37,6 +37,18 @@
     <link rel="stylesheet" href="{% static 'admin/css/custom_admin.css' %}">
     <link rel="stylesheet" href="{% static 'admin/css/super_admin.css' %}">
 
+    <!-- Super Admin Theme Override - This must be loaded last -->
+    <link rel="stylesheet" href="{% static 'admin/css/super_admin_override.css' %}">
+
+    <!-- Enhanced Admin CSS -->
+    <link rel="stylesheet" href="{% static 'admin/css/admin_enhanced.css' %}">
+
+    <!-- Simple Footer CSS -->
+    <link rel="stylesheet" href="{% static 'admin/css/simple-footer.css' %}">
+
+    <!-- User Profile Section CSS -->
+    <link rel="stylesheet" href="{% static 'admin/css/user-profile-section.css' %}">
+
     {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -55,13 +67,13 @@
                 </a>
             </div>
 
-            <button class="sidebar-toggle">
-                <i class="fas fa-chevron-left"></i>
-            </button>
+
 
             <div class="sidebar-content">
                 <div class="sidebar-user text-center my-4">
-                    <img src="{% if request.user.profile.profile_picture %}{{ request.user.profile.profile_picture.url }}{% else %}{% static 'img/default-avatar.png' %}{% endif %}" alt="Admin" class="img-fluid rounded-circle mb-2" width="80">
+                    <div class="sidebar-user-icon mb-2">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
                     <div class="fw-bold">{{ request.user.get_full_name|default:request.user.username }}</div>
                     <small>Super Admin</small>
                 </div>
@@ -266,6 +278,23 @@
                         </ul>
                     </li>
                 </ul>
+
+                <hr class="sidebar-divider">
+
+                <!-- Sidebar Logout Button -->
+                <div class="sidebar-logout mt-4">
+                    <a href="#" class="sidebar-logout-btn" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+
+                <!-- Mobile Logout Button (visible only on mobile) -->
+                <div class="mobile-logout d-lg-none mt-3 text-center">
+                    <a href="#" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </a>
+                </div>
             </div>
         </nav>
 
@@ -273,7 +302,7 @@
         <div class="main-content">
             <!-- Topbar -->
             <nav class="topbar">
-                <button id="sidebarToggleTop" class="btn btn-link d-md-none">
+                <button id="sidebarToggleTop" class="d-md-none" aria-label="Toggle Sidebar">
                     <i class="fas fa-bars"></i>
                 </button>
 
@@ -287,8 +316,54 @@
                 </div>
 
                 <div class="topbar-nav">
-                    <div class="topbar-divider d-none d-md-block"></div>
+                    <!-- User Profile Section -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <div class="user-profile-section" id="userProfileSection" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="user-profile-icon">
+                                    <i class="fas fa-user-shield"></i>
+                                </div>
+                                <div class="user-profile-info">
+                                    <div class="user-profile-name">{{ request.user.get_full_name|default:request.user.username }}</div>
+                                    <div class="user-profile-role">Super Admin</div>
+                                </div>
+                                <div class="user-profile-actions">
+                                    <a href="{% url 'home' %}" class="user-profile-goto-site" onclick="event.stopPropagation();" target="_blank">
+                                        <i class="fas fa-external-link-alt"></i> <span>Go to Site</span>
+                                    </a>
+                                    <button class="user-profile-logout" data-bs-toggle="modal" data-bs-target="#logoutModal" onclick="event.stopPropagation();">
+                                        <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+                                    </button>
+                                </div>
+                            </div>
 
+                            <!-- User Profile Dropdown Menu -->
+                            <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="userProfileSection">
+                                <a class="dropdown-item" href="{% url 'admin:auth_user_change' request.user.id %}">
+                                    <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="{% url 'admin:site_settings' %}">
+                                    <i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="{% url 'admin:activity_log' %}">
+                                    <i class="fas fa-list fa-sm fa-fw me-2 text-gray-400"></i>
+                                    Activity Log
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Hidden elements -->
+                <div class="d-none">
+                    <div class="topbar-divider d-md-block"></div>
                     <ul class="navbar-nav">
                         <!-- Notifications Dropdown -->
                         <li class="nav-item dropdown">
@@ -373,8 +448,8 @@
 
                         <div class="topbar-divider d-none d-md-block"></div>
 
-                        <!-- User Information -->
-                        <li class="nav-item dropdown">
+                        <!-- User Information Dropdown (Hidden) -->
+                        <li class="nav-item dropdown d-none">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span class="d-none d-lg-inline text-gray-600 me-2">{{ request.user.get_full_name|default:request.user.username }}</span>
                                 <img class="img-profile rounded-circle" src="{% if request.user.profile.profile_picture %}{{ request.user.profile.profile_picture.url }}{% else %}{% static 'img/default-avatar.png' %}{% endif %}" width="32">
@@ -401,6 +476,7 @@
                         </li>
                     </ul>
                 </div>
+                </div>
             </nav>
 
             <!-- Content -->
@@ -417,41 +493,61 @@
                 {% block content %}{% endblock %}
             </div>
 
-            <!-- Footer -->
-            <footer class="footer">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-6 text-muted">
-                            &copy; {% now "Y" %} VarnikaKart. All rights reserved.
-                        </div>
-                        <div class="col-md-6 text-md-end">
-                            <a href="{% url 'home' %}" class="text-muted me-3">
-                                <i class="fas fa-home me-1"></i> Back to Site
-                            </a>
-                            <a href="#" class="text-muted">
-                                <i class="fas fa-question-circle me-1"></i> Help
-                            </a>
-                        </div>
-                    </div>
+            <!-- Simple Footer -->
+            <footer class="simple-footer">
+                <div class="footer-text">
+                    &copy; {% now "Y" %} VarnikaKart. All rights reserved.
+                </div>
+                <div class="footer-links">
+                    <a href="{% url 'home' %}" class="footer-link" target="_blank">
+                        View Site
+                    </a>
+                    <a href="#" class="footer-link">
+                        <i class="fas fa-question-circle me-1"></i>
+                        Help
+                    </a>
                 </div>
             </footer>
         </div>
     </div>
 
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Enhanced Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-gradient-primary text-white" style="background: linear-gradient(135deg, #d35f5f 0%, #b54b4b 100%);">
+                    <h5 class="modal-title" id="logoutModalLabel">
+                        <i class="fas fa-sign-out-alt me-2"></i>
+                        Ready to Leave?
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    Select "Logout" below if you are ready to end your current session.
+                <div class="modal-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-shrink-0">
+                            <div class="icon-circle bg-light text-primary" style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #d35f5f;">
+                                <i class="fas fa-user-lock fa-lg"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-1">End Your Session</h6>
+                            <p class="text-muted mb-0">Select "Logout" below if you are ready to end your current session.</p>
+                        </div>
+                    </div>
+                    <div class="alert alert-warning d-flex align-items-center" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <div>
+                            Any unsaved changes will be lost.
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="{% url 'superadmin_logout' %}">Logout</a>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> Cancel
+                    </button>
+                    <a class="btn btn-primary" href="{% url 'superadmin_logout' %}" style="background: linear-gradient(135deg, #d35f5f 0%, #b54b4b 100%); border: none;">
+                        <i class="fas fa-sign-out-alt me-1"></i> Logout
+                    </a>
                 </div>
             </div>
         </div>
@@ -482,28 +578,135 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <!-- Custom Admin JS -->
+    <script src="{% static 'admin/js/custom_admin.js' %}"></script>
+
+    <!-- Force Sidebar Always Open (except on mobile) -->
+    <script>
+        // This script runs immediately to prevent any flicker
+        (function() {
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) {
+                // Only apply these styles on desktop
+                if (window.innerWidth >= 992) {
+                    // Force sidebar to be visible and remove any collapsed state
+                    sidebar.style.width = '250px';
+                    sidebar.style.marginLeft = '0';
+                    sidebar.style.transform = 'none';
+                    sidebar.classList.remove('collapsed');
+
+                    // Force main content to respect sidebar width
+                    const mainContent = document.querySelector('.main-content');
+                    if (mainContent) {
+                        mainContent.style.width = 'calc(100% - 250px)';
+                        mainContent.style.marginLeft = '250px';
+                        mainContent.classList.remove('expanded');
+                    }
+                }
+
+                // Remove any stored sidebar state
+                localStorage.removeItem('sidebarCollapsed');
+
+                // Apply theme colors directly
+                sidebar.style.background = 'linear-gradient(180deg, #d35f5f 0%, #b54b4b 100%)';
+
+                // Apply theme colors to sidebar elements
+                const brandIcon = sidebar.querySelector('.sidebar-brand-icon i');
+                if (brandIcon) {
+                    brandIcon.style.color = '#e6b33e';
+                }
+
+                // Add gradient border to sidebar header
+                const sidebarHeader = sidebar.querySelector('.sidebar-header');
+                if (sidebarHeader) {
+                    sidebarHeader.style.position = 'relative';
+                    sidebarHeader.style.borderBottom = '1px solid rgba(255, 255, 255, 0.1)';
+
+                    // Add gradient line at top
+                    const gradientLine = document.createElement('div');
+                    gradientLine.style.position = 'absolute';
+                    gradientLine.style.top = '0';
+                    gradientLine.style.left = '0';
+                    gradientLine.style.width = '100%';
+                    gradientLine.style.height = '3px';
+                    gradientLine.style.background = 'linear-gradient(to right, #d35f5f, #6a9b96, #e6b33e)';
+                    gradientLine.style.opacity = '0.7';
+                    sidebarHeader.prepend(gradientLine);
+                }
+            }
+        })();
+    </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Sidebar Toggle
-            const sidebarToggle = document.querySelector('.sidebar-toggle');
+            // Mobile sidebar functionality
             const sidebar = document.querySelector('.sidebar');
             const mainContent = document.querySelector('.main-content');
-
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', function() {
-                    sidebar.classList.toggle('collapsed');
-                    mainContent.classList.toggle('expanded');
-                });
-            }
 
             // Mobile Sidebar Toggle
             const sidebarToggleTop = document.getElementById('sidebarToggleTop');
 
-            if (sidebarToggleTop) {
-                sidebarToggleTop.addEventListener('click', function() {
-                    sidebar.classList.toggle('show');
-                });
+            // Make sure the sidebar is hidden on mobile by default
+            if (window.innerWidth < 992) {
+                sidebar.style.marginLeft = '-250px';
+                mainContent.style.width = '100%';
+                mainContent.style.marginLeft = '0';
             }
+
+            if (sidebarToggleTop) {
+                // Add a visible indicator to show the toggle button is clickable
+                sidebarToggleTop.style.cursor = 'pointer';
+                sidebarToggleTop.style.boxShadow = '0 2px 5px rgba(0, 0, 0, 0.2)';
+
+                sidebarToggleTop.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    sidebar.classList.toggle('show');
+                    console.log('Sidebar toggle clicked, show class:', sidebar.classList.contains('show'));
+
+                    // Add overlay when sidebar is shown
+                    if (sidebar.classList.contains('show')) {
+                        // Create overlay if it doesn't exist
+                        if (!document.querySelector('.sidebar-overlay')) {
+                            const overlay = document.createElement('div');
+                            overlay.className = 'sidebar-overlay';
+                            document.body.appendChild(overlay);
+
+                            // Close sidebar when clicking on overlay
+                            overlay.addEventListener('click', function() {
+                                sidebar.classList.remove('show');
+                                overlay.remove();
+                            });
+                        }
+                    } else {
+                        // Remove overlay when sidebar is hidden
+                        const overlay = document.querySelector('.sidebar-overlay');
+                        if (overlay) {
+                            overlay.remove();
+                        }
+                    }
+                });
+            } else {
+                console.error('Sidebar toggle button not found!');
+            }
+
+            // Close sidebar when clicking outside (for mobile)
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth < 992) {
+                    const isClickInside = sidebar.contains(event.target) ||
+                                         (sidebarToggleTop && sidebarToggleTop.contains(event.target));
+
+                    if (!isClickInside && sidebar.classList.contains('show')) {
+                        sidebar.classList.remove('show');
+
+                        // Remove overlay
+                        const overlay = document.querySelector('.sidebar-overlay');
+                        if (overlay) {
+                            overlay.remove();
+                        }
+                    }
+                }
+            });
 
             // Initialize DataTables using the utility function
             // This is now handled by datatable-utils.js
@@ -545,8 +748,59 @@
                     }, 5000);
                 });
             }
+
+            // User Profile Section enhancements
+            const userProfileSection = document.getElementById('userProfileSection');
+            const userProfileLogout = document.querySelector('.user-profile-logout');
+
+            if (userProfileSection) {
+                // Add hover effect
+                userProfileSection.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 6px 15px rgba(211, 95, 95, 0.3)';
+                });
+
+                userProfileSection.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = '';
+                });
+
+                // Prevent dropdown from closing when clicking logout button
+                if (userProfileLogout) {
+                    userProfileLogout.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                    });
+                }
+            }
+
+            // Handle window resize events to ensure sidebar behaves correctly
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 992) {
+                    // Desktop view - ensure sidebar is visible
+                    sidebar.style.marginLeft = '0';
+                    sidebar.classList.remove('show');
+                    mainContent.style.width = 'calc(100% - 250px)';
+                    mainContent.style.marginLeft = '250px';
+
+                    // Remove any overlay
+                    const overlay = document.querySelector('.sidebar-overlay');
+                    if (overlay) {
+                        overlay.remove();
+                    }
+                } else {
+                    // Mobile view - hide sidebar unless it's explicitly shown
+                    if (!sidebar.classList.contains('show')) {
+                        sidebar.style.marginLeft = '-250px';
+                        mainContent.style.width = '100%';
+                        mainContent.style.marginLeft = '0';
+                    }
+                }
+            });
         });
     </script>
+
+    <!-- Enhanced Admin JS -->
+    <script src="{% static 'admin/js/admin_enhanced.js' %}"></script>
 
     {% block extra_js %}{% endblock %}
 </body>

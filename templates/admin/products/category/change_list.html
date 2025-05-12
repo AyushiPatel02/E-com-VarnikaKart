@@ -1,6 +1,10 @@
 {% extends "admin/custom_base.html" %}
 {% load i18n static admin_urls %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'admin/css/category_list.css' %}">
+{% endblock %}
+
 {% block title %}Categories | VarnikaKart Admin{% endblock %}
 
 {% block content %}
@@ -152,7 +156,7 @@
                 <input type="hidden" name="model" value="products.category">
                 <input type="hidden" name="action" value="">
 
-                <table class="table table-hover datatable">
+                <table class="table table-hover datatable category-table">
                     <thead>
                         <tr>
                             <th width="30">
@@ -171,7 +175,7 @@
                     </thead>
                     <tbody>
                         {% for category in category_list %}
-                            <tr>
+                            <tr class="category-table-row">
                                 <td>
                                     <div class="form-check">
                                         <input class="form-check-input bulk-select-checkbox" type="checkbox" name="selected_ids" value="{{ category.id }}">
@@ -179,7 +183,7 @@
                                 </td>
                                 <td>
                                     {% if category.image %}
-                                        <img src="{{ category.image.url }}" alt="{{ category.name }}" class="img-thumbnail" width="50">
+                                        <img src="{{ category.image.url }}" alt="{{ category.name }}" class="category-table-image">
                                     {% else %}
                                         <div class="no-image">
                                             <i class="fas fa-image"></i>
@@ -187,33 +191,50 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    <a href="{% url 'admin:products_category_change' category.id %}">{{ category.name }}</a>
+                                    <a href="{% url 'admin:products_category_change' category.id %}" class="category-table-name">{{ category.name }}</a>
+                                    <div class="category-table-description">{{ category.description|truncatechars:100 }}</div>
                                 </td>
                                 <td>{{ category.slug }}</td>
                                 <td>
-                                    <span class="badge bg-primary">{{ category.products.count }}</span>
+                                    <span class="category-table-products">{{ category.products.count }}</span>
                                 </td>
                                 <td>
-                                    <div class="form-check form-switch">
+                                    <span class="category-table-status {% if category.is_active %}category-table-status-active{% else %}category-table-status-inactive{% endif %}">
+                                        {% if category.is_active %}Active{% else %}Inactive{% endif %}
+                                    </span>
+                                    <div class="form-check form-switch mt-2">
                                         <input class="form-check-input status-toggle" type="checkbox" role="switch" data-category-id="{{ category.id }}" {% if category.is_active %}checked{% endif %}>
                                     </div>
                                 </td>
                                 <td>{{ category.created_at|date:"M d, Y" }}</td>
                                 <td>
-                                    <a href="{% url 'admin:products_category_change' category.id %}" class="action-btn edit" data-toggle="tooltip" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a href="{% url 'products:product_list_by_category' category.slug %}" class="action-btn view" data-toggle="tooltip" title="View" target="_blank">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{% url 'admin:products_category_delete' category.id %}" class="action-btn delete delete-confirm" data-toggle="tooltip" title="Delete">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
+                                    <div class="category-table-actions">
+                                        <a href="{% url 'admin:products_category_change' category.id %}" class="category-table-btn category-table-btn-edit" data-bs-toggle="tooltip" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'products:product_list_by_category' category.slug %}" class="category-table-btn category-table-btn-view" data-bs-toggle="tooltip" title="View" target="_blank">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{% url 'admin:products_category_delete' category.id %}" class="category-table-btn category-table-btn-delete delete-confirm" data-bs-toggle="tooltip" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="8" class="text-center">No categories found.</td>
+                                <td colspan="8">
+                                    <div class="category-empty-state">
+                                        <div class="category-empty-state-icon">
+                                            <i class="fas fa-folder-open"></i>
+                                        </div>
+                                        <h3 class="category-empty-state-title">No Categories Found</h3>
+                                        <p class="category-empty-state-text">There are no categories available. Create your first category to get started.</p>
+                                        <a href="{% url 'admin:products_category_add' %}" class="category-empty-state-btn">
+                                            <i class="fas fa-plus me-1"></i> Add Category
+                                        </a>
+                                    </div>
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -321,6 +342,7 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'admin/js/category_admin.js' %}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Status toggle

@@ -56,9 +56,7 @@ body {
     border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.sidebar.collapsed {
-    margin-left: calc(-1 * var(--sidebar-width) + 70px);
-}
+/* Removed collapsed sidebar state for super admin */
 
 .sidebar-header {
     padding: 1.5rem;
@@ -161,10 +159,7 @@ body {
     flex-direction: column;
 }
 
-.main-content.expanded {
-    width: calc(100% - 70px);
-    margin-left: 70px;
-}
+/* Removed expanded main content state for super admin */
 
 /* Header */
 .topbar {
@@ -173,10 +168,17 @@ body {
     box-shadow: var(--box-shadow-sm);
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0 1.5rem;
     position: sticky;
     top: 0;
     z-index: 100;
+}
+
+.topbar-nav {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
 }
 
 /* Content Area */
@@ -292,4 +294,58 @@ body {
     background: var(--primary-dark);
     transform: translateY(-3px);
     box-shadow: 0 0.5rem 1rem rgba(94, 96, 206, 0.15);
+}
+
+/* Inline Admin Styling */
+.inline-group {
+    margin-top: 2rem;
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--box-shadow-sm);
+    overflow: hidden;
+    background-color: var(--white-color);
+}
+
+.inline-group h2 {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 1rem;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.inline-related {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.inline-related h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    color: var(--primary-color);
+}
+
+.inline-related .form-row {
+    margin-bottom: 1rem;
+}
+
+/* Super Admin Photo Field Styling */
+.field-super_admin_photo label {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.field-super_admin_photo input[type="file"] {
+    padding: 0.5rem;
+    border: 1px dashed var(--primary-color);
+    border-radius: 0.5rem;
+    background-color: rgba(94, 96, 206, 0.05);
+}
+
+.field-super_admin_photo img {
+    margin-top: 0.5rem;
+    border-radius: 0.5rem;
+    box-shadow: var(--box-shadow-sm);
+    max-width: 150px;
+    height: auto;
 }

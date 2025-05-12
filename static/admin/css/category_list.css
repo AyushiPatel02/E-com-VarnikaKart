@@ -1,0 +1,314 @@
+/* Category List Styling */
+
+/* Category Cards */
+.category-card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.category-card {
+    position: relative;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: all 0.3s ease;
+    height: 100%;
+    background-color: #fff;
+    border: none;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.category-card-image {
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.category-card-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5));
+}
+
+.category-card-status {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1;
+}
+
+.category-card-body {
+    padding: 1.25rem;
+}
+
+.category-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.category-card-description {
+    color: #6c757d;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 4.5rem;
+}
+
+.category-card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.category-card-products {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.category-card-date {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.category-card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #e9ecef;
+    padding-top: 1rem;
+}
+
+.category-card-btn {
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.category-card-btn:hover {
+    transform: translateY(-2px);
+}
+
+.category-card-btn-primary {
+    background-color: #7952b3;
+    color: white;
+}
+
+.category-card-btn-primary:hover {
+    background-color: #6741a2;
+    color: white;
+}
+
+.category-card-btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.category-card-btn-secondary:hover {
+    background-color: #5a6268;
+    color: white;
+}
+
+.category-card-btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.category-card-btn-danger:hover {
+    background-color: #c82333;
+    color: white;
+}
+
+/* Category Table */
+.category-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+    background-color: #fff;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.category-table th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.category-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: middle;
+}
+
+.category-table tr:last-child td {
+    border-bottom: none;
+}
+
+.category-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+.category-table-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 0.25rem;
+    object-fit: cover;
+}
+
+.category-table-name {
+    font-weight: 600;
+    color: #333;
+}
+
+.category-table-description {
+    color: #6c757d;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+}
+
+.category-table-products {
+    font-weight: 600;
+    color: #7952b3;
+}
+
+.category-table-status {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 50rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+    min-width: 80px;
+}
+
+.category-table-status-active {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.category-table-status-inactive {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.category-table-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.category-table-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.category-table-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15);
+}
+
+.category-table-btn-edit {
+    background-color: #7952b3;
+}
+
+.category-table-btn-view {
+    background-color: #17a2b8;
+}
+
+.category-table-btn-delete {
+    background-color: #dc3545;
+}
+
+/* Category Empty State */
+.category-empty-state {
+    text-align: center;
+    padding: 3rem;
+    background-color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.category-empty-state-icon {
+    font-size: 4rem;
+    color: #adb5bd;
+    margin-bottom: 1rem;
+}
+
+.category-empty-state-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.category-empty-state-text {
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+}
+
+.category-empty-state-btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: #7952b3;
+    color: white;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.category-empty-state-btn:hover {
+    background-color: #6741a2;
+    transform: translateY(-2px);
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767.98px) {
+    .category-card-container {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+    
+    .category-table-description {
+        max-width: 150px;
+    }
+    
+    .category-table-actions {
+        flex-direction: column;
+    }
+}

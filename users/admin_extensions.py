@@ -1,21 +1,31 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib import admin
+from users.models import Profile
+
+class ProfileInline(admin.StackedInline):
+    model = Profile
+    can_delete = False
+    verbose_name_plural = 'Profile'
+    fk_name = 'user'
+    fields = ['phone_number', 'profile_picture', 'super_admin_photo', 'date_of_birth']
 
 class UserAdmin(BaseUserAdmin):
+    inlines = (ProfileInline,)
     def changelist_view(self, request, extra_context=None):
         # Get staff users count
         staff_users = User.objects.filter(is_staff=True).count()
         total_users = User.objects.count()
         staff_percentage = int((staff_users / total_users * 100) if total_users > 0 else 0)
-        
+
         # Get superusers count
         superusers = User.objects.filter(is_superuser=True).count()
         superuser_percentage = int((superusers / total_users * 100) if total_users > 0 else 0)
-        
+
         # Get active users count
         active_users = User.objects.filter(is_active=True).count()
         active_percentage = int((active_users / total_users * 100) if total_users > 0 else 0)
-        
+
         # Create context
         context = {
             'staff_users': staff_users,
@@ -25,8 +35,8 @@ class UserAdmin(BaseUserAdmin):
             'active_users': active_users,
             'active_percentage': active_percentage,
         }
-        
+
         if extra_context:
             context.update(extra_context)
-            
+
         return super().changelist_view(request, context)

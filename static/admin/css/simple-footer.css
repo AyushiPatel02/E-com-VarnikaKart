@@ -1,0 +1,53 @@
+/* Simple Footer Styles for VarnikaKart Admin */
+
+.simple-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.simple-footer .footer-text {
+    margin: 0;
+}
+
+.simple-footer .footer-links {
+    display: flex;
+    gap: 15px;
+}
+
+.simple-footer .footer-link {
+    color: #007bff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.simple-footer .footer-link:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+.simple-footer .footer-link i {
+    margin-right: 5px;
+}
+
+/* Question mark icon styling */
+.simple-footer .footer-link .fa-question-circle {
+    color: #007bff;
+    background-color: #fff;
+    border-radius: 50%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .simple-footer {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+}
