@@ -1,0 +1,722 @@
+{% extends "admin/super_base.html" %}
+{% load i18n static %}
+
+{% block title %}Dashboard | VarnikaKart Super Admin{% endblock %}
+
+{% block extra_css %}
+<!-- No extra CSS needed as it's already included in admin_components.css -->
+{% endblock %}
+
+{% block content %}
+<!-- We don't need a page header here since we added it to the topbar -->
+
+<!-- Welcome Card -->
+<div class="welcome-card mb-4">
+    <div class="card-body">
+        <div class="row align-items-center">
+            <div class="col-auto">
+                <img src="{% if request.user.profile.profile_picture %}{{ request.user.profile.profile_picture.url }}{% else %}{% static 'img/default-avatar.png' %}{% endif %}" alt="Admin" class="welcome-avatar">
+            </div>
+            <div class="col">
+                <h2 class="welcome-title">Welcome back, Admin!</h2>
+                <p class="welcome-subtitle">Here's what's happening with your store today.</p>
+            </div>
+            <div class="col-auto">
+                <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="timeRangeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-calendar me-1"></i> today
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="timeRangeDropdown">
+                        <li><a class="dropdown-item" href="?time_range=today">Today</a></li>
+                        <li><a class="dropdown-item" href="?time_range=week">This Week</a></li>
+                        <li><a class="dropdown-item" href="?time_range=month">This Month</a></li>
+                        <li><a class="dropdown-item" href="?time_range=year">This Year</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="quick-stats-row mt-3">
+            <a href="{% url 'admin:orders_order_changelist' %}" class="quick-stats-badge">
+                <i class="fas fa-shopping-cart"></i> {{ order_count }} Orders
+            </a>
+            <a href="{% url 'admin:sales_report' %}" class="quick-stats-badge">
+                <i class="fas fa-rupee-sign"></i> ₹{{ revenue }} Revenue
+            </a>
+            <a href="{% url 'admin:auth_user_changelist' %}" class="quick-stats-badge">
+                <i class="fas fa-users"></i> {{ user_count }} Customers
+            </a>
+            <a href="{% url 'admin:products_product_changelist' %}" class="quick-stats-badge">
+                <i class="fas fa-box"></i> {{ product_count }} Products
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card total-orders-card">
+            <div class="stat-card-header">
+                <div class="stat-card-title">TOTAL ORDERS</div>
+                <div class="stat-card-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+            </div>
+            <div class="stat-card-value">0</div>
+            <div class="stat-card-footer">
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: 8.5%;" aria-valuenow="8.5" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div class="stat-card-percent">
+                    <i class="fas fa-arrow-up"></i> 8.5%
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card total-revenue-card">
+            <div class="stat-card-header">
+                <div class="stat-card-title">TOTAL REVENUE</div>
+                <div class="stat-card-icon">
+                    <i class="fas fa-rupee-sign"></i>
+                </div>
+            </div>
+            <div class="stat-card-value">₹0.00</div>
+            <div class="stat-card-footer">
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: 15.8%;" aria-valuenow="15.8" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div class="stat-card-percent">
+                    <i class="fas fa-arrow-up"></i> 15.8%
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card total-customers-card">
+            <div class="stat-card-header">
+                <div class="stat-card-title">TOTAL CUSTOMERS</div>
+                <div class="stat-card-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+            </div>
+            <div class="stat-card-value">1</div>
+            <div class="stat-card-footer">
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: 12.3%;" aria-valuenow="12.3" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div class="stat-card-percent">
+                    <i class="fas fa-arrow-up"></i> 12.3%
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card active-products-card">
+            <div class="stat-card-header">
+                <div class="stat-card-title">ACTIVE PRODUCTS</div>
+                <div class="stat-card-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+            </div>
+            <div class="stat-card-value">10</div>
+            <div class="stat-card-footer">
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div class="stat-card-percent">
+                    100% Active
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sales Overview & Revenue Sources -->
+<div class="row g-4 mb-4">
+    <div class="col-xl-8">
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div class="chart-card-title">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Sales Overview</span>
+                </div>
+                <div class="chart-card-actions">
+                    <button type="button" class="chart-card-action-btn" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" href="{% url 'admin:sales_report' %}">View Detailed Report</a>
+                        <a class="dropdown-item" href="#">Export Data</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Settings</a>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-card-body">
+                <div class="chart-container">
+                    <canvas id="salesChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4">
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div class="chart-card-title">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Revenue Sources</span>
+                </div>
+                <div class="chart-card-actions">
+                    <button type="button" class="chart-card-action-btn" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" href="#">View Details</a>
+                        <a class="dropdown-item" href="#">Export Data</a>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-card-body">
+                <div class="chart-container">
+                    <canvas id="revenueSourcesChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Order Status & Recent Orders -->
+<div class="row g-4 mb-4">
+    <div class="col-xl-4">
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div class="chart-card-title">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Order Status</span>
+                </div>
+                <div class="chart-card-actions">
+                    <a href="{% url 'admin:orders_order_changelist' %}" class="chart-card-link">
+                        <i class="fas fa-list me-1"></i> View All
+                    </a>
+                </div>
+            </div>
+            <div class="chart-card-body">
+                <div class="chart-container">
+                    <canvas id="orderStatusChart" height="200"></canvas>
+                </div>
+                <div class="order-status-list mt-4">
+                    <div class="order-status-item">
+                        <div class="order-status-label">Pending</div>
+                        <div class="order-status-badge warning">{{ pending_orders_count }}</div>
+                    </div>
+                    <div class="order-status-item">
+                        <div class="order-status-label">Confirmed</div>
+                        <div class="order-status-badge info">{{ confirmed_orders_count }}</div>
+                    </div>
+                    <div class="order-status-item">
+                        <div class="order-status-label">Shipped</div>
+                        <div class="order-status-badge primary">{{ shipped_orders_count }}</div>
+                    </div>
+                    <div class="order-status-item">
+                        <div class="order-status-label">Delivered</div>
+                        <div class="order-status-badge success">{{ delivered_orders_count }}</div>
+                    </div>
+                    <div class="order-status-item">
+                        <div class="order-status-label">Cancelled</div>
+                        <div class="order-status-badge danger">{{ cancelled_orders_count }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-8">
+        <div class="data-table-card">
+            <div class="data-table-header">
+                <div class="data-table-title">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Recent Orders</span>
+                </div>
+                <div class="data-table-actions">
+                    <a href="{% url 'admin:orders_order_changelist' %}" class="data-table-link">
+                        <i class="fas fa-list me-1"></i> View All
+                    </a>
+                </div>
+            </div>
+            <div class="data-table-body">
+                <div class="table-responsive">
+                    <table class="table custom-table">
+                        <thead>
+                            <tr>
+                                <th>Order #</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in recent_orders %}
+                                <tr>
+                                    <td>{{ order.order_number }}</td>
+                                    <td>{{ order.full_name }}</td>
+                                    <td>{{ order.created_at|date:"M d, Y" }}</td>
+                                    <td>₹{{ order.order_total }}</td>
+                                    <td>
+                                        <span class="status-badge {% if order.status == 'P' %}warning{% elif order.status == 'C' %}info{% elif order.status == 'S' %}primary{% elif order.status == 'D' %}success{% elif order.status == 'X' %}danger{% endif %}">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td class="actions-cell">
+                                        <a href="{% url 'admin:orders_order_change' order.id %}" class="table-action-btn view" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{% url 'admin:orders_order_change' order.id %}" class="table-action-btn edit" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">No recent orders found.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Low Stock Products & Recent Reviews -->
+<div class="row g-4 mb-4">
+    <div class="col-xl-6">
+        <div class="data-table-card">
+            <div class="data-table-header">
+                <div class="data-table-title">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Low Stock Products</span>
+                </div>
+                <div class="data-table-actions">
+                    <a href="{% url 'admin:products_product_changelist' %}?stock__lte=10" class="data-table-link">
+                        <i class="fas fa-list me-1"></i> View All
+                    </a>
+                </div>
+            </div>
+            <div class="data-table-body">
+                <div class="table-responsive">
+                    <table class="table custom-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in low_stock_products %}
+                                <tr>
+                                    <td>{{ product.name }}</td>
+                                    <td>{{ product.category.name }}</td>
+                                    <td>₹{{ product.price }}</td>
+                                    <td>
+                                        <span class="status-badge {% if product.stock <= 5 %}danger{% else %}warning{% endif %}">
+                                            {{ product.stock }}
+                                        </span>
+                                    </td>
+                                    <td class="actions-cell">
+                                        <a href="{% url 'admin:products_product_change' product.id %}" class="table-action-btn edit" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">No low stock products found.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6">
+        <div class="data-table-card">
+            <div class="data-table-header">
+                <div class="data-table-title">
+                    <i class="fas fa-star"></i>
+                    <span>Recent Reviews</span>
+                </div>
+                <div class="data-table-actions">
+                    <a href="{% url 'admin:products_review_changelist' %}" class="data-table-link">
+                        <i class="fas fa-list me-1"></i> View All
+                    </a>
+                </div>
+            </div>
+            <div class="data-table-body">
+                <div class="table-responsive">
+                    <table class="table custom-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Customer</th>
+                                <th>Rating</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for review in recent_reviews %}
+                                <tr>
+                                    <td>{{ review.product.name }}</td>
+                                    <td>{{ review.user.username }}</td>
+                                    <td>
+                                        <div class="rating-stars">
+                                            {% for i in "12345" %}
+                                                <i class="fas fa-star {% if i|add:"0" <= review.rating %}text-warning{% else %}text-muted{% endif %}"></i>
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                    <td>{{ review.created_at|date:"M d, Y" }}</td>
+                                    <td class="actions-cell">
+                                        <a href="{% url 'admin:products_review_change' review.id %}" class="table-action-btn view" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">No recent reviews found.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Recent Activities -->
+<div class="row g-4 mb-4">
+    <div class="col-12">
+        <div class="activity-card">
+            <div class="activity-card-header">
+                <div class="activity-card-title">
+                    <i class="fas fa-history"></i>
+                    <span>Recent Activities</span>
+                </div>
+                <div class="activity-card-actions">
+                    <a href="{% url 'admin:activity_log' %}" class="activity-card-link">
+                        <i class="fas fa-list me-1"></i> View All
+                    </a>
+                </div>
+            </div>
+            <div class="activity-card-body">
+                <div class="modern-timeline">
+                    {% for entry in admin_log %}
+                        <div class="timeline-item">
+                            <div class="timeline-icon {% if entry.is_addition %}success{% elif entry.is_change %}warning{% elif entry.is_deletion %}danger{% endif %}">
+                                <i class="fas fa-{% if entry.is_addition %}plus{% elif entry.is_change %}edit{% elif entry.is_deletion %}trash{% endif %}"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-heading">
+                                    <span class="timeline-title">{{ entry.user.username }}</span>
+                                    <span class="timeline-date">{{ entry.action_time|date:"M d, Y H:i" }}</span>
+                                </div>
+                                <div class="timeline-body">
+                                    {% if entry.is_addition %}
+                                        Added a new {{ entry.content_type.name }}:
+                                    {% elif entry.is_change %}
+                                        Changed {{ entry.content_type.name }}:
+                                    {% elif entry.is_deletion %}
+                                        Deleted {{ entry.content_type.name }}:
+                                    {% endif %}
+                                    {% if entry.is_deletion or not entry.get_admin_url %}
+                                        {{ entry.object_repr }}
+                                    {% else %}
+                                        <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="text-center">No recent activities found.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Sales data for chart
+    const salesData = {{ monthly_sales_data|default:"{'labels': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], 'revenue': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 'orders': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}"|safe }};
+
+    // Revenue sources data for chart
+    const revenueSourcesData = {{ revenue_sources_data|default:"{'labels': ['Direct', 'Social Media', 'Email', 'Affiliates', 'Other'], 'data': [55, 20, 15, 8, 2]}"|safe }};
+
+    // Orders status data for chart
+    const ordersStatusData = [
+        {{ pending_orders_count|default:"5" }},
+        {{ confirmed_orders_count|default:"10" }},
+        {{ shipped_orders_count|default:"15" }},
+        {{ delivered_orders_count|default:"20" }},
+        {{ cancelled_orders_count|default:"3" }}
+    ];
+
+    // Modern chart styling
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set default colors for all charts
+        Chart.defaults.color = '#666';
+        Chart.defaults.borderColor = 'rgba(211, 95, 95, 0.1)';
+
+        // Set theme colors for all charts
+        const chartColors = {
+            primary: '#d35f5f',
+            primaryLight: 'rgba(211, 95, 95, 0.7)',
+            primaryLighter: 'rgba(211, 95, 95, 0.4)',
+            secondary: '#6a9b96',
+            secondaryLight: 'rgba(106, 155, 150, 0.7)',
+            accent: '#e6b33e',
+            accentLight: 'rgba(230, 179, 62, 0.7)',
+            success: '#38b000',
+            info: '#48cae4',
+            warning: '#ffaa00',
+            danger: '#d00000'
+        };
+
+        // Sales Chart
+        const salesChartCtx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(salesChartCtx, {
+            type: 'line',
+            data: {
+                labels: salesData.labels,
+                datasets: [{
+                    label: 'Revenue',
+                    data: salesData.revenue,
+                    borderColor: chartColors.primary,
+                    backgroundColor: 'rgba(211, 95, 95, 0.05)',
+                    borderWidth: 3,
+                    pointBackgroundColor: chartColors.primary,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    tension: 0.3,
+                    fill: true
+                }, {
+                    label: 'Orders',
+                    data: salesData.orders,
+                    borderColor: chartColors.secondary,
+                    backgroundColor: 'transparent',
+                    borderWidth: 3,
+                    pointBackgroundColor: chartColors.secondary,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    tension: 0.3,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        titleColor: '#333',
+                        bodyColor: '#666',
+                        bodyFont: {
+                            size: 13
+                        },
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        padding: 15,
+                        borderColor: 'rgba(211, 95, 95, 0.1)',
+                        borderWidth: 1,
+                        displayColors: true,
+                        usePointStyle: true,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    if (context.dataset.label === 'Revenue') {
+                                        label += '₹' + context.parsed.y;
+                                    } else {
+                                        label += context.parsed.y;
+                                    }
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            borderDash: [3, 3]
+                        }
+                    }
+                }
+            }
+        });
+
+        // Revenue Sources Chart
+        const revenueSourcesChartCtx = document.getElementById('revenueSourcesChart').getContext('2d');
+        const revenueSourcesChart = new Chart(revenueSourcesChartCtx, {
+            type: 'doughnut',
+            data: {
+                labels: revenueSourcesData.labels,
+                datasets: [{
+                    data: revenueSourcesData.data,
+                    backgroundColor: [
+                        chartColors.primary,
+                        chartColors.secondary,
+                        chartColors.accent,
+                        chartColors.info,
+                        chartColors.success
+                    ],
+                    borderColor: '#fff',
+                    borderWidth: 3,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        titleColor: '#333',
+                        bodyColor: '#666',
+                        bodyFont: {
+                            size: 13
+                        },
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        padding: 15,
+                        borderColor: 'rgba(211, 95, 95, 0.1)',
+                        borderWidth: 1,
+                        displayColors: true,
+                        usePointStyle: true,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += '₹' + context.parsed;
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Order Status Chart
+        const orderStatusChartCtx = document.getElementById('orderStatusChart').getContext('2d');
+        const orderStatusChart = new Chart(orderStatusChartCtx, {
+            type: 'polarArea',
+            data: {
+                labels: ['Pending', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'],
+                datasets: [{
+                    data: ordersStatusData,
+                    backgroundColor: [
+                        chartColors.warning,
+                        chartColors.info,
+                        chartColors.primary,
+                        chartColors.success,
+                        chartColors.danger
+                    ],
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        titleColor: '#333',
+                        bodyColor: '#666',
+                        bodyFont: {
+                            size: 13
+                        },
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        padding: 15,
+                        borderColor: 'rgba(211, 95, 95, 0.1)',
+                        borderWidth: 1,
+                        displayColors: true,
+                        usePointStyle: true
+                    }
+                },
+                scales: {
+                    r: {
+                        ticks: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

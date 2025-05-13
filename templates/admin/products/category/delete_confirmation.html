@@ -1,4 +1,4 @@
-{% extends "admin/custom_base.html" %}
+{% extends "admin/super_base.html" %}
 {% load i18n admin_urls %}
 
 {% block title %}Delete Category: {{ object.name }} | VarnikaKart Admin{% endblock %}
@@ -26,13 +26,13 @@
         <div class="alert alert-warning">
             <h4 class="alert-heading"><i class="fas fa-exclamation-circle me-2"></i> Warning!</h4>
             <p>You are about to delete the category "{{ object.name }}". This action cannot be undone.</p>
-            
+
             {% if object.products.count > 0 %}
             <hr>
             <p class="mb-0"><strong>This category has {{ object.products.count }} product{{ object.products.count|pluralize }} associated with it.</strong> Deleting this category will affect these products.</p>
             {% endif %}
         </div>
-        
+
         <h5 class="mb-3">Category Details</h5>
         <div class="row mb-4">
             <div class="col-md-6">
@@ -63,7 +63,7 @@
                 {% endif %}
             </div>
         </div>
-        
+
         {% if object.products.count > 0 %}
         <h5 class="mb-3">Associated Products ({{ object.products.count }})</h5>
         <div class="table-responsive mb-4">
@@ -96,7 +96,7 @@
             </table>
         </div>
         {% endif %}
-        
+
         <form method="post">
             {% csrf_token %}
             <div class="d-flex justify-content-between">

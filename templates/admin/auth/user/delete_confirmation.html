@@ -1,4 +1,4 @@
-{% extends "admin/custom_base.html" %}
+{% extends "admin/super_base.html" %}
 {% load i18n admin_urls %}
 
 {% block title %}Delete User: {{ object.username }} | VarnikaKart Admin{% endblock %}
@@ -26,7 +26,7 @@
         <div class="alert alert-warning">
             <h4 class="alert-heading"><i class="fas fa-exclamation-circle me-2"></i> Warning!</h4>
             <p>You are about to delete the user "{{ object.username }}". This action cannot be undone.</p>
-            
+
             <hr>
             <p class="mb-0"><strong>This will permanently delete all associated data including:</strong></p>
             <ul>
@@ -37,7 +37,7 @@
                 <li>Order history (orders will be preserved but disassociated)</li>
             </ul>
         </div>
-        
+
         <h5 class="mb-3">User Details</h5>
         <div class="row mb-4">
             <div class="col-md-6">
@@ -96,7 +96,7 @@
                         </div>
                     {% endif %}
                 </div>
-                
+
                 <div class="user-stats">
                     <div class="row text-center">
                         <div class="col-4">
@@ -115,7 +115,7 @@
                 </div>
             </div>
         </div>
-        
+
         {% if object.orders.count > 0 %}
         <h5 class="mb-3">Recent Orders</h5>
         <div class="table-responsive mb-4">
@@ -152,7 +152,7 @@
             </table>
         </div>
         {% endif %}
-        
+
         <form method="post">
             {% csrf_token %}
             <div class="d-flex justify-content-between">

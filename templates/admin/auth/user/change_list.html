@@ -1,23 +1,23 @@
-{% extends "admin/custom_base.html" %}
+{% extends "admin/super_base.html" %}
 {% load i18n static admin_urls %}
 
 {% block title %}Users | VarnikaKart Admin{% endblock %}
 
+{% block page_title %}Users{% endblock %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item active" aria-current="page">Users</li>
+{% endblock %}
+
 {% block content %}
 <div class="page-header">
     <div>
-        <h1 class="page-title">Users</h1>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Users</li>
-            </ol>
-        </nav>
-    </div>
-    <div>
-        <a href="{% url 'admin:auth_user_add' %}" class="btn btn-primary">
-            <i class="fas fa-plus me-1"></i> Add User
-        </a>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Users</h2>
+            <a href="{% url 'admin:auth_user_add' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i> Add User
+            </a>
+        </div>
     </div>
 </div>
 

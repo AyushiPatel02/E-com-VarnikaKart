@@ -1,4 +1,4 @@
-{% extends "admin/custom_base.html" %}
+{% extends "admin/super_base.html" %}
 {% load i18n static admin_urls %}
 
 {% block title %}Add User | VarnikaKart Admin{% endblock %}
@@ -24,7 +24,7 @@
     <div class="card-body">
         <form method="post" id="user_form" novalidate>
             {% csrf_token %}
-            
+
             {% if form.errors %}
             <div class="alert alert-danger">
                 <h4 class="alert-heading">Please correct the errors below:</h4>
@@ -42,7 +42,7 @@
                 </ul>
             </div>
             {% endif %}
-            
+
             <div class="row mb-3">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -65,7 +65,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="row mb-3">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -88,7 +88,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="row mb-3">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -111,7 +111,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <h5 class="mt-4 mb-3">Permissions</h5>
             <div class="row mb-3">
                 <div class="col-md-4">
@@ -151,7 +151,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="mt-4">
                 <button type="submit" name="_save" class="btn btn-primary">
                     <i class="fas fa-save me-1"></i> Save
@@ -181,7 +181,7 @@
                 input.classList.add('form-control');
             }
         });
-        
+
         // Add form-select class to all select elements
         const selectElements = document.querySelectorAll('select');
         selectElements.forEach(select => {

@@ -705,12 +705,31 @@ class VarnikaKartAdminSite(AdminSite):
         ).order_by('month')
 
         # Format data for Chart.js
-        monthly_sales_data = []
+        monthly_labels = []
+        monthly_revenue = []
+        monthly_orders = []
+
         for i in range(months):
             month = (timezone.now() - timedelta(days=30*(months-i-1))).replace(day=1)
             month_data = next((item for item in monthly_sales if item['month'].month == month.month and
                               item['month'].year == month.year), None)
-            monthly_sales_data.append(float(month_data['total']) if month_data else 0)
+
+            monthly_labels.append(month.strftime('%b'))
+            monthly_revenue.append(float(month_data['total']) if month_data else 0)
+
+            # Get order count for this month
+            month_orders = Order.objects.filter(
+                created_at__year=month.year,
+                created_at__month=month.month
+            ).count()
+            monthly_orders.append(month_orders)
+
+        # Create the data structure expected by the template
+        monthly_sales_data = {
+            'labels': monthly_labels,
+            'revenue': monthly_revenue,
+            'orders': monthly_orders
+        }
 
         # Revenue sources data (dummy data for now)
         revenue_sources_data = {
@@ -763,8 +782,8 @@ class VarnikaKartAdminSite(AdminSite):
         if extra_context:
             context.update(extra_context)
 
-        # Use our custom dashboard template instead of the default admin index
-        return self.render_with_template('admin/custom_dashboard.html', context, request)
+        # Use our modern dashboard template instead of the default admin index
+        return self.render_with_template('admin/modern_dashboard.html', context, request)
 
 # Create an instance of the custom admin site
 admin_site = VarnikaKartAdminSite(name='varnikakart_admin')

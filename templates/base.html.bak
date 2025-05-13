@@ -17,22 +17,45 @@
 
     {% load static %}
     <!-- Custom CSS files -->
-    <link rel="stylesheet" href="{% static 'css/simplified/main.css' %}">
-    <link rel="stylesheet" href="{% static 'css/simplified/theme.css' %}">
-    <link rel="stylesheet" href="{% static 'css/simplified/responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'dist/varnikakart.min.css' %}">
 
     <!-- Additional CSS block for templates -->
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <!-- Page Transition Overlay -->
+    <!-- Page Transition Overlay - Handcrafted Theme -->
     <div class="page-transition-overlay">
         <div class="page-transition-logo">VarnikaKart</div>
         <div class="loading-spinner"></div>
         <div class="loading-progress">
             <div class="loading-progress-bar"></div>
         </div>
-        <div class="loading-message">Loading your experience...</div>
+        <div class="loading-message">Crafting your experience...</div>
+
+        <!-- Dots Animation -->
+        <div class="dots-container">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+
+        <!-- Handcrafted Decorative Elements -->
+        <div class="preloader-decoration">
+            <div class="preloader-shape preloader-shape-1"></div>
+            <div class="preloader-shape preloader-shape-2"></div>
+            <div class="preloader-shape preloader-shape-3"></div>
+        </div>
+
+        <!-- Thread Decorations -->
+        <div class="thread-decoration">
+            <div class="thread thread-1"></div>
+            <div class="thread thread-2"></div>
+            <div class="thread thread-3"></div>
+        </div>
+
+        <!-- Brush Stroke Decorations -->
+        <div class="brush-stroke brush-stroke-1"></div>
+        <div class="brush-stroke brush-stroke-2"></div>
     </div>
 
     <!-- Navigation -->
@@ -76,105 +99,53 @@
         </div>
 
         <!-- Main Navigation -->
-        <nav class="pro-navbar navbar navbar-expand-lg">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container">
-                <!-- Brand -->
-                <a class="navbar-brand" href="{% url 'home' %}">
-                    VarnikaKart
+                <!-- Creative Brand with icon -->
+                <a class="navbar-brand" href="/">
+                    <i class="fas fa-paint-brush me-2"></i><span class="brand-text">Varnika<span class="text-secondary">Kart</span></span>
                 </a>
 
                 <!-- Mobile Menu Button -->
-                <button class="mobile-menu-btn d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-                    <i class="fas fa-bars"></i>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
                 </button>
 
                 <!-- Navbar Content -->
                 <div class="collapse navbar-collapse" id="navbarContent">
                     <!-- Navigation Links -->
-                    <ul class="nav-links navbar-nav me-auto mb-2 mb-lg-0">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" href="{% url 'home' %}">Home</a>
+                            <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">Home</a>
                         </li>
 
-                        <!-- Shop Dropdown with Mega Menu -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-bs-toggle="dropdown">Shop</a>
-                            <div class="mega-menu">
-                                <div class="mega-menu-grid">
-                                    <div class="mega-menu-column">
-                                        <h6>Categories</h6>
-                                        <ul class="mega-menu-list">
-                                            <li><a href="{% url 'products:product_list' %}?category=Paintings"><i class="fas fa-palette"></i> Paintings</a></li>
-                                            <li><a href="{% url 'products:product_list' %}?category=Jewelry"><i class="fas fa-gem"></i> Jewelry</a></li>
-                                            <li><a href="{% url 'products:product_list' %}?category=Gifts"><i class="fas fa-gift"></i> Gifts</a></li>
-                                            <li><a href="{% url 'products:product_list' %}?category=Home Decor"><i class="fas fa-home"></i> Home Decor</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="mega-menu-column">
-                                        <h6>Collections</h6>
-                                        <ul class="mega-menu-list">
-                                            <li><a href="{% url 'products:product_list' %}?collection=new_arrivals"><i class="fas fa-star"></i> New Arrivals</a></li>
-                                            <li><a href="{% url 'products:product_list' %}?collection=best_sellers"><i class="fas fa-fire"></i> Best Sellers</a></li>
-                                            <li><a href="{% url 'products:product_list' %}?collection=on_sale"><i class="fas fa-tag"></i> On Sale</a></li>
-                                            <li><a href="{% url 'products:product_list' %}?collection=featured"><i class="fas fa-award"></i> Featured</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="mega-menu-column">
-                                        <h6>Artists</h6>
-                                        <ul class="mega-menu-list">
-                                            <li><a href="{% url 'products:featured_artists' %}"><i class="fas fa-user-artist"></i> Featured Artists</a></li>
-                                            <li><a href="{% url 'products:artist_stores' %}"><i class="fas fa-store"></i> Artist Stores</a></li>
-                                            <li><a href="{% url 'products:become_artist' %}"><i class="fas fa-handshake"></i> Become an Artist</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="mega-menu-column">
-                                        <h6>Trending</h6>
-                                        <div class="trending-items">
-                                            <div class="row g-2">
-                                                <div class="col-6">
-                                                    <a href="{% url 'products:trending' %}" class="text-decoration-none">
-                                                        <div class="card">
-                                                            <div class="card-body p-2">
-                                                                <div class="d-flex align-items-center">
-                                                                    <i class="fas fa-fire text-danger me-2"></i>
-                                                                    <div>
-                                                                        <h6 class="mb-0 small">Trending Now</h6>
-                                                                        <small class="text-muted">See what's hot</small>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="col-6">
-                                                    <a href="{% url 'products:trending' %}" class="text-decoration-none">
-                                                        <div class="card">
-                                                            <div class="card-body p-2">
-                                                                <div class="d-flex align-items-center">
-                                                                    <i class="fas fa-chart-line text-success me-2"></i>
-                                                                    <div>
-                                                                        <h6 class="mb-0 small">Weekly Trends</h6>
-                                                                        <small class="text-muted">This week's picks</small>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="col-12">
-                                                    <a href="{% url 'products:trending' %}" class="btn btn-sm btn-primary w-100">View All Trending</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-
-                        <!-- Categories Dropdown -->
+                        <!-- Shop Dropdown -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link" href="#" data-bs-toggle="dropdown">Categories</a>
-                            <ul class="dropdown-menu">
+                            <a class="nav-link dropdown-toggle {% if 'products' in request.path %}active{% endif %}" href="{% url 'products:product_list' %}" id="shopDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Shop
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="shopDropdown">
+                                <li><a class="dropdown-item" href="{% url 'products:product_list' %}"><i class="fas fa-th-large"></i> All Products</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><h6 class="dropdown-header">Categories</h6></li>
+                                <li><a class="dropdown-item" href="{% url 'products:product_list' %}?category=Paintings"><i class="fas fa-palette"></i> Paintings</a></li>
+                                <li><a class="dropdown-item" href="{% url 'products:product_list' %}?category=Jewelry"><i class="fas fa-gem"></i> Jewelry</a></li>
+                                <li><a class="dropdown-item" href="{% url 'products:product_list' %}?category=Gifts"><i class="fas fa-gift"></i> Gifts</a></li>
+                                <li><a class="dropdown-item" href="{% url 'products:product_list' %}?category=Home Decor"><i class="fas fa-home"></i> Home Decor</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><h6 class="dropdown-header">Collections</h6></li>
+                                <li><a class="dropdown-item" href="{% url 'products:product_list' %}?collection=new_arrivals"><i class="fas fa-star"></i> New Arrivals</a></li>
+                                <li><a class="dropdown-item" href="{% url 'products:product_list' %}?collection=best_sellers"><i class="fas fa-fire"></i> Best Sellers</a></li>
+                                <li><a class="dropdown-item" href="{% url 'deals' %}"><i class="fas fa-tag"></i> On Sale</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Categories -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="{% url 'products:product_list' %}" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Categories
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
                                 <li><a class="dropdown-item" href="{% url 'products:product_list' %}?category=Paintings"><i class="fas fa-palette"></i> Paintings</a></li>
                                 <li><a class="dropdown-item" href="{% url 'products:product_list' %}?category=Jewelry"><i class="fas fa-gem"></i> Jewelry</a></li>
                                 <li><a class="dropdown-item" href="{% url 'products:product_list' %}?category=Gifts"><i class="fas fa-gift"></i> Gifts</a></li>
@@ -183,266 +154,102 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'deals' %}">Deals</a>
+                            <a class="nav-link {% if request.path == '/deals/' %}active{% endif %}" href="{% url 'deals' %}">Deals</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'products:trending' %}">Trending</a>
+                            <a class="nav-link" href="{% url 'products:product_list' %}?collection=trending">Trending</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'about' %}">About</a>
+                            <a class="nav-link {% if request.path == '/about/' %}active{% endif %}" href="{% url 'about' %}">About</a>
                         </li>
                     </ul>
 
-                    <!-- Search Bar with Suggestions -->
-                    <div class="search-bar me-3">
-                        <input type="search" class="search-input" placeholder="Search products...">
-                        <i class="fas fa-search search-icon"></i>
-
-                        <!-- Search Suggestions -->
-                        <div class="search-suggestions">
-                            <!-- Header will be added by JS -->
-
-                            <!-- Example suggestion items -->
-                            <div class="suggestion-item" data-url="/products/handmade-pottery/">
-                                <img src="{% static 'img/products/pottery.jpg' %}" alt="Handmade Pottery">
-                                <div class="details">
-                                    <div class="name">Handmade Pottery</div>
-                                    <div class="category"><i class="fas fa-home"></i> Home Decor</div>
-                                </div>
-                                <div class="price">$49.99</div>
-                            </div>
-
-                            <div class="suggestion-item" data-url="/products/silver-necklace/">
-                                <img src="{% static 'img/products/necklace.jpg' %}" alt="Silver Necklace">
-                                <div class="details">
-                                    <div class="name">Silver Necklace with Gemstones</div>
-                                    <div class="category"><i class="fas fa-gem"></i> Jewelry</div>
-                                </div>
-                                <div class="price">$89.99</div>
-                            </div>
-
-                            <div class="suggestion-item" data-url="/products/abstract-painting/">
-                                <img src="{% static 'img/products/painting.jpg' %}" alt="Abstract Painting">
-                                <div class="details">
-                                    <div class="name">Abstract Canvas Painting</div>
-                                    <div class="category"><i class="fas fa-palette"></i> Paintings</div>
-                                </div>
-                                <div class="price">$129.99</div>
-                            </div>
-
-                            <!-- Footer will be added by JS -->
-                        </div>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="nav-actions">
-                        <!-- Theme Switcher Button -->
-                        <div class="dropdown">
-                            <button class="action-btn" title="Appearance Settings" id="themeSwitcherBtn" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-palette"></i>
+                    <!-- Creative Search Form -->
+                    <form class="d-flex me-2" action="{% url 'products:product_list' %}" method="get">
+                        <div class="input-group">
+                            <input class="form-control" type="search" name="q" placeholder="Find something magical..." aria-label="Search">
+                            <button class="btn btn-outline-primary" type="submit">
+                                <i class="fas fa-search"></i>
                             </button>
-                            <div class="dropdown-menu dropdown-menu-end theme-dropdown p-3">
-                                <h6 class="dropdown-header border-bottom pb-2 mb-2 fw-bold">Appearance Settings</h6>
-
-                                <!-- Dark/Light Mode Toggle -->
-                                <div class="mode-toggle mb-4">
-                                    <h6 class="small fw-bold mb-2">Display Mode</h6>
-                                    <div class="mode-toggle-container p-3 rounded border">
-                                        <div class="d-flex align-items-center justify-content-between mb-2">
-                                            <div class="mode-icon-container">
-                                                <i class="fas fa-sun mode-icon mode-icon-sun"></i>
-                                                <i class="fas fa-moon mode-icon mode-icon-moon"></i>
-                                            </div>
-                                            <div class="mode-time small text-muted">
-                                                Auto: Light 6AM-6PM, Dark 6PM-6AM
-                                            </div>
-                                        </div>
-                                        <div class="btn-group w-100 mode-btn-group" role="group" aria-label="Display mode">
-                                            <button type="button" class="btn btn-sm btn-outline-primary mode-btn" data-mode="light" id="lightModeBtn">
-                                                <i class="fas fa-sun me-1"></i> Light
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-outline-primary mode-btn" data-mode="auto" id="autoModeBtn">
-                                                <i class="fas fa-adjust me-1"></i> Auto
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-outline-primary mode-btn" data-mode="dark" id="darkModeBtn">
-                                                <i class="fas fa-moon me-1"></i> Dark
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Theme Selection -->
-                                <h6 class="small fw-bold mb-3">Select Theme</h6>
-                                <div class="theme-options">
-                                    <div class="theme-option d-flex align-items-center p-3 rounded mb-2" data-theme="canvas-bloom">
-                                        <div class="theme-preview me-3">
-                                            <div class="theme-color" style="background: linear-gradient(135deg, #7e9a9a, #a4c3b2);"></div>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <div class="d-flex align-items-center">
-                                                <i class="fas fa-palette me-2 text-primary"></i>
-                                                <div class="fw-bold" id="current-theme-name">Canvas Bloom</div>
-                                            </div>
-                                            <small class="text-muted d-block mt-1 fw-medium">Elegant artistic theme with soft colors</small>
-                                        </div>
-                                    </div>
-
-                                    <div class="theme-option d-flex align-items-center p-3 rounded mb-2" data-theme="midnight-royal">
-                                        <div class="theme-preview me-3">
-                                            <div class="theme-color" style="background: linear-gradient(135deg, #6c5ce7, #2d3436);"></div>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <div class="d-flex align-items-center">
-                                                <i class="fas fa-gem me-2 text-primary"></i>
-                                                <div class="fw-bold">Midnight Royal</div>
-                                            </div>
-                                            <small class="text-muted d-block mt-1 fw-medium">Luxurious dark theme with royal accents</small>
-                                        </div>
-                                    </div>
-
-                                    <div class="theme-option d-flex align-items-center p-3 rounded mb-2" data-theme="pastel-pop">
-                                        <div class="theme-preview me-3">
-                                            <div class="theme-color" style="background: linear-gradient(135deg, #ff9ff3, #48dbfb);"></div>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <div class="d-flex align-items-center">
-                                                <i class="fas fa-gift me-2 text-primary"></i>
-                                                <div class="fw-bold">Pastel Pop</div>
-                                            </div>
-                                            <small class="text-muted d-block mt-1 fw-medium">Vibrant, playful theme with pastel colors</small>
-                                        </div>
-                                    </div>
-
-                                    <div class="theme-option d-flex align-items-center p-3 rounded mb-2" data-theme="boho-vibe">
-                                        <div class="theme-preview me-3">
-                                            <div class="theme-color" style="background: linear-gradient(135deg, #b97a63, #8d7b68);"></div>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <div class="d-flex align-items-center">
-                                                <i class="fas fa-home me-2 text-primary"></i>
-                                                <div class="fw-bold">Boho Vibe</div>
-                                            </div>
-                                            <small class="text-muted d-block mt-1 fw-medium">Earthy, natural theme for handmade items</small>
-                                        </div>
-                                    </div>
-
-                                    <div class="theme-option d-flex align-items-center p-3 rounded" data-theme="monochrome-chic">
-                                        <div class="theme-preview me-3">
-                                            <div class="theme-color" style="background: linear-gradient(135deg, #000000, #333333);"></div>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <div class="d-flex align-items-center">
-                                                <i class="fas fa-tachometer-alt me-2 text-primary"></i>
-                                                <div class="fw-bold">Monochrome Chic</div>
-                                            </div>
-                                            <small class="text-muted d-block mt-1 fw-medium">Sleek, modern theme with minimalist design</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
+                    </form>
 
-                        <button class="action-btn" title="Notifications">
-                            <i class="fas fa-bell"></i>
-                            <span class="badge">3</span>
-                        </button>
-                        <button class="action-btn" title="Wishlist">
+                    <!-- Creative Action Buttons -->
+                    <div class="d-flex">
+                        <a href="{% url 'users:wishlist' %}" class="btn btn-outline-primary me-2" title="My Wishlist">
                             <i class="fas fa-heart"></i>
-                        </button>
-                        <button class="action-btn" title="Cart">
+                        </a>
+                        <a href="{% url 'orders:cart' %}" class="btn btn-outline-primary me-2" title="Shopping Cart">
                             <i class="fas fa-shopping-cart"></i>
                             <span class="badge">2</span>
-                        </button>
+                        </a>
 
-                        <!-- User Menu Button -->
-                        <button class="action-btn" title="Profile" id="userMenuBtn">
-                            <i class="fas fa-user"></i>
-                        </button>
-
-                        <!-- User Menu Dropdown -->
-                        <div class="user-menu">
-                            {% if user.is_authenticated %}
-                            <div class="user-header">
-                                <div class="user-avatar">
-                                    {% if user.profile.profile_picture %}
-                                    <img src="{{ user.profile.profile_picture.url }}" alt="{{ user.username }}" class="img-fluid rounded-circle" style="width: 100%; height: 100%; object-fit: cover;">
-                                    {% else %}
-                                    {{ user.username|slice:":2"|upper }}
-                                    {% endif %}
-                                </div>
-                                <div class="user-info">
-                                    <h6>{{ user.get_full_name|default:user.username }}</h6>
-                                    <p>{{ user.email }}</p>
-                                </div>
-                            </div>
-                            <ul class="mega-menu-list">
-                                <li><a href="{% url 'users:profile' %}"><i class="fas fa-user-circle"></i> My Profile</a></li>
-                                <li><a href="{% url 'orders:order_history' %}"><i class="fas fa-shopping-bag"></i> My Orders</a></li>
-                                <li><a href="{% url 'users:address_list' %}"><i class="fas fa-map-marker-alt"></i> My Addresses</a></li>
-                                <li><a href="{% url 'users:wishlist' %}"><i class="fas fa-heart"></i> Wishlist</a></li>
-                                <li><a href="{% url 'account_change_password' %}"><i class="fas fa-lock"></i> Change Password</a></li>
-                                <li><a href="{% url 'account_logout' %}" class="text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        <!-- Creative User Dropdown -->
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="User Menu">
+                                <i class="fas fa-user"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                {% if user.is_authenticated %}
+                                <li><h6 class="dropdown-header">Welcome, Artisan!</h6></li>
+                                <li><a class="dropdown-item" href="{% url 'users:profile' %}"><i class="fas fa-user-circle"></i> My Creative Profile</a></li>
+                                <li><a class="dropdown-item" href="{% url 'orders:order_history' %}"><i class="fas fa-shopping-bag"></i> My Purchases</a></li>
+                                <li><a class="dropdown-item" href="{% url 'users:address_list' %}"><i class="fas fa-map-marker-alt"></i> My Addresses</a></li>
+                                <li><a class="dropdown-item" href="{% url 'users:wishlist' %}"><i class="fas fa-heart"></i> My Inspirations</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'users:edit_profile' %}"><i class="fas fa-lock"></i> Security Settings</a></li>
+                                <li><a class="dropdown-item text-danger" href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt"></i> Sign Out</a></li>
+                                {% else %}
+                                <li><h6 class="dropdown-header">Join Our Creative Community</h6></li>
+                                <li><a class="dropdown-item" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i> Sign In</a></li>
+                                <li><a class="dropdown-item" href="{% url 'account_signup' %}"><i class="fas fa-user-plus"></i> Create Account</a></li>
+                                {% endif %}
                             </ul>
-                            {% else %}
-                            <div class="user-header guest-header">
-                                <div class="user-avatar guest-avatar">
-                                    <i class="fas fa-user-circle fa-2x"></i>
-                                </div>
-                                <div class="user-info">
-                                    <h6>Welcome, Guest</h6>
-                                    <p>Sign in to access your account</p>
-                                </div>
-                            </div>
-                            <ul class="mega-menu-list">
-                                <li><a href="{% url 'account_login' %}" class="login-btn"><i class="fas fa-sign-in-alt"></i> Login</a></li>
-                                <li><a href="{% url 'account_signup' %}" class="register-btn"><i class="fas fa-user-plus"></i> Register</a></li>
-                            </ul>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
         </nav>
 
-        <!-- Category Navigation -->
-        <div class="category-navbar py-2 d-none d-lg-block">
+        <!-- Creative Category Navigation -->
+        <div class="bg-light py-2 d-none d-lg-block">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <ul class="list-inline mb-0 category-nav text-center">
-                            <li class="list-inline-item">
-                                <a href="{% url 'products:product_list' %}?category=Paintings" class="category-link text-decoration-none fw-medium">
-                                    <i class="fas fa-palette me-1"></i> Paintings
+                        <ul class="nav justify-content-center">
+                            <li class="nav-item">
+                                <a href="{% url 'products:product_list' %}?category=Paintings" class="nav-link">
+                                    <i class="fas fa-palette me-1"></i> Artistic Paintings
                                 </a>
                             </li>
-                            <li class="list-inline-item">
-                                <a href="{% url 'products:product_list' %}?category=Jewelry" class="category-link text-decoration-none fw-medium">
-                                    <i class="fas fa-gem me-1"></i> Jewelry
+                            <li class="nav-item">
+                                <a href="{% url 'products:product_list' %}?category=Jewelry" class="nav-link">
+                                    <i class="fas fa-gem me-1"></i> Handcrafted Jewelry
                                 </a>
                             </li>
-                            <li class="list-inline-item">
-                                <a href="{% url 'products:product_list' %}?category=Home Decor" class="category-link text-decoration-none fw-medium">
-                                    <i class="fas fa-home me-1"></i> Home Decor
+                            <li class="nav-item">
+                                <a href="{% url 'products:product_list' %}?category=Home Decor" class="nav-link">
+                                    <i class="fas fa-home me-1"></i> Unique Home Decor
                                 </a>
                             </li>
-                            <li class="list-inline-item">
-                                <a href="{% url 'products:product_list' %}?category=Gifts" class="category-link text-decoration-none fw-medium">
-                                    <i class="fas fa-gift me-1"></i> Personalized Gifts
+                            <li class="nav-item">
+                                <a href="{% url 'products:product_list' %}?category=Gifts" class="nav-link">
+                                    <i class="fas fa-gift me-1"></i> Personalized Treasures
                                 </a>
                             </li>
-                            <li class="list-inline-item">
-                                <a href="{% url 'products:product_list' %}?collection=on_sale" class="category-link text-decoration-none fw-medium">
-                                    <i class="fas fa-tags me-1"></i> Sale
+                            <li class="nav-item">
+                                <a href="{% url 'deals' %}" class="nav-link">
+                                    <i class="fas fa-tags me-1"></i> Special Offers
                                 </a>
                             </li>
-                            <li class="list-inline-item">
-                                <a href="{% url 'products:product_list' %}?collection=new_arrivals" class="category-link text-decoration-none fw-medium">
-                                    <i class="fas fa-star me-1"></i> New Arrivals
+                            <li class="nav-item">
+                                <a href="{% url 'products:product_list' %}?collection=new_arrivals" class="nav-link">
+                                    <i class="fas fa-star me-1"></i> Fresh Creations
                                 </a>
                             </li>
-                            <li class="list-inline-item">
-                                <a href="{% url 'products:product_list' %}?collection=best_sellers" class="category-link text-decoration-none fw-medium">
-                                    <i class="fas fa-award me-1"></i> Best Sellers
+                            <li class="nav-item">
+                                <a href="{% url 'products:product_list' %}?collection=best_sellers" class="nav-link">
+                                    <i class="fas fa-award me-1"></i> Artisan Favorites
                                 </a>
                             </li>
                         </ul>
@@ -519,7 +326,7 @@
                         <li class="mb-2"><a href="{% url 'products:product_list' %}" class="text-decoration-none text-muted">All Products</a></li>
                         <li class="mb-2"><a href="{% url 'products:product_list' %}?collection=new_arrivals" class="text-decoration-none text-muted">New Arrivals</a></li>
                         <li class="mb-2"><a href="{% url 'products:product_list' %}?collection=best_sellers" class="text-decoration-none text-muted">Best Sellers</a></li>
-                        <li class="mb-2"><a href="{% url 'products:product_list' %}?collection=on_sale" class="text-decoration-none text-muted">Sale</a></li>
+                        <li class="mb-2"><a href="{% url 'deals' %}" class="text-decoration-none text-muted">Sale</a></li>
                         <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Gift Cards</a></li>
                     </ul>
                 </div>
@@ -538,11 +345,11 @@
                 <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
                     <h6 class="fw-bold mb-3">Customer Service</h6>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Contact Us</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">FAQs</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Shipping & Returns</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Track Order</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Privacy Policy</a></li>
+                        <li class="mb-2"><a href="{% url 'contact' %}" class="text-decoration-none text-muted">Contact Us</a></li>
+                        <li class="mb-2"><a href="{% url 'about' %}#faqs" class="text-decoration-none text-muted">FAQs</a></li>
+                        <li class="mb-2"><a href="{% url 'about' %}#shipping" class="text-decoration-none text-muted">Shipping & Returns</a></li>
+                        <li class="mb-2"><a href="{% url 'orders:order_history' %}" class="text-decoration-none text-muted">Track Order</a></li>
+                        <li class="mb-2"><a href="{% url 'about' %}#privacy" class="text-decoration-none text-muted">Privacy Policy</a></li>
                     </ul>
                 </div>
 
@@ -550,10 +357,10 @@
                     <h6 class="fw-bold mb-3">Contact Us</h6>
                     <ul class="list-unstyled">
                         <li class="mb-2 text-muted">
-                            <i class="fas fa-map-marker-alt me-2"></i>123 Craft Street, Artville
+                            <i class="fas fa-map-marker-alt me-2"></i>123 Craft Street, New Delhi, India
                         </li>
                         <li class="mb-2 text-muted">
-                            <i class="fas fa-phone me-2"></i>+1 234 567 8900
+                            <i class="fas fa-phone me-2"></i>+91 6393260995
                         </li>
                         <li class="mb-2 text-muted">
                             <i class="fas fa-envelope me-2"></i>info@varnikakart.com
@@ -576,10 +383,11 @@
                     </p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <img src="https://cdn.pixabay.com/photo/2021/12/06/13/48/visa-6850402_1280.png" alt="Payment Methods" height="30" class="me-2">
-                    <img src="https://cdn.pixabay.com/photo/2021/12/06/13/48/mastercard-6850401_1280.png" alt="Payment Methods" height="30" class="me-2">
-                    <img src="https://cdn.pixabay.com/photo/2021/12/06/13/48/paypal-6850403_1280.png" alt="Payment Methods" height="30" class="me-2">
-                    <img src="https://cdn.pixabay.com/photo/2022/03/16/19/45/american-express-7073836_1280.png" alt="Payment Methods" height="30">
+                    <img src="https://cdn.pixabay.com/photo/2021/12/06/13/48/visa-6850402_1280.png" alt="Visa" height="30" class="me-2">
+                    <img src="https://cdn.pixabay.com/photo/2021/12/06/13/48/mastercard-6850401_1280.png" alt="Mastercard" height="30" class="me-2">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo-vector.svg/1200px-UPI-Logo-vector.svg.png" alt="UPI" height="30" class="me-2">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/2560px-Paytm_Logo_%28standalone%29.svg.png" alt="Paytm" height="30" class="me-2">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/31/Razorpay_logo.svg" alt="Razorpay" height="30">
                 </div>
             </div>
         </div>
@@ -588,53 +396,9 @@
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Theme Switcher JS -->
-    <script src="{% static 'js/theme-switcher.js' %}"></script>
-
-    <!-- Dark Mode JS -->
-    <script src="{% static 'js/dark-mode.js' %}"></script>
-
-    <!-- User Menu JS -->
-    <script src="{% static 'js/user-menu.js' %}"></script>
-
-    <!-- Page Transitions JS -->
-    <script src="{% static 'js/page-transitions.js' %}"></script>
-
-    <!-- Product Cards JS -->
-    <script src="{% static 'js/product-cards.js' %}"></script>
-
-    <!-- Performance Optimizations JS -->
-    <script src="{% static 'js/performance-optimizations.js' %}"></script>
-
-    <!-- Progressive Loading JS -->
-    <script src="{% static 'js/progressive-loading.js' %}"></script>
-
-    <!-- Smooth Transitions JS -->
-    <script src="{% static 'js/smooth-transitions.js' %}"></script>
-
-    <!-- Advanced Search JS -->
-    <script src="{% static 'js/advanced-search.js' %}"></script>
-
-    <!-- Product Filters JS -->
-    <script src="{% static 'js/product-filters.js' %}"></script>
-
-    <!-- Wishlist and Compare JS -->
-    <script src="{% static 'js/wishlist-compare.js' %}"></script>
-
-    <!-- Advanced Cart JS -->
-    <script src="{% static 'js/advanced-cart.js' %}"></script>
-
-    <!-- Image Gallery JS -->
-    <script src="{% static 'js/image-gallery.js' %}"></script>
-
-    <!-- Image Magnifier JS -->
-    <script src="{% static 'js/image-magnifier.js' %}"></script>
-
-    <!-- Accessibility JS -->
-    <script src="{% static 'js/accessibility.js' %}"></script>
-
     <!-- Custom JS -->
-    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/simple-menubar.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/preloader.js' %}" type="text/javascript"></script>
 
     {% block extra_js %}{% endblock %}
 </body>

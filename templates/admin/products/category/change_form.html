@@ -1,26 +1,26 @@
-{% extends "admin/custom_base.html" %}
+{% extends "admin/super_base.html" %}
 {% load i18n admin_urls static admin_modify %}
 
 {% block title %}{% if add %}Add Category{% else %}Edit Category: {{ original.name }}{% endif %} | VarnikaKart Admin{% endblock %}
 
+{% block page_title %}{% if add %}Add Category{% else %}Edit Category: {{ original.name }}{% endif %}{% endblock %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item"><a href="{% url 'admin:products_category_changelist' %}">Categories</a></li>
+<li class="breadcrumb-item active" aria-current="page">{% if add %}Add{% else %}Edit{% endif %} Category</li>
+{% endblock %}
+
 {% block content %}
 <div class="page-header">
     <div>
-        <h1 class="page-title">{% if add %}Add Category{% else %}Edit Category: {{ original.name }}{% endif %}</h1>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'admin:products_category_changelist' %}">Categories</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{% if add %}Add{% else %}Edit{% endif %} Category</li>
-            </ol>
-        </nav>
-    </div>
-    <div>
-        {% if not add %}
-        <a href="{% url 'admin:products_category_delete' original.pk %}" class="btn btn-danger delete-confirm">
-            <i class="fas fa-trash me-1"></i> Delete
-        </a>
-        {% endif %}
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">{% if add %}Add Category{% else %}Edit Category: {{ original.name }}{% endif %}</h2>
+            {% if not add %}
+            <a href="{% url 'admin:products_category_delete' original.pk %}" class="btn btn-danger delete-confirm">
+                <i class="fas fa-trash me-1"></i> Delete
+            </a>
+            {% endif %}
+        </div>
     </div>
 </div>
 
@@ -33,7 +33,7 @@
             <div class="card-body">
                 <form method="post" enctype="multipart/form-data" id="category_form" novalidate>
                     {% csrf_token %}
-                    
+
                     {% if errors %}
                     <div class="alert alert-danger">
                         <h4 class="alert-heading">Please correct the errors below:</h4>
@@ -51,7 +51,7 @@
                         </ul>
                     </div>
                     {% endif %}
-                    
+
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
@@ -74,7 +74,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <div class="form-group">
                             <label for="id_description" class="form-label">Description</label>
@@ -85,7 +85,7 @@
                             {% endif %}
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <div class="form-group">
@@ -111,7 +111,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     {% if not add %}
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -128,7 +128,7 @@
                         </div>
                     </div>
                     {% endif %}
-                    
+
                     <div class="mt-4">
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-save me-1"></i> Save
@@ -141,7 +141,7 @@
             </div>
         </div>
     </div>
-    
+
     {% if not add and original.image %}
     <div class="col-lg-4">
         <div class="card mb-4 slide-in-right">
@@ -153,7 +153,7 @@
                 <div class="text-muted">{{ original.image.name }}</div>
             </div>
         </div>
-        
+
         <div class="card mb-4 slide-in-right">
             <div class="card-header">
                 <h5>Category Products</h5>
@@ -167,7 +167,7 @@
                         <span class="badge bg-primary">{{ original.products.count }}</span>
                     </div>
                 </div>
-                
+
                 <a href="{% url 'admin:products_product_changelist' %}?category__id__exact={{ original.id }}" class="btn btn-sm btn-outline-primary w-100">
                     <i class="fas fa-list me-1"></i> View All Products
                 </a>
@@ -184,7 +184,7 @@
         // Auto-generate slug from name
         const nameInput = document.getElementById('id_name');
         const slugInput = document.getElementById('id_slug');
-        
+
         if (nameInput && slugInput) {
             nameInput.addEventListener('keyup', function() {
                 // Only auto-generate if slug is empty or hasn't been manually edited
@@ -194,17 +194,17 @@
                         .replace(/[^\w\s-]/g, '')  // Remove special chars
                         .replace(/\s+/g, '-')      // Replace spaces with hyphens
                         .replace(/-+/g, '-');      // Replace multiple hyphens with single hyphen
-                    
+
                     slugInput.value = slug;
                 }
             });
-            
+
             // Mark slug as manually edited if user changes it
             slugInput.addEventListener('input', function() {
                 slugInput.dataset.manuallyEdited = 'true';
             });
         }
-        
+
         // Delete confirmation
         const deleteLink = document.querySelector('.delete-confirm');
         if (deleteLink) {
@@ -214,7 +214,7 @@
                 }
             });
         }
-        
+
         // Make description field a rich text editor if available
         if (typeof ClassicEditor !== 'undefined') {
             ClassicEditor

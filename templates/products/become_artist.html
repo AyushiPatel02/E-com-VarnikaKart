@@ -1,0 +1,681 @@
+{% extends 'base.html' %}
+{% load product_tags %}
+
+{% block title %}Become an Artist - VarnikaKart{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Become Artist Page Styles */
+    .become-artist-header {
+        background: linear-gradient(135deg, #d35f5f 0%, #b54b4b 100%);
+        padding: 80px 0;
+        color: white;
+        border-radius: 0 0 30px 30px;
+        margin-bottom: 50px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .become-artist-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://images.unsplash.com/photo-1607082349566-187342175e2f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+        background-size: cover;
+        background-position: center;
+        opacity: 0.1;
+    }
+
+    .section-title {
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(135deg, #d35f5f 0%, #b54b4b 100%);
+    }
+
+    .benefit-card {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        border: none;
+        margin-bottom: 30px;
+        height: 100%;
+    }
+
+    .benefit-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .benefit-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #d35f5f 0%, #b54b4b 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        margin: 0 auto 20px;
+    }
+
+    .benefit-title {
+        font-weight: 700;
+        margin-bottom: 15px;
+        font-size: 1.3rem;
+        text-align: center;
+    }
+
+    .benefit-text {
+        color: #6c757d;
+        text-align: center;
+    }
+
+    .step-card {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        border: none;
+        margin-bottom: 30px;
+        position: relative;
+    }
+
+    .step-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .step-number {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #d35f5f 0%, #b54b4b 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.2rem;
+        box-shadow: 0 5px 15px rgba(211, 95, 95, 0.3);
+    }
+
+    .step-card .card-body {
+        padding: 30px;
+    }
+
+    .step-title {
+        font-weight: 700;
+        margin-bottom: 15px;
+        font-size: 1.3rem;
+        padding-left: 40px;
+    }
+
+    .step-text {
+        color: #6c757d;
+    }
+
+    .testimonial-card {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        border: none;
+        margin-bottom: 30px;
+        height: 100%;
+    }
+
+    .testimonial-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .testimonial-card .card-body {
+        padding: 30px;
+    }
+
+    .testimonial-text {
+        color: #495057;
+        font-style: italic;
+        margin-bottom: 20px;
+        position: relative;
+        padding: 0 20px;
+    }
+
+    .testimonial-text::before {
+        content: """;
+        position: absolute;
+        top: -20px;
+        left: -10px;
+        font-size: 4rem;
+        color: #f8f9fa;
+        font-family: Georgia, serif;
+        z-index: -1;
+    }
+
+    .testimonial-author {
+        display: flex;
+        align-items: center;
+    }
+
+    .author-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 15px;
+    }
+
+    .author-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .author-info {
+        flex: 1;
+    }
+
+    .author-name {
+        font-weight: 700;
+        margin-bottom: 3px;
+        color: #495057;
+    }
+
+    .author-role {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .application-form {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        border: none;
+        margin-bottom: 30px;
+    }
+
+    .application-form .card-header {
+        background: linear-gradient(135deg, #d35f5f 0%, #b54b4b 100%);
+        color: white;
+        font-weight: 700;
+        padding: 20px 30px;
+        border: none;
+    }
+
+    .application-form .card-body {
+        padding: 30px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #e0e0e0;
+        padding: 12px 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 0 0.25rem rgba(211, 95, 95, 0.25);
+        border-color: #d35f5f;
+    }
+
+    .form-text {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #d35f5f 0%, #b54b4b 100%);
+        border: none;
+        border-radius: 50px;
+        padding: 12px 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(211, 95, 95, 0.3);
+    }
+
+    .faq-card {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        border: none;
+        margin-bottom: 30px;
+    }
+
+    .faq-card .card-header {
+        background: linear-gradient(135deg, #d35f5f 0%, #b54b4b 100%);
+        color: white;
+        font-weight: 700;
+        padding: 20px 30px;
+        border: none;
+    }
+
+    .faq-card .card-body {
+        padding: 30px;
+    }
+
+    .accordion-item {
+        border: none;
+        margin-bottom: 15px;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .accordion-button {
+        font-weight: 600;
+        color: #495057;
+        padding: 15px 20px;
+    }
+
+    .accordion-button:not(.collapsed) {
+        color: #d35f5f;
+        background-color: #fff;
+    }
+
+    .accordion-button:focus {
+        box-shadow: none;
+        border-color: #e9ecef;
+    }
+
+    .accordion-button:not(.collapsed)::after {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23d35f5f'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    }
+
+    .accordion-body {
+        padding: 15px 20px;
+        color: #6c757d;
+    }
+
+    .animate-fadeInUp {
+        animation: fadeInUp 0.5s ease-out forwards;
+        opacity: 0;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .delay-1 {
+        animation-delay: 0.1s;
+    }
+
+    .delay-2 {
+        animation-delay: 0.2s;
+    }
+
+    .delay-3 {
+        animation-delay: 0.3s;
+    }
+
+    .delay-4 {
+        animation-delay: 0.4s;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="become-artist-header text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">Join Our Artisan Community</h1>
+        <p class="lead mb-4">Share your handcrafted creations with a global audience and grow your artisan business with VarnikaKart</p>
+        <a href="#application-form" class="btn btn-light btn-lg px-4 py-3">
+            <i class="fas fa-paint-brush me-2"></i>Apply Now
+        </a>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Benefits Section -->
+    <section class="mb-5">
+        <h2 class="section-title">Why Join VarnikaKart?</h2>
+        <div class="row">
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card benefit-card animate-fadeInUp delay-1">
+                    <div class="card-body text-center">
+                        <div class="benefit-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h3 class="benefit-title">Global Reach</h3>
+                        <p class="benefit-text">Showcase your products to customers around the world and expand your market beyond local boundaries.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card benefit-card animate-fadeInUp delay-2">
+                    <div class="card-body text-center">
+                        <div class="benefit-icon">
+                            <i class="fas fa-rupee-sign"></i>
+                        </div>
+                        <h3 class="benefit-title">Fair Compensation</h3>
+                        <p class="benefit-text">Set your own prices and receive fair compensation for your handcrafted items and artistic skills.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card benefit-card animate-fadeInUp delay-3">
+                    <div class="card-body text-center">
+                        <div class="benefit-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h3 class="benefit-title">Business Tools</h3>
+                        <p class="benefit-text">Access powerful tools to manage your inventory, track sales, and grow your artisan business.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card benefit-card animate-fadeInUp delay-4">
+                    <div class="card-body text-center">
+                        <div class="benefit-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 class="benefit-title">Community Support</h3>
+                        <p class="benefit-text">Join a supportive community of fellow artisans to share knowledge, techniques, and inspiration.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="mb-5">
+        <h2 class="section-title">How It Works</h2>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card step-card animate-fadeInUp delay-1">
+                    <div class="step-number">1</div>
+                    <div class="card-body">
+                        <h3 class="step-title">Apply</h3>
+                        <p class="step-text">Fill out our simple application form with details about your craft, experience, and product offerings. Include high-quality photos of your work.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card step-card animate-fadeInUp delay-2">
+                    <div class="step-number">2</div>
+                    <div class="card-body">
+                        <h3 class="step-title">Review</h3>
+                        <p class="step-text">Our curation team will review your application to ensure your products meet our quality standards and align with our marketplace vision.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card step-card animate-fadeInUp delay-3">
+                    <div class="step-number">3</div>
+                    <div class="card-body">
+                        <h3 class="step-title">Setup</h3>
+                        <p class="step-text">Once approved, set up your artist profile and product listings with our easy-to-use dashboard. Add detailed descriptions and high-quality images.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card step-card animate-fadeInUp delay-4">
+                    <div class="step-number">4</div>
+                    <div class="card-body">
+                        <h3 class="step-title">Sell</h3>
+                        <p class="step-text">Start selling your handcrafted products to customers worldwide. We handle payments, customer service, and shipping logistics so you can focus on creating.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="mb-5">
+        <h2 class="section-title">What Our Artisans Say</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card testimonial-card animate-fadeInUp delay-1">
+                    <div class="card-body">
+                        <p class="testimonial-text">Joining VarnikaKart has transformed my small jewelry business. I now have customers from across India and even internationally. The platform is easy to use and the team is incredibly supportive.</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Priya Sharma">
+                            </div>
+                            <div class="author-info">
+                                <div class="author-name">Priya Sharma</div>
+                                <div class="author-role">Jewelry Designer, Mumbai</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card testimonial-card animate-fadeInUp delay-2">
+                    <div class="card-body">
+                        <p class="testimonial-text">As a traditional woodworker, I was skeptical about selling online. VarnikaKart has proven me wrong. Their focus on quality and craftsmanship has helped me find the right customers who appreciate my work.</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Rajesh Kumar">
+                            </div>
+                            <div class="author-info">
+                                <div class="author-name">Rajesh Kumar</div>
+                                <div class="author-role">Wooden Craftsman, Jaipur</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card testimonial-card animate-fadeInUp delay-3">
+                    <div class="card-body">
+                        <p class="testimonial-text">The exposure I've gained through VarnikaKart has been incredible. My textile art is now reaching homes across the country, and I've been able to quit my day job to focus on my passion full-time.</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Ananya Patel">
+                            </div>
+                            <div class="author-info">
+                                <div class="author-name">Ananya Patel</div>
+                                <div class="author-role">Textile Artist, Ahmedabad</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Form Section -->
+    <section class="mb-5" id="application-form">
+        <h2 class="section-title">Apply to Become an Artist</h2>
+        <div class="card application-form animate-fadeInUp">
+            <div class="card-header">
+                <i class="fas fa-paint-brush me-2"></i>Artist Application Form
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label for="fullName" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="fullName" placeholder="Your full name">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" placeholder="Your email address">
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" placeholder="Your phone number">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="location" class="form-label">Location</label>
+                            <input type="text" class="form-control" id="location" placeholder="City, State">
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="craftType" class="form-label">Craft Type</label>
+                        <select class="form-select" id="craftType">
+                            <option selected disabled>Select your primary craft</option>
+                            <option value="jewelry">Jewelry</option>
+                            <option value="pottery">Pottery</option>
+                            <option value="textiles">Textiles</option>
+                            <option value="woodworking">Woodworking</option>
+                            <option value="painting">Painting</option>
+                            <option value="sculpture">Sculpture</option>
+                            <option value="paper_crafts">Paper Crafts</option>
+                            <option value="glass_art">Glass Art</option>
+                            <option value="metal_work">Metal Work</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="experience" class="form-label">Years of Experience</label>
+                        <select class="form-select" id="experience">
+                            <option selected disabled>Select your experience level</option>
+                            <option value="less_than_1">Less than 1 year</option>
+                            <option value="1_to_3">1-3 years</option>
+                            <option value="3_to_5">3-5 years</option>
+                            <option value="5_to_10">5-10 years</option>
+                            <option value="more_than_10">More than 10 years</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="bio" class="form-label">Artist Bio</label>
+                        <textarea class="form-control" id="bio" rows="4" placeholder="Tell us about yourself, your craft, and your artistic journey"></textarea>
+                        <div class="form-text">This will be displayed on your artist profile if approved.</div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="portfolio" class="form-label">Portfolio Link (Optional)</label>
+                        <input type="url" class="form-control" id="portfolio" placeholder="Link to your website, Instagram, or online portfolio">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Upload Product Images</label>
+                        <input type="file" class="form-control" multiple accept="image/*">
+                        <div class="form-text">Upload 3-5 high-quality images of your best work. Maximum 5MB per image.</div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="termsCheck">
+                            <label class="form-check-label" for="termsCheck">
+                                I agree to the <a href="#">Terms and Conditions</a> and <a href="#">Seller Guidelines</a>
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane me-2"></i>Submit Application
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="mb-5">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <div class="card faq-card animate-fadeInUp">
+            <div class="card-header">
+                <i class="fas fa-question-circle me-2"></i>Common Questions
+            </div>
+            <div class="card-body">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                How long does the application process take?
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Our team typically reviews applications within 7-10 business days. You'll receive an email notification once your application has been reviewed, regardless of the outcome.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                What are the fees for selling on VarnikaKart?
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                VarnikaKart charges a 15% commission on each sale, which covers payment processing, customer service, and marketing. There are no monthly fees or listing fees.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                How do I handle shipping and returns?
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                You're responsible for shipping your products to customers. We provide shipping label generation and tracking integration. Our standard return policy is 7 days, but you can set specific policies for fragile or custom items.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingFour">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                When and how do I get paid?
+                            </button>
+                        </h2>
+                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Payments are processed every 15 days for all completed orders (after the return period). We offer direct bank transfers to your registered account. You can track all your earnings in real-time through your seller dashboard.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingFive">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                What kind of support do you offer to artists?
+                            </button>
+                        </h2>
+                        <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                We provide dedicated seller support via email and phone, educational resources on product photography and descriptions, marketing opportunities, and a private community forum to connect with other artisans.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <div class="text-center mb-5 animate-fadeInUp">
+        <h2 class="mb-4">Ready to Share Your Craft with the World?</h2>
+        <a href="#application-form" class="btn btn-primary btn-lg px-5 py-3">
+            <i class="fas fa-paint-brush me-2"></i>Apply Now
+        </a>
+    </div>
+</div>
+{% endblock %}

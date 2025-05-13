@@ -1,4 +1,4 @@
-{% extends "admin/custom_base.html" %}
+{% extends "admin/super_base.html" %}
 {% load i18n static %}
 
 {% block title %}Dashboard | VarnikaKart Admin{% endblock %}
@@ -79,7 +79,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Total Orders -->
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card stat-card info h-100">
@@ -102,7 +102,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Total Products -->
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card stat-card success h-100">
@@ -125,7 +125,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Total Customers -->
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card stat-card warning h-100">
@@ -192,7 +192,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Pie Chart -->
     <div class="col-xl-4 col-lg-5 mb-4">
         <div class="card slide-in-right">
@@ -280,7 +280,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Order Status -->
     <div class="col-xl-4 col-lg-5 mb-4">
         <div class="card slide-in-right">
@@ -382,7 +382,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Recent Reviews -->
     <div class="col-xl-6 mb-4">
         <div class="card slide-in-right">
@@ -496,10 +496,10 @@
 <script>
     // Sales data for chart
     const salesData = {{ monthly_sales_data|safe }};
-    
+
     // Revenue sources data for chart
     const revenueSourcesData = {{ revenue_sources_data|safe }};
-    
+
     // Orders status data for chart
     const ordersStatusData = [
         {{ pending_orders_count }},
@@ -508,5 +508,27 @@
         {{ delivered_orders_count }},
         {{ cancelled_orders_count }}
     ];
+
+    // Override chart colors to use our theme color
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set default colors for all charts
+        if (typeof Chart !== 'undefined') {
+            Chart.defaults.color = '#666';
+            Chart.defaults.borderColor = 'rgba(211, 95, 95, 0.1)';
+
+            // Set theme colors for all charts
+            window.themeColors = {
+                primary: '#d35f5f',
+                primaryLight: '#e07f7f',
+                primaryDark: '#b54b4b',
+                secondary: '#6a9b96',
+                accent: '#e6b33e',
+                success: '#38b000',
+                info: '#48cae4',
+                warning: '#ffaa00',
+                danger: '#d00000'
+            };
+        }
+    });
 </script>
 {% endblock %}

@@ -1,24 +1,37 @@
 // VarnikaKart Enhanced Admin Panel JavaScript
 
+// Define theme colors
+const themeColors = {
+    primary: '#d35f5f',
+    primaryLight: '#e07f7f',
+    primaryDark: '#b54b4b',
+    secondary: '#6a9b96',
+    accent: '#e6b33e',
+    success: '#38b000',
+    info: '#48cae4',
+    warning: '#ffaa00',
+    danger: '#d00000'
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Quick Actions Menu
     initQuickActions();
-    
+
     // Initialize Enhanced Charts
     initEnhancedCharts();
-    
+
     // Initialize Dark Mode Toggle
     initDarkMode();
-    
+
     // Initialize Enhanced Form Validation
     initFormValidation();
-    
+
     // Initialize Enhanced DataTables
     initEnhancedDataTables();
-    
+
     // Initialize Tooltips and Popovers
     initTooltipsAndPopovers();
-    
+
     // Initialize Notifications
     initNotifications();
 });
@@ -56,17 +69,17 @@ function initQuickActions() {
                 </div>
             </div>
         `;
-        
+
         document.body.insertAdjacentHTML('beforeend', quickActionsHTML);
-        
+
         // Toggle quick actions menu
         const quickActionsToggle = document.querySelector('.quick-actions-toggle');
         const quickActionsMenu = document.querySelector('.quick-actions-menu');
-        
+
         quickActionsToggle.addEventListener('click', function() {
             quickActionsMenu.classList.toggle('show');
         });
-        
+
         // Close quick actions menu when clicking outside
         document.addEventListener('click', function(event) {
             if (!event.target.closest('.quick-actions')) {
@@ -85,19 +98,19 @@ function initEnhancedCharts() {
         if (Chart.getChart(salesChartCanvas)) {
             Chart.getChart(salesChartCanvas).destroy();
         }
-        
+
         // Get sales data
-        const chartData = typeof salesData !== 'undefined' ? 
-            (Array.isArray(salesData) ? 
-                salesData.map(item => item.total || item) : 
-                salesData) : 
+        const chartData = typeof salesData !== 'undefined' ?
+            (Array.isArray(salesData) ?
+                salesData.map(item => item.total || item) :
+                salesData) :
             [65, 59, 80, 81, 56, 55, 40, 60, 75, 85, 90, 100];
-        
+
         // Get labels
-        const chartLabels = typeof salesData !== 'undefined' && Array.isArray(salesData) && salesData[0].month ? 
-            salesData.map(item => item.month) : 
+        const chartLabels = typeof salesData !== 'undefined' && Array.isArray(salesData) && salesData[0].month ?
+            salesData.map(item => item.month) :
             ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        
+
         const salesChart = new Chart(salesChartCanvas, {
             type: 'line',
             data: {
@@ -193,7 +206,7 @@ function initEnhancedCharts() {
             }
         });
     }
-    
+
     // Order Status Chart with enhanced styling
     const orderStatusChartCanvas = document.getElementById('orderStatusChart');
     if (orderStatusChartCanvas && typeof Chart !== 'undefined') {
@@ -201,7 +214,7 @@ function initEnhancedCharts() {
         if (Chart.getChart(orderStatusChartCanvas)) {
             Chart.getChart(orderStatusChartCanvas).destroy();
         }
-        
+
         const orderStatusChart = new Chart(orderStatusChartCanvas, {
             type: 'doughnut',
             data: {
@@ -261,13 +274,13 @@ function initDarkMode() {
                 <i class="fas fa-moon"></i>
             </div>
         `;
-        
+
         topbarNav.insertAdjacentHTML('beforeend', darkModeToggleHTML);
-        
+
         // Toggle dark mode
         const darkModeToggle = document.querySelector('.dark-mode-toggle');
         const body = document.body;
-        
+
         // Check localStorage for dark mode
         const darkMode = localStorage.getItem('darkMode') === 'true';
         if (darkMode) {
@@ -275,13 +288,13 @@ function initDarkMode() {
             darkModeToggle.querySelector('i').classList.remove('fa-moon');
             darkModeToggle.querySelector('i').classList.add('fa-sun');
         }
-        
+
         darkModeToggle.addEventListener('click', function() {
             body.classList.toggle('dark-mode');
-            
+
             // Save state to localStorage
             localStorage.setItem('darkMode', body.classList.contains('dark-mode'));
-            
+
             // Update icon
             const icon = darkModeToggle.querySelector('i');
             if (body.classList.contains('dark-mode')) {
@@ -298,48 +311,48 @@ function initDarkMode() {
 // Enhanced Form Validation
 function initFormValidation() {
     const forms = document.querySelectorAll('form:not(.no-validation)');
-    
+
     forms.forEach(form => {
         const inputs = form.querySelectorAll('input, select, textarea');
-        
+
         inputs.forEach(input => {
             // Add validation classes
             if (input.required && !input.classList.contains('form-control-required')) {
                 input.classList.add('form-control-required');
-                
+
                 // Add required indicator to label
                 const label = form.querySelector(`label[for="${input.id}"]`);
                 if (label && !label.querySelector('.required-indicator')) {
                     label.innerHTML += ' <span class="required-indicator text-danger">*</span>';
                 }
             }
-            
+
             // Add validation event listeners
             input.addEventListener('blur', function() {
                 validateInput(input);
             });
-            
+
             input.addEventListener('input', function() {
                 if (input.classList.contains('is-invalid')) {
                     validateInput(input);
                 }
             });
         });
-        
+
         // Form submit validation
         form.addEventListener('submit', function(event) {
             let isValid = true;
-            
+
             inputs.forEach(input => {
                 if (!validateInput(input)) {
                     isValid = false;
                 }
             });
-            
+
             if (!isValid) {
                 event.preventDefault();
                 event.stopPropagation();
-                
+
                 // Scroll to first invalid input
                 const firstInvalid = form.querySelector('.is-invalid');
                 if (firstInvalid) {
@@ -356,23 +369,23 @@ function validateInput(input) {
     if (input.type === 'hidden' || input.type === 'submit' || input.type === 'button') {
         return true;
     }
-    
+
     let isValid = true;
     const errorMessage = input.dataset.errorMessage || 'This field is required';
-    
+
     // Remove existing feedback
     const existingFeedback = input.nextElementSibling;
     if (existingFeedback && existingFeedback.classList.contains('invalid-feedback')) {
         existingFeedback.remove();
     }
-    
+
     // Check validity
     if (input.required && !input.value.trim()) {
         isValid = false;
     } else if (input.type === 'email' && input.value.trim() && !isValidEmail(input.value)) {
         isValid = false;
     }
-    
+
     // Update classes
     if (isValid) {
         input.classList.remove('is-invalid');
@@ -380,14 +393,14 @@ function validateInput(input) {
     } else {
         input.classList.remove('is-valid');
         input.classList.add('is-invalid');
-        
+
         // Add feedback message
         const feedback = document.createElement('div');
         feedback.className = 'invalid-feedback';
         feedback.textContent = errorMessage;
         input.insertAdjacentElement('afterend', feedback);
     }
-    
+
     return isValid;
 }
 
@@ -429,7 +442,7 @@ function initTooltipsAndPopovers() {
             boundary: document.body
         });
     });
-    
+
     const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
     popoverTriggerList.map(function (popoverTriggerEl) {
         return new bootstrap.Popover(popoverTriggerEl, {
@@ -451,13 +464,13 @@ function initNotifications() {
 function showNotification(message, type = 'info', duration = 5000) {
     const toastContainer = document.querySelector('.toast-container');
     if (!toastContainer) return;
-    
+
     const toast = document.createElement('div');
     toast.className = `toast toast-${type} fade-in`;
     toast.setAttribute('role', 'alert');
     toast.setAttribute('aria-live', 'assertive');
     toast.setAttribute('aria-atomic', 'true');
-    
+
     toast.innerHTML = `
         <div class="toast-header">
             <i class="fas fa-${type === 'info' ? 'info-circle' : type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'times-circle'} me-2"></i>
@@ -469,15 +482,15 @@ function showNotification(message, type = 'info', duration = 5000) {
             ${message}
         </div>
     `;
-    
+
     toastContainer.appendChild(toast);
-    
+
     const bsToast = new bootstrap.Toast(toast, {
         autohide: true,
         delay: duration
     });
     bsToast.show();
-    
+
     // Remove toast after it's hidden
     toast.addEventListener('hidden.bs.toast', function() {
         toast.remove();

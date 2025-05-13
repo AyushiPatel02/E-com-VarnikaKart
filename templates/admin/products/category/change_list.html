@@ -1,27 +1,26 @@
-{% extends "admin/custom_base.html" %}
+{% extends "admin/super_base.html" %}
 {% load i18n static admin_urls %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'admin/css/category_list.css' %}">
+    <!-- All styles are now in admin_pages.css -->
 {% endblock %}
 
 {% block title %}Categories | VarnikaKart Admin{% endblock %}
+{% block page_title %}Categories{% endblock %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item active" aria-current="page">Categories</li>
+{% endblock %}
 
 {% block content %}
 <div class="page-header">
     <div>
-        <h1 class="page-title">Categories</h1>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Categories</li>
-            </ol>
-        </nav>
-    </div>
-    <div>
-        <a href="{% url 'admin:products_category_add' %}" class="btn btn-primary">
-            <i class="fas fa-plus me-1"></i> Add Category
-        </a>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Categories</h2>
+            <a href="{% url 'admin:products_category_add' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i> Add Category
+            </a>
+        </div>
     </div>
 </div>
 

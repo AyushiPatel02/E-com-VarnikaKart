@@ -1,7 +1,14 @@
-{% extends "admin/custom_base.html" %}
+{% extends "admin/super_base.html" %}
 {% load i18n admin_urls static admin_modify %}
 
 {% block title %}{% if add %}Add Product{% else %}Edit Product: {{ original.name }}{% endif %} | VarnikaKart Admin{% endblock %}
+
+{% block page_title %}{% if add %}Add Product{% else %}Edit Product: {{ original.name }}{% endif %}{% endblock %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item"><a href="{% url 'admin:products_product_changelist' %}">Products</a></li>
+<li class="breadcrumb-item active" aria-current="page">{% if add %}Add{% else %}Edit{% endif %} Product</li>
+{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -13,23 +20,23 @@
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         margin-bottom: 10px;
     }
-    
+
     .image-preview-container {
         display: flex;
         flex-wrap: wrap;
         gap: 15px;
         margin-bottom: 20px;
     }
-    
+
     .image-preview-item {
         position: relative;
         transition: all 0.3s ease;
     }
-    
+
     .image-preview-item:hover {
         transform: scale(1.05);
     }
-    
+
     .image-actions {
         position: absolute;
         top: 5px;
@@ -37,7 +44,7 @@
         display: flex;
         gap: 5px;
     }
-    
+
     .image-action-btn {
         width: 30px;
         height: 30px;
@@ -49,12 +56,12 @@
         cursor: pointer;
         transition: all 0.2s ease;
     }
-    
+
     .image-action-btn:hover {
         background: var(--primary-color);
         color: white;
     }
-    
+
     .primary-badge {
         position: absolute;
         bottom: 15px;
@@ -65,14 +72,14 @@
         font-size: 0.7rem;
         border-radius: 0 4px 4px 0;
     }
-    
+
     .product-stats {
         display: flex;
         flex-wrap: wrap;
         gap: 15px;
         margin-bottom: 20px;
     }
-    
+
     .stat-card {
         flex: 1;
         min-width: 150px;
@@ -82,46 +89,46 @@
         box-shadow: var(--box-shadow-sm);
         text-align: center;
     }
-    
+
     .stat-value {
         font-size: 1.8rem;
         font-weight: 700;
         margin-bottom: 5px;
     }
-    
+
     .stat-label {
         color: var(--secondary-color);
         font-size: 0.9rem;
     }
-    
+
     .variation-table {
         width: 100%;
         margin-bottom: 20px;
     }
-    
+
     .variation-table th {
         background-color: var(--light-color);
         padding: 10px;
     }
-    
+
     .variation-table td {
         padding: 10px;
         border-bottom: 1px solid rgba(0,0,0,0.05);
     }
-    
+
     .tab-content {
         padding: 20px 0;
     }
-    
+
     .nav-tabs .nav-link {
         font-weight: 500;
     }
-    
+
     .nav-tabs .nav-link.active {
         border-bottom: 2px solid var(--primary-color);
         color: var(--primary-color);
     }
-    
+
     .stock-indicator {
         width: 100%;
         height: 6px;
@@ -130,20 +137,20 @@
         overflow: hidden;
         margin-top: 5px;
     }
-    
+
     .stock-level {
         height: 100%;
         border-radius: 3px;
     }
-    
+
     .stock-low {
         background-color: var(--danger-color);
     }
-    
+
     .stock-medium {
         background-color: var(--warning-color);
     }
-    
+
     .stock-high {
         background-color: var(--success-color);
     }
@@ -153,21 +160,13 @@
 {% block content %}
 <div class="page-header">
     <div>
-        <h1 class="page-title">{% if add %}Add Product{% else %}Edit Product: {{ original.name }}{% endif %}</h1>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'admin:products_product_changelist' %}">Products</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{% if add %}Add{% else %}Edit{% endif %} Product</li>
-            </ol>
-        </nav>
-    </div>
-    <div>
-        {% if not add %}
-        <div class="btn-group">
-            <a href="{% url 'products:product_detail' original.slug %}" class="btn btn-info" target="_blank">
-                <i class="fas fa-eye me-1"></i> View on Site
-            </a>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">{% if add %}Add Product{% else %}Edit Product: {{ original.name }}{% endif %}</h2>
+            {% if not add %}
+            <div class="btn-group">
+                <a href="{% url 'products:product_detail' original.slug %}" class="btn btn-info" target="_blank">
+                    <i class="fas fa-eye me-1"></i> View on Site
+                </a>
             <a href="{% url 'admin:products_product_delete' original.pk %}" class="btn btn-danger delete-confirm">
                 <i class="fas fa-trash me-1"></i> Delete
             </a>
@@ -273,7 +272,7 @@
                                 {% endif %}
                             </div>
                         </div>
-                        
+
                         <div class="tab-pane fade" id="pricing" role="tabpanel" aria-labelledby="pricing-tab">
                             <div class="row">
                                 <div class="col-md-4 mb-3">
@@ -305,7 +304,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             {% if not add and original.discount_price %}
                             <div class="alert alert-success">
                                 <div class="d-flex align-items-center">
@@ -320,7 +319,7 @@
                             </div>
                             {% endif %}
                         </div>
-                        
+
                         <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
                             {% if not add %}
                             <div class="mb-4">
@@ -349,7 +348,7 @@
                                 </div>
                             </div>
                             {% endif %}
-                            
+
                             <h5 class="mb-3">Upload New Images</h5>
                             <div class="row">
                                 <div class="col-12">
@@ -384,11 +383,11 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="tab-pane fade" id="variations" role="tabpanel" aria-labelledby="variations-tab">
                             <h5 class="mb-3">Product Variations</h5>
                             <p class="text-muted mb-4">Add variations like size, color, material, etc.</p>
-                            
+
                             {{ inlines.1.formset.management_form }}
                             <div class="table-responsive">
                                 <table class="variation-table">
@@ -418,11 +417,11 @@
                                 </table>
                             </div>
                         </div>
-                        
+
                         {% if not add %}
                         <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
                             <h5 class="mb-3">Customer Reviews</h5>
-                            
+
                             {% if original.reviews.exists %}
                                 <div class="table-responsive">
                                     <table class="table">
@@ -462,7 +461,7 @@
                         </div>
                         {% endif %}
                     </div>
-                    
+
                     <div class="mt-4 d-flex justify-content-between">
                         <div>
                             <button type="submit" class="btn btn-primary">
@@ -484,7 +483,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-lg-4">
         {% if not add %}
         <div class="card mb-4 slide-in-right">
@@ -509,7 +508,7 @@
                         <div class="stat-label">Variations</div>
                     </div>
                 </div>
-                
+
                 <div class="d-flex align-items-center mb-3">
                     <div class="flex-grow-1">
                         <h6 class="mb-0">Created</h6>
@@ -518,7 +517,7 @@
                         <span class="badge bg-light text-dark">{{ original.created_at|date:"F d, Y" }}</span>
                     </div>
                 </div>
-                
+
                 <div class="d-flex align-items-center mb-3">
                     <div class="flex-grow-1">
                         <h6 class="mb-0">Last Updated</h6>
@@ -527,7 +526,7 @@
                         <span class="badge bg-light text-dark">{{ original.updated_at|date:"F d, Y" }}</span>
                     </div>
                 </div>
-                
+
                 <div class="d-flex align-items-center">
                     <div class="flex-grow-1">
                         <h6 class="mb-0">Category</h6>
@@ -540,7 +539,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="card mb-4 slide-in-right">
             <div class="card-header">
                 <h5>Related Orders</h5>
@@ -550,7 +549,7 @@
                 <div class="alert alert-info">
                     <i class="fas fa-info-circle me-2"></i> Order information will be displayed here.
                 </div>
-                
+
                 <a href="#" class="btn btn-sm btn-outline-primary w-100">
                     <i class="fas fa-list me-1"></i> View All Related Orders
                 </a>
@@ -579,7 +578,7 @@
                 ]
             });
         }
-        
+
         // Initialize Select2 for dropdowns
         if ($.fn.select2) {
             $('#id_category').select2({
@@ -587,11 +586,11 @@
                 placeholder: 'Select a category'
             });
         }
-        
+
         // Auto-generate slug from name
         const nameInput = document.getElementById('id_name');
         const slugInput = document.getElementById('id_slug');
-        
+
         if (nameInput && slugInput) {
             nameInput.addEventListener('keyup', function() {
                 if (!slugInput.dataset.manuallyChanged) {
@@ -602,12 +601,12 @@
                         .replace(/^-+|-+$/g, '');
                 }
             });
-            
+
             slugInput.addEventListener('change', function() {
                 slugInput.dataset.manuallyChanged = 'true';
             });
         }
-        
+
         // Handle primary image selection
         const primaryCheckboxes = document.querySelectorAll('input[name$="-is_primary"]');
         primaryCheckboxes.forEach(checkbox => {

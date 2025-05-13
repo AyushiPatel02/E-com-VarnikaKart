@@ -30,18 +30,10 @@
     <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
-    <!-- Custom Admin CSS -->
-    <link rel="stylesheet" href="{% static 'admin/css/custom_admin.css' %}">
-    <link rel="stylesheet" href="{% static 'admin/css/simple-footer.css' %}">
-    <link rel="stylesheet" href="{% static 'admin/css/user-profile-section.css' %}">
-
-    <!-- Enhanced Admin Styling -->
-    <link rel="stylesheet" href="{% static 'admin/css/enhanced_admin.css' %}">
-    <link rel="stylesheet" href="{% static 'admin/css/category_management.css' %}">
-    <link rel="stylesheet" href="{% static 'admin/css/product_management.css' %}">
-
-    <!-- Admin Sidebar Override - This must be loaded last -->
-    <link rel="stylesheet" href="{% static 'admin/css/admin_sidebar_override.css' %}">
+    <!-- Consolidated Admin CSS - Only 3 files -->
+    <link rel="stylesheet" href="{% static 'admin/css/admin_base.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/css/admin_components.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/css/admin_pages.css' %}">
 
     {% block extra_css %}{% endblock %}
 </head>
@@ -482,7 +474,7 @@
     <!-- Custom Admin JS -->
     <script src="{% static 'admin/js/custom_admin.js' %}"></script>
 
-    <!-- Enhanced Admin JS -->
+    <!-- Admin JS -->
     <script src="{% static 'admin/js/enhanced_admin.js' %}"></script>
     <script src="{% static 'admin/js/category_admin.js' %}"></script>
 

@@ -1,7 +1,13 @@
-{% extends "admin/custom_base.html" %}
+{% extends "admin/super_base.html" %}
 {% load i18n static admin_urls admin_list %}
 
 {% block title %}Products | VarnikaKart Admin{% endblock %}
+
+{% block page_title %}Products{% endblock %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item active" aria-current="page">Products</li>
+{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -404,36 +410,32 @@
 {% block content %}
 <div class="page-header">
     <div>
-        <h1 class="page-title">Products</h1>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Products</li>
-            </ol>
-        </nav>
-    </div>
-    <div>
-        <div class="btn-group">
-            <a href="{% url 'admin:products_product_add' %}" class="btn btn-primary">
-                <i class="fas fa-plus me-1"></i> Add Product
-            </a>
-            <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="visually-hidden">Toggle Dropdown</span>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{% url 'admin:products_product_add' %}"><i class="fas fa-plus me-2"></i>Add Single Product</a></li>
-                <li><a class="dropdown-item" href="#"><i class="fas fa-file-import me-2"></i>Import Products</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Product Settings</a></li>
-            </ul>
-        </div>
-        <div class="btn-group ms-2 view-toggle">
-            <button type="button" class="list-view-btn active" title="List View">
-                <i class="fas fa-list"></i>
-            </button>
-            <button type="button" class="grid-view-btn" title="Grid View">
-                <i class="fas fa-th-large"></i>
-            </button>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Products</h2>
+            <div class="d-flex">
+                <div class="btn-group">
+                    <a href="{% url 'admin:products_product_add' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i> Add Product
+                    </a>
+                    <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'admin:products_product_add' %}"><i class="fas fa-plus me-2"></i>Add Single Product</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-file-import me-2"></i>Import Products</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Product Settings</a></li>
+                    </ul>
+                </div>
+                <div class="btn-group ms-2 view-toggle">
+                    <button type="button" class="list-view-btn active" title="List View">
+                        <i class="fas fa-list"></i>
+                    </button>
+                    <button type="button" class="grid-view-btn" title="Grid View">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

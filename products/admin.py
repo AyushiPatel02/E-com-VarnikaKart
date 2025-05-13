@@ -197,7 +197,7 @@ class ProductAdmin(admin.ModelAdmin):
 
     class Media:
         css = {
-            'all': ('admin/css/custom_admin.css',)
+            'all': ('admin/css/admin_base.css', 'admin/css/admin_components.css', 'admin/css/admin_pages.css',)
         }
         js = ('admin/js/custom_admin.js',)
 

@@ -3,13 +3,26 @@
  * This file contains JavaScript functions to enhance the admin interface
  */
 
+// Define theme colors
+const themeColors = {
+    primary: '#d35f5f',
+    primaryLight: '#e07f7f',
+    primaryDark: '#b54b4b',
+    secondary: '#6a9b96',
+    accent: '#e6b33e',
+    success: '#38b000',
+    info: '#48cae4',
+    warning: '#ffaa00',
+    danger: '#d00000'
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize all components
     initializeComponents();
-    
+
     // Add event listeners
     addEventListeners();
-    
+
     // Initialize animations
     initializeAnimations();
 });
@@ -20,37 +33,37 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeComponents() {
     // Initialize tooltips
     initializeTooltips();
-    
+
     // Initialize popovers
     initializePopovers();
-    
+
     // Initialize image previews
     initializeImagePreviews();
-    
+
     // Initialize character counters
     initializeCharacterCounters();
-    
+
     // Initialize slug generators
     initializeSlugGenerators();
-    
+
     // Initialize status toggles
     initializeStatusToggles();
-    
+
     // Initialize bulk actions
     initializeBulkActions();
-    
+
     // Initialize search functionality
     initializeSearch();
-    
+
     // Initialize filters
     initializeFilters();
-    
+
     // Initialize sortable tables
     initializeSortableTables();
-    
+
     // Initialize responsive tables
     initializeResponsiveTables();
-    
+
     // Initialize charts if available
     if (typeof Chart !== 'undefined') {
         initializeCharts();
@@ -67,7 +80,7 @@ function addEventListeners() {
         form.addEventListener('submit', function(e) {
             const requiredFields = form.querySelectorAll('[required]');
             let isValid = true;
-            
+
             requiredFields.forEach(field => {
                 if (!field.value.trim()) {
                     isValid = false;
@@ -76,14 +89,14 @@ function addEventListeners() {
                     field.classList.remove('is-invalid');
                 }
             });
-            
+
             if (!isValid) {
                 e.preventDefault();
                 showNotification('Please fill in all required fields.', 'warning');
             }
         });
     });
-    
+
     // Add event listener for delete confirmations
     const deleteButtons = document.querySelectorAll('.delete-confirm');
     deleteButtons.forEach(button => {
@@ -93,14 +106,14 @@ function addEventListeners() {
             }
         });
     });
-    
+
     // Add event listener for card hover effects
     const cards = document.querySelectorAll('.card');
     cards.forEach(card => {
         card.addEventListener('mouseenter', function() {
             this.classList.add('card-hover');
         });
-        
+
         card.addEventListener('mouseleave', function() {
             this.classList.remove('card-hover');
         });
@@ -153,7 +166,7 @@ function initializeImagePreviews() {
             previewContainer.className = 'image-preview-container mt-2';
             input.parentNode.insertBefore(previewContainer, input.nextSibling);
         }
-        
+
         // Create preview image if it doesn't exist
         let previewImage = previewContainer.querySelector('.image-preview');
         if (!previewImage) {
@@ -165,7 +178,7 @@ function initializeImagePreviews() {
             previewImage.style.display = 'none';
             previewContainer.appendChild(previewImage);
         }
-        
+
         // Add event listener for file selection
         input.addEventListener('change', function() {
             if (this.files && this.files[0]) {
@@ -179,7 +192,7 @@ function initializeImagePreviews() {
                 previewImage.style.display = 'none';
             }
         });
-        
+
         // Show existing image if available
         const existingImage = input.closest('.form-group').querySelector('a img');
         if (existingImage && existingImage.src) {
@@ -203,7 +216,7 @@ function initializeCharacterCounters() {
             counter.innerHTML = `<small>${input.value.length} characters</small>`;
             input.parentNode.insertBefore(counter, input.nextSibling);
         }
-        
+
         // Add event listener for input
         input.addEventListener('input', function() {
             const count = this.value.length;
@@ -247,7 +260,7 @@ function showNotification(message, type = 'info') {
         ${message}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     `;
-    
+
     // Add notification to the page
     const container = document.querySelector('.notifications-container');
     if (container) {
@@ -263,7 +276,7 @@ function showNotification(message, type = 'info') {
         document.body.appendChild(newContainer);
         newContainer.appendChild(notification);
     }
-    
+
     // Auto-dismiss after 5 seconds
     setTimeout(() => {
         notification.classList.remove('show');

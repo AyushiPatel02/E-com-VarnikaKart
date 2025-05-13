@@ -1,0 +1,447 @@
+{% extends 'base.html' %}
+{% load product_tags %}
+
+{% block title %}Order History - VarnikaKart{% endblock %}
+
+{% block extra_css %}
+<style>
+    .order-history-container {
+        padding: 50px 0;
+    }
+
+    .page-title {
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    .page-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(135deg, #d35f5f 0%, #b54b4b 100%);
+    }
+
+    .order-card {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border: none;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .order-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-header {
+        background-color: #f8f9fa;
+        padding: 15px 20px;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .order-number {
+        font-weight: 700;
+        color: #495057;
+    }
+
+    .order-date {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .order-status {
+        padding: 5px 10px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    .status-processing {
+        background-color: #cce5ff;
+        color: #004085;
+    }
+
+    .status-shipped {
+        background-color: #d1ecf1;
+        color: #0c5460;
+    }
+
+    .status-delivered {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .status-cancelled {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .order-body {
+        padding: 20px;
+    }
+
+    .order-items {
+        margin-bottom: 20px;
+    }
+
+    .order-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .order-item:last-child {
+        border-bottom: none;
+    }
+
+    .order-item-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-right: 15px;
+    }
+
+    .order-item-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .order-item-details {
+        flex: 1;
+    }
+
+    .order-item-name {
+        font-weight: 600;
+        margin-bottom: 3px;
+        font-size: 0.95rem;
+    }
+
+    .order-item-meta {
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+
+    .order-item-price {
+        font-weight: 600;
+        color: #d35f5f;
+        font-size: 0.95rem;
+    }
+
+    .order-summary {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 0;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .order-total-label {
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .order-total-value {
+        font-weight: 700;
+        color: #d35f5f;
+    }
+
+    .order-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .btn-view-order {
+        background: linear-gradient(135deg, #d35f5f 0%, #b54b4b 100%);
+        border: none;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-view-order:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(211, 95, 95, 0.3);
+    }
+
+    .btn-track-order {
+        background: transparent;
+        border: 2px solid #d35f5f;
+        color: #d35f5f;
+        padding: 8px 15px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-track-order:hover {
+        background-color: #d35f5f;
+        color: white;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 50px 0;
+    }
+
+    .empty-state i {
+        font-size: 5rem;
+        color: #e0e0e0;
+        margin-bottom: 20px;
+    }
+
+    .empty-state h4 {
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: #495057;
+    }
+
+    .empty-state p {
+        color: #6c757d;
+        max-width: 400px;
+        margin: 0 auto 20px;
+    }
+
+    .filter-bar {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 15px 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .filter-label {
+        font-weight: 600;
+        margin-right: 10px;
+        color: #495057;
+    }
+
+    .filter-select {
+        border-radius: 50px;
+        border: 1px solid #e0e0e0;
+        padding: 8px 15px;
+        background-color: white;
+        color: #495057;
+        font-weight: 500;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .filter-select:focus {
+        box-shadow: 0 0 0 0.25rem rgba(211, 95, 95, 0.25);
+        border-color: #d35f5f;
+    }
+
+    .pagination-container {
+        margin-top: 30px;
+    }
+
+    .page-link {
+        color: #d35f5f;
+        border-radius: 50%;
+        margin: 0 5px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .page-link:hover {
+        background-color: #d35f5f;
+        color: white;
+    }
+
+    .page-item.active .page-link {
+        background-color: #d35f5f;
+        border-color: #d35f5f;
+    }
+
+    .page-item.disabled .page-link {
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container order-history-container">
+    <h1 class="page-title">Order History</h1>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar d-flex flex-wrap justify-content-between align-items-center">
+        <div class="d-flex align-items-center mb-3 mb-md-0">
+            <span class="filter-label">Filter by:</span>
+            <select class="form-select filter-select me-3">
+                <option value="all">All Orders</option>
+                <option value="pending">Pending</option>
+                <option value="processing">Processing</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+        </div>
+        <div class="d-flex align-items-center">
+            <span class="filter-label">Sort by:</span>
+            <select class="form-select filter-select">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="price-low">Price: Low to High</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Orders List -->
+    <div class="orders-list">
+        {% for order in orders %}
+        <div class="card order-card">
+            <div class="order-header d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="order-number">Order #{{ order.order_number }}</div>
+                    <div class="order-date">{{ order.created_at|date:"F d, Y" }}</div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <span class="order-status status-{{ order.status|lower }}">{{ order.get_status_display }}</span>
+                </div>
+            </div>
+            <div class="order-body">
+                <div class="order-items">
+                    {% for item in order.items.all|slice:":2" %}
+                    <div class="order-item">
+                        <div class="order-item-image">
+                            {% if item.product.primary_image %}
+                            <img src="{{ item.product.primary_image.url }}" alt="{{ item.product.name }}">
+                            {% else %}
+                            <div class="bg-light text-center py-2">
+                                <i class="fas fa-image text-muted"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="order-item-details">
+                            <div class="order-item-name">{{ item.product.name }}</div>
+                            <div class="order-item-meta">Quantity: {{ item.quantity }}</div>
+                        </div>
+                        <div class="order-item-price">₹{{ item.price }}</div>
+                    </div>
+                    {% endfor %}
+                    {% if order.items.count > 2 %}
+                    <div class="text-center mt-2">
+                        <small class="text-muted">+ {{ order.items.count|add:"-2" }} more items</small>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="order-summary">
+                    <span class="order-total-label">Total Amount:</span>
+                    <span class="order-total-value">₹{{ order.grand_total }}</span>
+                </div>
+                <div class="order-actions">
+                    <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-view-order">
+                        <i class="fas fa-eye me-1"></i> View Details
+                    </a>
+                    <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-track-order">
+                        <i class="fas fa-truck me-1"></i> Track Order
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            <i class="fas fa-shopping-bag"></i>
+            <h4>No orders yet</h4>
+            <p>You haven't placed any orders yet. Start shopping to see your order history here.</p>
+            <a href="{% url 'products:product_list' %}" class="btn btn-view-order">
+                <i class="fas fa-shopping-cart me-2"></i>Shop Now
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if orders.has_other_pages %}
+    <div class="pagination-container">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if orders.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1" aria-label="First">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ orders.previous_page_number }}" aria-label="Previous">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="First">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for i in orders.paginator.page_range %}
+                {% if orders.number == i %}
+                <li class="page-item active">
+                    <a class="page-link" href="#">{{ i }}</a>
+                </li>
+                {% elif i > orders.number|add:"-3" and i < orders.number|add:"3" %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                {% if orders.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ orders.next_page_number }}" aria-label="Next">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ orders.paginator.num_pages }}" aria-label="Last">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Last">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

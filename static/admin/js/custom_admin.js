@@ -15,6 +15,21 @@ document.addEventListener('DOMContentLoaded', function() {
         mainContent.classList.remove('expanded');
     }
 
+    // Initialize Search Functionality
+    initializeSearch();
+
+    // Initialize Notifications
+    initializeNotifications();
+
+    // Initialize Dropdown Animations
+    initializeDropdownAnimations();
+
+    // Initialize Dark Mode
+    initializeDarkMode();
+
+    // Initialize Keyboard Shortcuts
+    initializeKeyboardShortcuts();
+
     // Clear any stored sidebar state
     localStorage.removeItem('sidebarCollapsed');
 
@@ -494,8 +509,134 @@ function initCharts() {
     }
 }
 
+// Initialize Search Functionality
+function initializeSearch() {
+    const searchToggle = document.getElementById('searchToggle');
+    const searchInput = document.querySelector('.search-input');
+    const searchSubmit = document.querySelector('.search-submit');
+    const searchInputContainer = document.querySelector('.search-input-container');
+
+    if (searchToggle && searchInput) {
+        // Focus input when search icon is clicked
+        searchToggle.addEventListener('click', function() {
+            searchInputContainer.style.opacity = '1';
+            searchInputContainer.style.width = window.innerWidth < 576 ? '160px' : window.innerWidth < 768 ? '200px' : '250px';
+            searchInput.focus();
+        });
+
+        // Handle search submission
+        if (searchSubmit) {
+            searchSubmit.addEventListener('click', function() {
+                performSearch(searchInput.value);
+            });
+        }
+
+        // Handle enter key press
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch(searchInput.value);
+            }
+        });
+
+        // Hide search input when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!searchToggle.contains(e.target) &&
+                !searchInputContainer.contains(e.target) &&
+                searchInputContainer.style.opacity === '1') {
+                searchInputContainer.style.opacity = '0';
+                searchInputContainer.style.width = '40px';
+            }
+        });
+    }
+}
+
+// Perform search
+function performSearch(query) {
+    if (query.trim() === '') return;
+
+    // You can customize this to search in different areas
+    // For now, we'll just redirect to the Django admin search
+    window.location.href = '/admin/search/?q=' + encodeURIComponent(query);
+}
+
+// Initialize Dropdown Animations
+function initializeDropdownAnimations() {
+    // Add animation class to all dropdowns
+    const dropdownMenus = document.querySelectorAll('.dropdown-menu');
+
+    if (dropdownMenus.length > 0) {
+        dropdownMenus.forEach(menu => {
+            menu.classList.add('animated--fade-in');
+        });
+    }
+
+    // Add hover effect to dropdown items
+    const dropdownItems = document.querySelectorAll('.dropdown-item');
+
+    if (dropdownItems.length > 0) {
+        dropdownItems.forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                const icon = this.querySelector('i');
+                if (icon) {
+                    icon.style.transform = 'translateX(3px)';
+                    icon.style.color = 'var(--primary-color)';
+                }
+            });
+
+            item.addEventListener('mouseleave', function() {
+                const icon = this.querySelector('i');
+                if (icon) {
+                    icon.style.transform = 'translateX(0)';
+                    icon.style.color = '';
+                }
+            });
+        });
+    }
+}
+
 // Initialize Notifications
 function initNotifications() {
+    // Update notification badge
+    updateNotificationBadge();
+
+    // Add click event to notification items
+    const notificationItems = document.querySelectorAll('.notification-item');
+
+    if (notificationItems.length > 0) {
+        notificationItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // Mark as read when clicked
+                this.classList.remove('unread');
+
+                // Update badge count
+                updateNotificationBadge();
+            });
+        });
+    }
+
+    // Add click event to "Mark all as read" button
+    const markAllReadBtn = document.querySelector('.mark-all-read');
+    if (markAllReadBtn) {
+        markAllReadBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Mark all notifications as read
+            const unreadNotifications = document.querySelectorAll('.notification-item.unread');
+            unreadNotifications.forEach(notification => {
+                notification.classList.remove('unread');
+            });
+
+            // Update badge count
+            updateNotificationBadge();
+
+            // Show success message
+            if (typeof showNotification === 'function') {
+                showNotification('All notifications marked as read', 'success');
+            }
+        });
+    }
+
     // Show notification toast
     const showNotification = (message, type = 'info') => {
         const toast = document.createElement('div');
@@ -545,4 +686,192 @@ function initNotifications() {
 
     // Expose showNotification function globally
     window.showNotification = showNotification;
+}
+
+// Initialize Dark Mode
+function initializeDarkMode() {
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const htmlElement = document.documentElement;
+
+    if (darkModeToggle) {
+        // Check if dark mode is enabled in localStorage
+        const isDarkMode = localStorage.getItem('darkMode') === 'enabled';
+
+        // Set initial state
+        if (isDarkMode) {
+            htmlElement.classList.add('dark-mode');
+            darkModeToggle.checked = true;
+
+            // Update icon and text
+            updateDarkModeUI(true);
+        }
+
+        // Add event listener for toggle
+        darkModeToggle.addEventListener('change', function() {
+            toggleDarkMode(this.checked);
+        });
+    }
+}
+
+// Toggle Dark Mode
+function toggleDarkMode(enable) {
+    const htmlElement = document.documentElement;
+
+    if (enable) {
+        // Enable Dark Mode
+        htmlElement.classList.add('dark-mode');
+        localStorage.setItem('darkMode', 'enabled');
+
+        // Update UI
+        updateDarkModeUI(true);
+
+        // Show notification
+        if (typeof showNotification === 'function') {
+            showNotification('Dark mode enabled', 'info');
+        }
+    } else {
+        // Disable Dark Mode
+        htmlElement.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', 'disabled');
+
+        // Update UI
+        updateDarkModeUI(false);
+
+        // Show notification
+        if (typeof showNotification === 'function') {
+            showNotification('Light mode enabled', 'info');
+        }
+    }
+
+    // Update toggle if it exists
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    if (darkModeToggle) {
+        darkModeToggle.checked = enable;
+    }
+}
+
+// Update Dark Mode UI
+function updateDarkModeUI(isDarkMode) {
+    // Update icon
+    const darkModeIcon = document.querySelector('.theme-switcher i');
+    if (darkModeIcon) {
+        if (isDarkMode) {
+            darkModeIcon.classList.remove('fa-moon');
+            darkModeIcon.classList.add('fa-sun');
+        } else {
+            darkModeIcon.classList.remove('fa-sun');
+            darkModeIcon.classList.add('fa-moon');
+        }
+    }
+
+    // Update text
+    const darkModeText = document.querySelector('.theme-switcher span');
+    if (darkModeText) {
+        if (isDarkMode) {
+            darkModeText.innerHTML = '<i class="fas fa-sun me-2"></i>Light Mode';
+        } else {
+            darkModeText.innerHTML = '<i class="fas fa-moon me-2"></i>Dark Mode';
+        }
+    }
+}
+
+// Initialize Keyboard Shortcuts
+function initializeKeyboardShortcuts() {
+    // Show keyboard shortcuts modal when ? is pressed
+    document.addEventListener('keydown', function(e) {
+        // Don't trigger shortcuts when typing in input fields
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) {
+            return;
+        }
+
+        // Show keyboard shortcuts modal
+        if (e.key === '?') {
+            e.preventDefault();
+            const keyboardShortcutsModal = new bootstrap.Modal(document.getElementById('keyboardShortcutsModal'));
+            keyboardShortcutsModal.show();
+        }
+
+        // Focus search when / is pressed
+        if (e.key === '/') {
+            e.preventDefault();
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                const searchInputContainer = document.querySelector('.search-input-container');
+                if (searchInputContainer) {
+                    searchInputContainer.style.opacity = '1';
+                    searchInputContainer.style.width = window.innerWidth < 576 ? '160px' : window.innerWidth < 768 ? '200px' : '250px';
+                }
+                searchInput.focus();
+            }
+        }
+
+        // Toggle dark mode when Shift+D is pressed
+        if (e.key === 'D' && e.shiftKey) {
+            e.preventDefault();
+            const isDarkMode = document.documentElement.classList.contains('dark-mode');
+            toggleDarkMode(!isDarkMode);
+        }
+
+        // Navigation shortcuts
+        if (e.key === 'g' && !e.shiftKey && !e.ctrlKey && !e.altKey) {
+            // Start navigation sequence
+            const navigationTimeout = setTimeout(() => {
+                window.navigationKeyPressed = false;
+            }, 1000);
+
+            window.navigationKeyPressed = true;
+            window.navigationTimeout = navigationTimeout;
+
+            return;
+        }
+
+        // Handle second key in navigation sequence
+        if (window.navigationKeyPressed) {
+            clearTimeout(window.navigationTimeout);
+            window.navigationKeyPressed = false;
+
+            switch (e.key) {
+                case 'h': // Go to Dashboard
+                    window.location.href = '/admin/';
+                    break;
+                case 'p': // Go to Products
+                    window.location.href = '/admin/products/product/';
+                    break;
+                case 'o': // Go to Orders
+                    window.location.href = '/admin/orders/order/';
+                    break;
+                case 'u': // Go to Users
+                    window.location.href = '/admin/auth/user/';
+                    break;
+                case 's': // Go to Settings
+                    window.location.href = '/admin/site_settings/';
+                    break;
+            }
+        }
+
+        // Create new item with N
+        if (e.key === 'n' && !e.shiftKey && !e.ctrlKey && !e.altKey) {
+            // Check if we're on a list page
+            const addButton = document.querySelector('a.btn-primary[href*="add"]');
+            if (addButton) {
+                e.preventDefault();
+                addButton.click();
+            }
+        }
+    });
+}
+
+// Update notification badge
+function updateNotificationBadge() {
+    const unreadNotifications = document.querySelectorAll('.notification-item.unread');
+    const badge = document.querySelector('.notification-badge');
+
+    if (badge) {
+        if (unreadNotifications.length > 0) {
+            badge.textContent = unreadNotifications.length;
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
 }

@@ -1,0 +1,605 @@
+{% extends 'base.html' %}
+{% load product_tags %}
+
+{% block title %}Featured Artists - VarnikaKart{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Featured Artists Page Styles */
+    .artists-header {
+        background: linear-gradient(135deg, #d35f5f 0%, #b54b4b 100%);
+        padding: 80px 0;
+        color: white;
+        border-radius: 0 0 30px 30px;
+        margin-bottom: 50px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .artists-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://images.unsplash.com/photo-1607082349566-187342175e2f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+        background-size: cover;
+        background-position: center;
+        opacity: 0.1;
+    }
+
+    .section-title {
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(135deg, #d35f5f 0%, #b54b4b 100%);
+    }
+
+    .artist-card {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        border: none;
+        margin-bottom: 30px;
+    }
+
+    .artist-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .artist-cover {
+        height: 150px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+
+    .artist-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 5px solid white;
+        overflow: hidden;
+        position: absolute;
+        bottom: -50px;
+        left: 50%;
+        transform: translateX(-50%);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .artist-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .artist-card .card-body {
+        padding-top: 60px;
+        text-align: center;
+    }
+
+    .artist-name {
+        font-weight: 700;
+        margin-bottom: 5px;
+        font-size: 1.3rem;
+    }
+
+    .artist-specialty {
+        color: #6c757d;
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+    }
+
+    .artist-bio {
+        color: #495057;
+        margin-bottom: 20px;
+        font-size: 0.95rem;
+    }
+
+    .artist-stats {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .stat-item {
+        text-align: center;
+        padding: 0 15px;
+        border-right: 1px solid #e9ecef;
+    }
+
+    .stat-item:last-child {
+        border-right: none;
+    }
+
+    .stat-value {
+        font-weight: 700;
+        color: #d35f5f;
+        font-size: 1.2rem;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
+    .artist-card .btn-primary {
+        background: linear-gradient(135deg, #d35f5f 0%, #b54b4b 100%);
+        border: none;
+        border-radius: 50px;
+        padding: 10px 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .artist-card .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(211, 95, 95, 0.3);
+    }
+
+    .artist-card .btn-outline-primary {
+        background: transparent;
+        border: 2px solid #d35f5f;
+        color: #d35f5f;
+        border-radius: 50px;
+        padding: 10px 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .artist-card .btn-outline-primary:hover {
+        background-color: #d35f5f;
+        color: white;
+    }
+
+    .artist-social {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .social-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6c757d;
+        margin: 0 5px;
+        transition: all 0.3s ease;
+    }
+
+    .social-icon:hover {
+        background-color: #d35f5f;
+        color: white;
+        transform: translateY(-3px);
+    }
+
+    .artist-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: rgba(255, 255, 255, 0.9);
+        color: #d35f5f;
+        font-weight: 700;
+        padding: 5px 10px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .featured-badge {
+        background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+        color: white;
+    }
+
+    .artist-products {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .product-preview {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 0 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .product-preview:hover {
+        transform: scale(1.1);
+    }
+
+    .product-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .more-products {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        background-color: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6c757d;
+        font-weight: 700;
+        margin: 0 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .filter-bar {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .filter-label {
+        font-weight: 600;
+        margin-right: 10px;
+        color: #495057;
+    }
+
+    .filter-select {
+        border-radius: 50px;
+        border: 1px solid #e0e0e0;
+        padding: 8px 15px;
+        background-color: white;
+        color: #495057;
+        font-weight: 500;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .filter-select:focus {
+        box-shadow: 0 0 0 0.25rem rgba(211, 95, 95, 0.25);
+        border-color: #d35f5f;
+    }
+
+    .pagination-container {
+        margin-top: 50px;
+    }
+
+    .page-link {
+        color: #d35f5f;
+        border-radius: 50%;
+        margin: 0 5px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .page-link:hover {
+        background-color: #d35f5f;
+        color: white;
+    }
+
+    .page-item.active .page-link {
+        background-color: #d35f5f;
+        border-color: #d35f5f;
+    }
+
+    .page-item.disabled .page-link {
+        color: #6c757d;
+    }
+
+    .animate-fadeInUp {
+        animation: fadeInUp 0.5s ease-out forwards;
+        opacity: 0;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .delay-1 {
+        animation-delay: 0.1s;
+    }
+
+    .delay-2 {
+        animation-delay: 0.2s;
+    }
+
+    .delay-3 {
+        animation-delay: 0.3s;
+    }
+
+    .delay-4 {
+        animation-delay: 0.4s;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="artists-header text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">Meet Our Featured Artists</h1>
+        <p class="lead mb-4">Discover the talented artisans behind our handcrafted products. Each artist brings their unique perspective, cultural heritage, and exceptional skills to create one-of-a-kind pieces for your home and lifestyle.</p>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form class="d-flex">
+                    <input class="form-control form-control-lg me-2" type="search" placeholder="Search artists..." aria-label="Search">
+                    <button class="btn btn-light btn-lg" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Filter Bar -->
+    <div class="filter-bar d-flex flex-wrap justify-content-between align-items-center">
+        <div class="d-flex align-items-center mb-3 mb-md-0">
+            <span class="filter-label">Filter by:</span>
+            <select class="form-select filter-select me-3">
+                <option value="all">All Artists</option>
+                <option value="featured">Featured Artists</option>
+                <option value="new">New Artists</option>
+                <option value="award-winning">Award-Winning Artists</option>
+            </select>
+        </div>
+        <div class="d-flex align-items-center">
+            <span class="filter-label">Sort by:</span>
+            <select class="form-select filter-select">
+                <option value="popularity">Popularity</option>
+                <option value="newest">Newest First</option>
+                <option value="products">Most Products</option>
+                <option value="rating">Highest Rated</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Featured Artists Section -->
+    <h2 class="section-title">Featured Artists</h2>
+    <div class="row">
+        <!-- Artist 1 -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card artist-card animate-fadeInUp delay-1">
+                <div class="artist-cover" style="background-image: url('https://images.unsplash.com/photo-1555212697-194d092e3b8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');">
+                    <div class="artist-badge featured-badge">Featured</div>
+                    <div class="artist-avatar">
+                        <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Priya Sharma">
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h3 class="artist-name">Priya Sharma</h3>
+                    <div class="artist-specialty">Jewelry Designer</div>
+                    <p class="artist-bio">Award-winning jewelry designer specializing in traditional Indian designs with a modern twist. Each piece tells a unique story of heritage and craftsmanship.</p>
+                    
+                    <div class="artist-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">24</div>
+                            <div class="stat-label">Products</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4.9</div>
+                            <div class="stat-label">Rating</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">5+</div>
+                            <div class="stat-label">Years</div>
+                        </div>
+                    </div>
+                    
+                    <div class="artist-products">
+                        <div class="product-preview">
+                            <img src="https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80" alt="Product">
+                        </div>
+                        <div class="product-preview">
+                            <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80" alt="Product">
+                        </div>
+                        <div class="product-preview">
+                            <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80" alt="Product">
+                        </div>
+                        <div class="more-products">+21</div>
+                    </div>
+                    
+                    <div class="artist-social">
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    </div>
+                    
+                    <a href="#" class="btn btn-primary w-100">View Artist Profile</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Artist 2 -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card artist-card animate-fadeInUp delay-2">
+                <div class="artist-cover" style="background-image: url('https://images.unsplash.com/photo-1513364776144-60967b0f800f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80');">
+                    <div class="artist-badge">New</div>
+                    <div class="artist-avatar">
+                        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Rajesh Kumar">
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h3 class="artist-name">Rajesh Kumar</h3>
+                    <div class="artist-specialty">Wooden Craftsman</div>
+                    <p class="artist-bio">Master woodworker with over 15 years of experience creating intricate wooden home decor items. Specializes in sustainable materials and traditional techniques.</p>
+                    
+                    <div class="artist-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">18</div>
+                            <div class="stat-label">Products</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4.7</div>
+                            <div class="stat-label">Rating</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">15+</div>
+                            <div class="stat-label">Years</div>
+                        </div>
+                    </div>
+                    
+                    <div class="artist-products">
+                        <div class="product-preview">
+                            <img src="https://images.unsplash.com/photo-1503455637927-730bce8583c0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1970&q=80" alt="Product">
+                        </div>
+                        <div class="product-preview">
+                            <img src="https://images.unsplash.com/photo-1604074131665-7a4b13870ab2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Product">
+                        </div>
+                        <div class="product-preview">
+                            <img src="https://images.unsplash.com/photo-1581539250439-c96689b516dd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1965&q=80" alt="Product">
+                        </div>
+                        <div class="more-products">+15</div>
+                    </div>
+                    
+                    <div class="artist-social">
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    </div>
+                    
+                    <a href="#" class="btn btn-primary w-100">View Artist Profile</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Artist 3 -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card artist-card animate-fadeInUp delay-3">
+                <div class="artist-cover" style="background-image: url('https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80');">
+                    <div class="artist-badge featured-badge">Featured</div>
+                    <div class="artist-avatar">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Ananya Patel">
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h3 class="artist-name">Ananya Patel</h3>
+                    <div class="artist-specialty">Textile Artist</div>
+                    <p class="artist-bio">Contemporary textile artist blending traditional Indian embroidery techniques with modern designs. Creates unique home decor and wearable art pieces.</p>
+                    
+                    <div class="artist-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">15</div>
+                            <div class="stat-label">Products</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4.8</div>
+                            <div class="stat-label">Rating</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">8+</div>
+                            <div class="stat-label">Years</div>
+                        </div>
+                    </div>
+                    
+                    <div class="artist-products">
+                        <div class="product-preview">
+                            <img src="https://images.unsplash.com/photo-1528822855841-e8bf3134cdc9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Product">
+                        </div>
+                        <div class="product-preview">
+                            <img src="https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Product">
+                        </div>
+                        <div class="product-preview">
+                            <img src="https://images.unsplash.com/photo-1617142584114-e7c58dc970ea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Product">
+                        </div>
+                        <div class="more-products">+12</div>
+                    </div>
+                    
+                    <div class="artist-social">
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-pinterest-p"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-etsy"></i></a>
+                    </div>
+                    
+                    <a href="#" class="btn btn-primary w-100">View Artist Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- More Artists Section -->
+    <h2 class="section-title mt-5">More Talented Artisans</h2>
+    <div class="row">
+        <!-- More artists would go here -->
+        <!-- For brevity, I'm not including all of them -->
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-container">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="First">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                </li>
+                <li class="page-item active">
+                    <a class="page-link" href="#">1</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="#">2</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="#">3</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Last">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Become an Artist CTA -->
+    <div class="card mt-5 mb-5">
+        <div class="card-body p-5 text-center">
+            <h3 class="mb-3">Are You an Artisan?</h3>
+            <p class="mb-4">Join our community of talented artisans and showcase your handcrafted products to a global audience.</p>
+            <a href="{% url 'products:become_artist' %}" class="btn btn-primary">
+                <i class="fas fa-paint-brush me-2"></i>Become an Artist
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,7 +1,12 @@
-{% extends "admin/custom_base.html" %}
+{% extends "admin/super_base.html" %}
 {% load i18n static admin_urls admin_modify %}
 
 {% block title %}{% if add %}Add User{% else %}Edit User: {{ original.username }}{% endif %} | VarnikaKart Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'admin/css/user_edit.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+{% endblock %}
 
 {% block content %}
 <div class="page-header">
@@ -17,23 +22,77 @@
     </div>
     <div>
         {% if not add %}
-        <div class="btn-group">
-            <a href="{% url 'admin:auth_user_password_change' original.pk %}" class="btn btn-primary">
-                <i class="fas fa-key me-1"></i> Change Password
-            </a>
-            <a href="{% url 'admin:auth_user_delete' original.pk %}" class="btn btn-danger delete-confirm">
-                <i class="fas fa-trash me-1"></i> Delete
-            </a>
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="quickActionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-bolt me-2"></i>Quick Actions
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end animated--fade-in" aria-labelledby="quickActionsDropdown">
+                <li><h6 class="dropdown-header">User Management</h6></li>
+                <li><a class="dropdown-item" href="{% url 'admin:auth_user_password_change' original.pk %}">
+                    <i class="fas fa-key me-2"></i>Change Password
+                </a></li>
+                <li><a class="dropdown-item" href="{% url 'admin:orders_order_changelist' %}?user__id__exact={{ original.id }}">
+                    <i class="fas fa-shopping-cart me-2"></i>View Orders
+                </a></li>
+                <li><a class="dropdown-item" href="#">
+                    <i class="fas fa-envelope me-2"></i>Send Email
+                </a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><h6 class="dropdown-header">Account Status</h6></li>
+                {% if original.is_active %}
+                <li><a class="dropdown-item toggle-status" href="#" data-status="inactive">
+                    <i class="fas fa-ban me-2"></i>Deactivate Account
+                </a></li>
+                {% else %}
+                <li><a class="dropdown-item toggle-status" href="#" data-status="active">
+                    <i class="fas fa-check-circle me-2"></i>Activate Account
+                </a></li>
+                {% endif %}
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger delete-confirm" href="{% url 'admin:auth_user_delete' original.pk %}">
+                    <i class="fas fa-trash me-2"></i>Delete User
+                </a></li>
+            </ul>
         </div>
         {% endif %}
     </div>
 </div>
 
+{% if not add %}
+<!-- Floating Action Button -->
+<div class="floating-action-button" id="floatingActionButton">
+    <button class="btn btn-primary btn-fab" type="button" id="fabButton">
+        <i class="fas fa-plus"></i>
+    </button>
+    <div class="fab-options">
+        <a href="{% url 'admin:auth_user_password_change' original.pk %}" class="fab-option" data-bs-toggle="tooltip" data-bs-placement="left" title="Change Password">
+            <i class="fas fa-key"></i>
+        </a>
+        <a href="{% url 'admin:orders_order_changelist' %}?user__id__exact={{ original.id }}" class="fab-option" data-bs-toggle="tooltip" data-bs-placement="left" title="View Orders">
+            <i class="fas fa-shopping-cart"></i>
+        </a>
+        <a href="#" class="fab-option" data-bs-toggle="tooltip" data-bs-placement="left" title="Send Email">
+            <i class="fas fa-envelope"></i>
+        </a>
+        <a href="#" class="fab-option delete-confirm" data-bs-toggle="tooltip" data-bs-placement="left" title="Delete User">
+            <i class="fas fa-trash"></i>
+        </a>
+    </div>
+</div>
+{% endif %}
+
 <div class="row">
     <div class="{% if not add %}col-lg-8{% else %}col-12{% endif %}">
-        <div class="card mb-4 slide-in-left">
-            <div class="card-header">
-                <h5>{% if add %}Add New User{% else %}Edit User{% endif %}</h5>
+        <div class="form-card mb-4 slide-in-left">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">{% if add %}Add New User{% else %}Edit User{% endif %}</h5>
+                {% if not add %}
+                <div>
+                    <a href="{% url 'admin:auth_user_password_change' original.pk %}" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-key me-1"></i> Change Password
+                    </a>
+                </div>
+                {% endif %}
             </div>
             <div class="card-body">
                 <form method="post" enctype="multipart/form-data" id="user_form" novalidate>
@@ -41,7 +100,10 @@
 
                     {% if errors %}
                     <div class="alert alert-danger">
-                        <h4 class="alert-heading">Please correct the errors below:</h4>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <h5 class="alert-heading mb-0">Please correct the errors below:</h5>
+                        </div>
                         <ul class="mb-0">
                             {% for field in adminform.form %}
                                 {% if field.errors %}
@@ -57,180 +119,221 @@
                     </div>
                     {% endif %}
 
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="id_username" class="form-label">Username <span class="text-danger">*</span></label>
-                                {{ adminform.form.username.errors }}
-                                {{ adminform.form.username }}
-                                {% if adminform.form.username.help_text %}
-                                <div class="form-text">{{ adminform.form.username.help_text }}</div>
-                                {% endif %}
+                    <!-- Account Information Section -->
+                    <div class="form-section">
+                        <h6 class="form-section-title">
+                            <i class="fas fa-user-circle me-2"></i>Account Information
+                        </h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_username" class="form-label">Username <span class="text-danger">*</span></label>
+                                    {{ adminform.form.username.errors }}
+                                    {{ adminform.form.username }}
+                                    {% if adminform.form.username.help_text %}
+                                    <div class="form-text">{{ adminform.form.username.help_text }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if add %}
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_password1" class="form-label">Password <span class="text-danger">*</span></label>
+                                    {{ adminform.form.password1.errors }}
+                                    {{ adminform.form.password1 }}
+                                    {% if adminform.form.password1.help_text %}
+                                    <div class="form-text">{{ adminform.form.password1.help_text }}</div>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
-                        {% if add %}
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="id_password1" class="form-label">Password <span class="text-danger">*</span></label>
-                                {{ adminform.form.password1.errors }}
-                                {{ adminform.form.password1 }}
-                                {% if adminform.form.password1.help_text %}
-                                <div class="form-text">{{ adminform.form.password1.help_text }}</div>
-                                {% endif %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_password2" class="form-label">Password Confirmation <span class="text-danger">*</span></label>
+                                    {{ adminform.form.password2.errors }}
+                                    {{ adminform.form.password2 }}
+                                    {% if adminform.form.password2.help_text %}
+                                    <div class="form-text">{{ adminform.form.password2.help_text }}</div>
+                                    {% endif %}
+                                </div>
                             </div>
+                            {% else %}
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_password" class="form-label">Password</label>
+                                    {{ adminform.form.password.errors }}
+                                    {{ adminform.form.password }}
+                                    {% if adminform.form.password.help_text %}
+                                    <div class="form-text">{{ adminform.form.password.help_text }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="id_password2" class="form-label">Password Confirmation <span class="text-danger">*</span></label>
-                                {{ adminform.form.password2.errors }}
-                                {{ adminform.form.password2 }}
-                                {% if adminform.form.password2.help_text %}
-                                <div class="form-text">{{ adminform.form.password2.help_text }}</div>
-                                {% endif %}
+
+                    <!-- Personal Information Section -->
+                    <div class="form-section">
+                        <h6 class="form-section-title">
+                            <i class="fas fa-address-card me-2"></i>Personal Information
+                        </h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_first_name" class="form-label">First Name</label>
+                                    {{ adminform.form.first_name.errors }}
+                                    {{ adminform.form.first_name }}
+                                    {% if adminform.form.first_name.help_text %}
+                                    <div class="form-text">{{ adminform.form.first_name.help_text }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_last_name" class="form-label">Last Name</label>
+                                    {{ adminform.form.last_name.errors }}
+                                    {{ adminform.form.last_name }}
+                                    {% if adminform.form.last_name.help_text %}
+                                    <div class="form-text">{{ adminform.form.last_name.help_text }}</div>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
-                        {% else %}
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="id_password" class="form-label">Password</label>
-                                {{ adminform.form.password.errors }}
-                                {{ adminform.form.password }}
-                                {% if adminform.form.password.help_text %}
-                                <div class="form-text">{{ adminform.form.password.help_text }}</div>
-                                {% endif %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_email" class="form-label">Email</label>
+                                    {{ adminform.form.email.errors }}
+                                    {{ adminform.form.email }}
+                                    {% if adminform.form.email.help_text %}
+                                    <div class="form-text">{{ adminform.form.email.help_text }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if not add %}
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_profile-phone_number" class="form-label">Phone Number</label>
+                                    <input type="text" name="profile-phone_number" id="id_profile-phone_number" class="form-control" value="{{ original.profile.phone_number|default:'' }}">
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% if not add %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_profile-date_of_birth" class="form-label">Date of Birth</label>
+                                    <input type="date" name="profile-date_of_birth" id="id_profile-date_of_birth" class="form-control" value="{{ original.profile.date_of_birth|date:'Y-m-d'|default:'' }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_profile-profile_picture" class="form-label">Profile Picture</label>
+                                    <input type="file" name="profile-profile_picture" id="id_profile-profile_picture" class="form-control" accept="image/*">
+                                    {% if original.profile.profile_picture %}
+                                    <div class="form-text">Current: {{ original.profile.profile_picture.url|slice:"12:" }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% if original.is_superuser %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_profile-super_admin_photo" class="form-label">Super Admin Photo</label>
+                                    <input type="file" name="profile-super_admin_photo" id="id_profile-super_admin_photo" class="form-control" accept="image/*">
+                                    {% if original.profile.super_admin_photo %}
+                                    <div class="form-text">Current: {{ original.profile.super_admin_photo.url|slice:"12:" }}</div>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                         {% endif %}
+                        {% endif %}
                     </div>
 
-                    <h5 class="mt-4 mb-3">Personal Information</h5>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="id_first_name" class="form-label">First Name</label>
-                                {{ adminform.form.first_name.errors }}
-                                {{ adminform.form.first_name }}
-                                {% if adminform.form.first_name.help_text %}
-                                <div class="form-text">{{ adminform.form.first_name.help_text }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="id_last_name" class="form-label">Last Name</label>
-                                {{ adminform.form.last_name.errors }}
-                                {{ adminform.form.last_name }}
-                                {% if adminform.form.last_name.help_text %}
-                                <div class="form-text">{{ adminform.form.last_name.help_text }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="id_email" class="form-label">Email</label>
-                                {{ adminform.form.email.errors }}
-                                {{ adminform.form.email }}
-                                {% if adminform.form.email.help_text %}
-                                <div class="form-text">{{ adminform.form.email.help_text }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <h5 class="mt-4 mb-3">Permissions</h5>
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <div class="form-check form-switch">
-                                    {{ adminform.form.is_active.errors }}
-                                    {{ adminform.form.is_active }}
-                                    <label class="form-check-label" for="id_is_active">Active</label>
+                    <!-- Permissions Section -->
+                    <div class="form-section">
+                        <h6 class="form-section-title">
+                            <i class="fas fa-shield-alt me-2"></i>Permissions
+                        </h6>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="form-check form-switch">
+                                        {{ adminform.form.is_active.errors }}
+                                        {{ adminform.form.is_active }}
+                                        <label class="form-check-label" for="id_is_active">Active</label>
+                                    </div>
+                                    {% if adminform.form.is_active.help_text %}
+                                    <div class="form-text">{{ adminform.form.is_active.help_text }}</div>
+                                    {% endif %}
                                 </div>
-                                {% if adminform.form.is_active.help_text %}
-                                <div class="form-text">{{ adminform.form.is_active.help_text }}</div>
-                                {% endif %}
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <div class="form-check form-switch">
-                                    {{ adminform.form.is_staff.errors }}
-                                    {{ adminform.form.is_staff }}
-                                    <label class="form-check-label" for="id_is_staff">Staff Status</label>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="form-check form-switch">
+                                        {{ adminform.form.is_staff.errors }}
+                                        {{ adminform.form.is_staff }}
+                                        <label class="form-check-label" for="id_is_staff">Staff Status</label>
+                                    </div>
+                                    {% if adminform.form.is_staff.help_text %}
+                                    <div class="form-text">{{ adminform.form.is_staff.help_text }}</div>
+                                    {% endif %}
                                 </div>
-                                {% if adminform.form.is_staff.help_text %}
-                                <div class="form-text">{{ adminform.form.is_staff.help_text }}</div>
-                                {% endif %}
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <div class="form-check form-switch">
-                                    {{ adminform.form.is_superuser.errors }}
-                                    {{ adminform.form.is_superuser }}
-                                    <label class="form-check-label" for="id_is_superuser">Superuser Status</label>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="form-check form-switch">
+                                        {{ adminform.form.is_superuser.errors }}
+                                        {{ adminform.form.is_superuser }}
+                                        <label class="form-check-label" for="id_is_superuser">Superuser Status</label>
+                                    </div>
+                                    {% if adminform.form.is_superuser.help_text %}
+                                    <div class="form-text">{{ adminform.form.is_superuser.help_text }}</div>
+                                    {% endif %}
                                 </div>
-                                {% if adminform.form.is_superuser.help_text %}
-                                <div class="form-text">{{ adminform.form.is_superuser.help_text }}</div>
-                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_groups" class="form-label">Groups</label>
+                                    {{ adminform.form.groups.errors }}
+                                    {{ adminform.form.groups }}
+                                    {% if adminform.form.groups.help_text %}
+                                    <div class="form-text">{{ adminform.form.groups.help_text }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_user_permissions" class="form-label">User Permissions</label>
+                                    {{ adminform.form.user_permissions.errors }}
+                                    {{ adminform.form.user_permissions }}
+                                    {% if adminform.form.user_permissions.help_text %}
+                                    <div class="form-text">{{ adminform.form.user_permissions.help_text }}</div>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="id_groups" class="form-label">Groups</label>
-                                {{ adminform.form.groups.errors }}
-                                {{ adminform.form.groups }}
-                                {% if adminform.form.groups.help_text %}
-                                <div class="form-text">{{ adminform.form.groups.help_text }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="id_user_permissions" class="form-label">User Permissions</label>
-                                {{ adminform.form.user_permissions.errors }}
-                                {{ adminform.form.user_permissions }}
-                                {% if adminform.form.user_permissions.help_text %}
-                                <div class="form-text">{{ adminform.form.user_permissions.help_text }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-
-                    {% if not add %}
-                    <h5 class="mt-4 mb-3">Important Dates</h5>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Last Login</label>
-                                <input type="text" class="form-control" value="{{ original.last_login|date:'F d, Y H:i'|default:'-' }}" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Date Joined</label>
-                                <input type="text" class="form-control" value="{{ original.date_joined|date:'F d, Y H:i' }}" readonly>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    <div class="mt-4">
+                    <div class="form-actions">
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-1"></i> Save
+                            <i class="fas fa-save me-2"></i> Save Changes
                         </button>
-                        <a href="{% url 'admin:auth_user_changelist' %}" class="btn btn-secondary">
-                            <i class="fas fa-times me-1"></i> Cancel
+                        <a href="{% url 'admin:auth_user_changelist' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i> Cancel
                         </a>
+                        {% if not add %}
+                        <a href="{% url 'admin:auth_user_delete' original.pk %}" class="btn btn-outline-danger ms-auto delete-confirm">
+                            <i class="fas fa-trash me-2"></i> Delete User
+                        </a>
+                        {% endif %}
                     </div>
                 </form>
             </div>
@@ -239,87 +342,108 @@
 
     {% if not add %}
     <div class="col-lg-4">
-        <div class="card mb-4 slide-in-right">
-            <div class="card-header">
-                <h5>User Profile</h5>
-            </div>
-            <div class="card-body">
-                <div class="text-center mb-3">
+        <!-- User Profile Card -->
+        <div class="user-profile-card mb-4 slide-in-right">
+            <div class="user-profile-header">
+                <div class="user-profile-avatar-container">
                     {% if original.is_superuser and original.profile.super_admin_photo %}
-                        <img src="{{ original.profile.super_admin_photo.url }}" alt="{{ original.username }}" class="img-fluid rounded-circle mb-3" style="max-height: 150px; max-width: 150px;">
+                        <img src="{{ original.profile.super_admin_photo.url }}" alt="{{ original.username }}" class="user-profile-avatar">
+                        <label for="id_profile-super_admin_photo" class="user-profile-upload-btn" title="Change photo">
+                            <i class="fas fa-camera"></i>
+                        </label>
                     {% elif original.profile.profile_picture %}
-                        <img src="{{ original.profile.profile_picture.url }}" alt="{{ original.username }}" class="img-fluid rounded-circle mb-3" style="max-height: 150px; max-width: 150px;">
+                        <img src="{{ original.profile.profile_picture.url }}" alt="{{ original.username }}" class="user-profile-avatar">
+                        <label for="id_profile-profile_picture" class="user-profile-upload-btn" title="Change photo">
+                            <i class="fas fa-camera"></i>
+                        </label>
                     {% else %}
-                        <div class="avatar-placeholder-large mb-3">
+                        <div class="avatar-placeholder-large">
                             {{ original.username|first|upper }}
                         </div>
+                        <label for="id_profile-profile_picture" class="user-profile-upload-btn" title="Upload photo">
+                            <i class="fas fa-camera"></i>
+                        </label>
                     {% endif %}
-                    <h5>{{ original.get_full_name|default:original.username }}</h5>
-                    <p class="text-muted">{{ original.email|default:"No email provided" }}</p>
                 </div>
+                <div class="user-profile-name">{{ original.get_full_name|default:original.username }}</div>
+                <div class="user-profile-username">@{{ original.username }}</div>
 
-                <div class="user-info">
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">Phone Number:</span>
-                        <span>{{ original.profile.phone_number|default:"-" }}</span>
+                <div class="user-profile-stats">
+                    <div class="user-profile-stat">
+                        <div class="user-profile-stat-value">{{ original.orders.count|default:"0" }}</div>
+                        <div class="user-profile-stat-label">Orders</div>
                     </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">Date of Birth:</span>
-                        <span>{{ original.profile.date_of_birth|date:"F d, Y"|default:"-" }}</span>
+                    <div class="user-profile-stat">
+                        <div class="user-profile-stat-value">{{ original.reviews.count|default:"0" }}</div>
+                        <div class="user-profile-stat-label">Reviews</div>
                     </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">Status:</span>
-                        <span class="badge {% if original.is_active %}bg-success{% else %}bg-danger{% endif %}">
+                    <div class="user-profile-stat">
+                        <div class="user-profile-stat-value">{{ original.wishlist.products.count|default:"0" }}</div>
+                        <div class="user-profile-stat-label">Wishlist</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="user-info-section">
+                <div class="user-info-item">
+                    <div class="user-info-label">Email</div>
+                    <div class="user-info-value">{{ original.email|default:"Not provided" }}</div>
+                </div>
+                <div class="user-info-item">
+                    <div class="user-info-label">Phone Number</div>
+                    <div class="user-info-value">{{ original.profile.phone_number|default:"Not provided" }}</div>
+                </div>
+                <div class="user-info-item">
+                    <div class="user-info-label">Date of Birth</div>
+                    <div class="user-info-value">{{ original.profile.date_of_birth|date:"F d, Y"|default:"Not provided" }}</div>
+                </div>
+                <div class="user-info-item">
+                    <div class="user-info-label">Status</div>
+                    <div class="user-info-value">
+                        <span class="user-status-badge {% if original.is_active %}active{% else %}inactive{% endif %}">
                             {% if original.is_active %}Active{% else %}Inactive{% endif %}
                         </span>
                     </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">Role:</span>
-                        <span>
-                            {% if original.is_superuser %}
-                                <span class="badge bg-danger">Superuser</span>
-                            {% elif original.is_staff %}
-                                <span class="badge bg-primary">Staff</span>
-                            {% else %}
-                                <span class="badge bg-secondary">Customer</span>
-                            {% endif %}
-                        </span>
+                </div>
+                <div class="user-info-item">
+                    <div class="user-info-label">Role</div>
+                    <div class="user-info-value">
+                        {% if original.is_superuser %}
+                            <span class="badge bg-danger">Superuser</span>
+                        {% elif original.is_staff %}
+                            <span class="badge bg-primary">Staff</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Customer</span>
+                        {% endif %}
                     </div>
                 </div>
-
-                <hr>
-
-                <div class="user-stats">
-                    <div class="row text-center">
-                        <div class="col-4">
-                            <div class="stat-value">{{ original.orders.count|default:"0" }}</div>
-                            <div class="stat-label">Orders</div>
-                        </div>
-                        <div class="col-4">
-                            <div class="stat-value">{{ original.reviews.count|default:"0" }}</div>
-                            <div class="stat-label">Reviews</div>
-                        </div>
-                        <div class="col-4">
-                            <div class="stat-value">{{ original.wishlist.products.count|default:"0" }}</div>
-                            <div class="stat-label">Wishlist</div>
-                        </div>
-                    </div>
+                <div class="user-info-item">
+                    <div class="user-info-label">Date Joined</div>
+                    <div class="user-info-value">{{ original.date_joined|date:"F d, Y" }}</div>
                 </div>
+                <div class="user-info-item">
+                    <div class="user-info-label">Last Login</div>
+                    <div class="user-info-value">{{ original.last_login|date:"F d, Y"|default:"Never" }}</div>
+                </div>
+            </div>
 
-                <div class="mt-3">
-                    <a href="{% url 'admin:orders_order_changelist' %}?user__id__exact={{ original.id }}" class="btn btn-outline-primary btn-sm w-100 mb-2">
-                        <i class="fas fa-shopping-cart me-1"></i> View Orders
+            <div class="p-3">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'admin:orders_order_changelist' %}?user__id__exact={{ original.id }}" class="btn btn-primary">
+                        <i class="fas fa-shopping-cart me-2"></i> View Orders
                     </a>
-                    <a href="#" class="btn btn-outline-secondary btn-sm w-100">
-                        <i class="fas fa-envelope me-1"></i> Send Email
+                    <a href="#" class="btn btn-outline-secondary">
+                        <i class="fas fa-envelope me-2"></i> Send Email
                     </a>
                 </div>
             </div>
         </div>
 
-        <div class="card mb-4 slide-in-right">
-            <div class="card-header">
-                <h5>Recent Orders</h5>
+        <!-- Recent Orders Card -->
+        <div class="user-profile-card mb-4 slide-in-right">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Recent Orders</h5>
+                <span class="badge bg-primary rounded-pill">{{ original.orders.count }}</span>
             </div>
             <div class="card-body p-0">
                 <div class="list-group list-group-flush">
@@ -329,24 +453,228 @@
                                 <h6 class="mb-1">{{ order.order_number }}</h6>
                                 <small>{{ order.created_at|date:"M d, Y" }}</small>
                             </div>
-                            <p class="mb-1">₹{{ order.order_total }}</p>
-                            <small class="text-muted">
-                                <span class="status-badge {% if order.status == 'P' %}pending{% elif order.status == 'C' %}confirmed{% elif order.status == 'S' %}shipped{% elif order.status == 'D' %}delivered{% elif order.status == 'X' %}cancelled{% endif %}">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="mb-1 fw-bold">₹{{ order.order_total }}</p>
+                                <span class="badge {% if order.status == 'P' %}bg-warning{% elif order.status == 'C' %}bg-info{% elif order.status == 'S' %}bg-primary{% elif order.status == 'D' %}bg-success{% elif order.status == 'X' %}bg-danger{% endif %}">
                                     {{ order.get_status_display }}
                                 </span>
-                            </small>
+                            </div>
                         </a>
                     {% empty %}
-                        <div class="list-group-item">
-                            <p class="text-center mb-0">No orders found.</p>
+                        <div class="list-group-item py-4">
+                            <div class="text-center">
+                                <i class="fas fa-shopping-cart fa-3x mb-3 text-muted"></i>
+                                <p class="mb-0">No orders found for this user.</p>
+                            </div>
                         </div>
                     {% endfor %}
                 </div>
                 {% if original.orders.count > 5 %}
                     <div class="card-footer text-center">
-                        <a href="{% url 'admin:orders_order_changelist' %}?user__id__exact={{ original.id }}">View all {{ original.orders.count }} orders</a>
+                        <a href="{% url 'admin:orders_order_changelist' %}?user__id__exact={{ original.id }}" class="text-primary">
+                            <i class="fas fa-eye me-1"></i> View all {{ original.orders.count }} orders
+                        </a>
                     </div>
                 {% endif %}
+            </div>
+        </div>
+
+        <!-- User Activity Card with Tabs -->
+        <div class="user-profile-card mb-4 slide-in-right">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs" id="userActivityTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="timeline-tab" data-bs-toggle="tab" data-bs-target="#timeline" type="button" role="tab" aria-controls="timeline" aria-selected="true">
+                            <i class="fas fa-history me-2"></i>Timeline
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity" type="button" role="tab" aria-controls="activity" aria-selected="false">
+                            <i class="fas fa-chart-line me-2"></i>Activity
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button" role="tab" aria-controls="security" aria-selected="false">
+                            <i class="fas fa-shield-alt me-2"></i>Security
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content" id="userActivityTabContent">
+                    <!-- Timeline Tab -->
+                    <div class="tab-pane fade show active" id="timeline" role="tabpanel" aria-labelledby="timeline-tab">
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-icon bg-primary">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6 class="mb-1">Account Created</h6>
+                                    <p class="mb-0 text-muted">{{ original.date_joined|date:"F d, Y" }}</p>
+                                </div>
+                            </div>
+                            {% if original.last_login %}
+                            <div class="timeline-item">
+                                <div class="timeline-icon bg-info">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6 class="mb-1">Last Login</h6>
+                                    <p class="mb-0 text-muted">{{ original.last_login|date:"F d, Y H:i" }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if original.orders.all %}
+                            <div class="timeline-item">
+                                <div class="timeline-icon bg-success">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6 class="mb-1">Last Order</h6>
+                                    <p class="mb-0 text-muted">{{ original.orders.all.0.created_at|date:"F d, Y" }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if original.reviews.all %}
+                            <div class="timeline-item">
+                                <div class="timeline-icon bg-warning">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6 class="mb-1">Last Review</h6>
+                                    <p class="mb-0 text-muted">{{ original.reviews.all.0.created_at|date:"F d, Y" }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if original.is_active %}
+                            <div class="timeline-item">
+                                <div class="timeline-icon bg-success">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6 class="mb-1">Account Status</h6>
+                                    <p class="mb-0 text-muted">Active</p>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="timeline-item">
+                                <div class="timeline-icon bg-danger">
+                                    <i class="fas fa-ban"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6 class="mb-1">Account Status</h6>
+                                    <p class="mb-0 text-muted">Inactive</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Activity Chart Tab -->
+                    <div class="tab-pane fade" id="activity" role="tabpanel" aria-labelledby="activity-tab">
+                        <div class="chart-container" style="position: relative; height: 250px;">
+                            <canvas id="userActivityChart"
+                                data-login-activity='[
+                                    {"date": "{{ original.date_joined|date:'Y-m-d' }}", "count": 1},
+                                    {% if original.last_login %}
+                                    {"date": "{{ original.last_login|date:'Y-m-d' }}", "count": 1}
+                                    {% endif %}
+                                ]'
+                                data-order-activity='[
+                                    {% for order in original.orders.all|slice:":5" %}
+                                    {"date": "{{ order.created_at|date:'Y-m-d' }}", "count": 1}{% if not forloop.last %},{% endif %}
+                                    {% endfor %}
+                                ]'
+                                data-review-activity='[
+                                    {% for review in original.reviews.all|slice:":5" %}
+                                    {"date": "{{ review.created_at|date:'Y-m-d' }}", "count": 1}{% if not forloop.last %},{% endif %}
+                                    {% endfor %}
+                                ]'
+                            ></canvas>
+                        </div>
+                        <div class="activity-stats mt-3">
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <div class="activity-stat">
+                                        <div class="activity-stat-value">{{ original.orders.count }}</div>
+                                        <div class="activity-stat-label">Total Orders</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="activity-stat">
+                                        <div class="activity-stat-value">{{ original.reviews.count|default:"0" }}</div>
+                                        <div class="activity-stat-label">Total Reviews</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="activity-stat">
+                                        <div class="activity-stat-value">₹{{ original.orders.all|dictsumattr:"order_total"|default:"0" }}</div>
+                                        <div class="activity-stat-label">Total Spent</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Tab -->
+                    <div class="tab-pane fade" id="security" role="tabpanel" aria-labelledby="security-tab">
+                        <div class="security-settings">
+                            <div class="security-setting-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Two-Factor Authentication</h6>
+                                        <p class="mb-0 text-muted">Add an extra layer of security to your account</p>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="twoFactorToggle">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="security-setting-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Account Lockout</h6>
+                                        <p class="mb-0 text-muted">Lock account after failed login attempts</p>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="accountLockoutToggle" checked>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="security-setting-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Password Expiry</h6>
+                                        <p class="mb-0 text-muted">Force password change every 90 days</p>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="passwordExpiryToggle">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="security-setting-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Login Notifications</h6>
+                                        <p class="mb-0 text-muted">Send email notifications on login</p>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="loginNotificationsToggle" checked>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <a href="{% url 'admin:auth_user_password_change' original.pk %}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-key me-2"></i>Change Password
+                                </a>
+                                <button type="button" class="btn btn-outline-secondary btn-sm ms-2" id="resetSecurityBtn">
+                                    <i class="fas fa-redo me-2"></i>Reset Security Settings
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -355,28 +683,276 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script src="{% static 'admin/js/user_activity_chart.js' %}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Delete confirmation
-        const deleteLink = document.querySelector('.delete-confirm');
-        if (deleteLink) {
-            deleteLink.addEventListener('click', function(e) {
-                if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+        // Delete confirmation with enhanced modal
+        const deleteLinks = document.querySelectorAll('.delete-confirm');
+        if (deleteLinks.length > 0) {
+            deleteLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
                     e.preventDefault();
-                }
+
+                    // Create modal dynamically
+                    const modalHTML = `
+                        <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger text-white">
+                                        <h5 class="modal-title">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                            Confirm Deletion
+                                        </h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body p-4">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="flex-shrink-0">
+                                                <div class="icon-circle bg-danger-light text-danger">
+                                                    <i class="fas fa-user-slash fa-lg"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <h5 class="mb-1">Delete User Account</h5>
+                                                <p class="text-muted mb-0">Are you sure you want to delete this user? This action cannot be undone.</p>
+                                            </div>
+                                        </div>
+                                        <div class="alert alert-warning d-flex" role="alert">
+                                            <i class="fas fa-exclamation-triangle me-2 mt-1"></i>
+                                            <div>
+                                                <p class="mb-0">Deleting this user will also remove:</p>
+                                                <ul class="mb-0">
+                                                    <li>All orders associated with this account</li>
+                                                    <li>All reviews and ratings</li>
+                                                    <li>Wishlist and saved items</li>
+                                                    <li>Address information</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                            <i class="fas fa-times me-2"></i>Cancel
+                                        </button>
+                                        <a href="${this.href}" class="btn btn-danger">
+                                            <i class="fas fa-trash me-2"></i>Delete User
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    // Append modal to body
+                    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+                    // Show modal
+                    const deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+                    deleteModal.show();
+
+                    // Remove modal from DOM after it's hidden
+                    document.getElementById('deleteConfirmModal').addEventListener('hidden.bs.modal', function() {
+                        this.remove();
+                    });
+                });
             });
         }
 
-        // Filter select2 dropdowns
+        // Enhanced Select2 dropdowns
         if ($.fn.select2) {
             $('#id_groups').select2({
                 placeholder: 'Select groups',
-                width: '100%'
+                width: '100%',
+                theme: 'bootstrap-5',
+                dropdownParent: $('#user_form')
             });
 
             $('#id_user_permissions').select2({
                 placeholder: 'Select permissions',
-                width: '100%'
+                width: '100%',
+                theme: 'bootstrap-5',
+                dropdownParent: $('#user_form')
+            });
+        }
+
+        // Image preview for profile picture upload
+        const profilePictureInput = document.getElementById('id_profile-profile_picture');
+        const superAdminPhotoInput = document.getElementById('id_profile-super_admin_photo');
+
+        if (profilePictureInput) {
+            profilePictureInput.addEventListener('change', function() {
+                previewImage(this, 'user-profile-avatar');
+            });
+        }
+
+        if (superAdminPhotoInput) {
+            superAdminPhotoInput.addEventListener('change', function() {
+                previewImage(this, 'user-profile-avatar');
+            });
+        }
+
+        // Function to preview uploaded images
+        function previewImage(input, targetClass) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const avatarElements = document.getElementsByClassName(targetClass);
+                    if (avatarElements.length > 0) {
+                        // If there's an image element, update its src
+                        if (avatarElements[0].tagName === 'IMG') {
+                            avatarElements[0].src = e.target.result;
+                        }
+                        // If it's the placeholder div, replace it with an image
+                        else {
+                            const placeholderDiv = avatarElements[0];
+                            const container = placeholderDiv.parentNode;
+
+                            // Create new image element
+                            const imgElement = document.createElement('img');
+                            imgElement.src = e.target.result;
+                            imgElement.alt = "User Avatar";
+                            imgElement.className = targetClass;
+
+                            // Replace placeholder with image
+                            container.replaceChild(imgElement, placeholderDiv);
+                        }
+                    }
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Add animation to timeline items
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        if (timelineItems.length > 0) {
+            timelineItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.classList.add('animate__animated', 'animate__fadeInUp');
+                }, 300 * index);
+            });
+        }
+
+        // Initialize tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Floating Action Button
+        const fabButton = document.getElementById('fabButton');
+        const floatingActionButton = document.getElementById('floatingActionButton');
+
+        if (fabButton && floatingActionButton) {
+            fabButton.addEventListener('click', function() {
+                floatingActionButton.classList.toggle('active');
+                fabButton.classList.toggle('active');
+            });
+
+            // Close FAB when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!floatingActionButton.contains(event.target) && floatingActionButton.classList.contains('active')) {
+                    floatingActionButton.classList.remove('active');
+                    fabButton.classList.remove('active');
+                }
+            });
+        }
+
+        // Toggle user status
+        const toggleStatusLinks = document.querySelectorAll('.toggle-status');
+        if (toggleStatusLinks.length > 0) {
+            toggleStatusLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const status = this.getAttribute('data-status');
+                    const isActiveCheckbox = document.getElementById('id_is_active');
+
+                    if (isActiveCheckbox) {
+                        isActiveCheckbox.checked = status === 'active';
+
+                        // Show notification
+                        const message = status === 'active' ?
+                            'User account has been activated. Click Save to apply changes.' :
+                            'User account has been deactivated. Click Save to apply changes.';
+
+                        const alertHTML = `
+                            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                                <i class="fas fa-info-circle me-2"></i>
+                                ${message}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        `;
+
+                        const formCard = document.querySelector('.form-card');
+                        if (formCard) {
+                            const existingAlert = formCard.querySelector('.alert');
+                            if (existingAlert) {
+                                existingAlert.remove();
+                            }
+
+                            formCard.querySelector('.card-body').insertAdjacentHTML('afterbegin', alertHTML);
+                        }
+                    }
+                });
+            });
+        }
+
+        // Security settings
+        const securityToggles = document.querySelectorAll('#security .form-check-input');
+        const resetSecurityBtn = document.getElementById('resetSecurityBtn');
+
+        if (resetSecurityBtn) {
+            resetSecurityBtn.addEventListener('click', function() {
+                securityToggles.forEach(toggle => {
+                    if (toggle.id === 'accountLockoutToggle' || toggle.id === 'loginNotificationsToggle') {
+                        toggle.checked = true;
+                    } else {
+                        toggle.checked = false;
+                    }
+                });
+
+                // Show notification
+                showNotification('Security settings have been reset to defaults.', 'info');
+            });
+        }
+
+        // Function to show notifications
+        function showNotification(message, type = 'success') {
+            const toastHTML = `
+                <div class="toast align-items-center text-white bg-${type} border-0 mb-3" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'info' ? 'info-circle' : 'exclamation-circle'} me-2"></i>
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            `;
+
+            // Create toast container if it doesn't exist
+            let toastContainer = document.querySelector('.toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
+                toastContainer.style.zIndex = '1100';
+                document.body.appendChild(toastContainer);
+            }
+
+            // Add toast to container
+            toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+
+            // Initialize and show toast
+            const toastElement = toastContainer.lastElementChild;
+            const toast = new bootstrap.Toast(toastElement, { autohide: true, delay: 5000 });
+            toast.show();
+
+            // Remove toast after it's hidden
+            toastElement.addEventListener('hidden.bs.toast', function() {
+                this.remove();
             });
         }
     });
