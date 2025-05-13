@@ -12,6 +12,8 @@ from products.models import Product
 from users.models import Address
 from .models import Cart, CartItem, Order, OrderItem, Payment
 from .forms import OrderForm
+from .payment import payment_gateway
+from core.email_utils import send_order_confirmation_email, send_payment_confirmation_email
 
 def _get_cart(request):
     """Helper function to get or create a cart for the user or session"""
@@ -161,8 +163,11 @@ def checkout(request):
             # Clear the cart
             cart.items.all().delete()
 
+            # Send order confirmation email
+            send_order_confirmation_email(order)
+
             # Redirect to payment page
-            return redirect('orders:payment_process')
+            return redirect('orders:payment_process', order_id=order.id)
     else:
         initial_data = {}
         if default_address:
@@ -224,20 +229,35 @@ def order_detail(request, order_id):
     return render(request, 'orders/order_detail.html', context)
 
 @login_required
-def payment_process(request):
+def payment_process(request, order_id):
     """View for processing payment"""
-    # This is a placeholder for the actual payment processing logic
-    # In a real application, this would integrate with a payment gateway like Razorpay or Stripe
-    return render(request, 'orders/payment_process.html')
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+
+    # Create payment
+    payment_data = payment_gateway.create_payment(order)
+
+    if not payment_data.get('success', False):
+        messages.error(request, f"Payment initialization failed: {payment_data.get('error', 'Unknown error')}")
+        return redirect('orders:checkout')
+
+    context = {
+        'order': order,
+        'payment_data': payment_data
+    }
+    return render(request, 'orders/payment_process.html', context)
 
 @login_required
-def payment_success(request):
+def payment_success(request, order_id):
     """View for handling successful payment"""
-    # This is a placeholder for the actual payment success logic
-    return render(request, 'orders/payment_success.html')
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+
+    context = {
+        'order': order
+    }
+    return render(request, 'orders/payment_success.html', context)
 
 @login_required
 def payment_cancel(request):
     """View for handling cancelled payment"""
-    # This is a placeholder for the actual payment cancellation logic
+    messages.error(request, "Payment was cancelled or failed. Please try again.")
     return render(request, 'orders/payment_cancel.html')

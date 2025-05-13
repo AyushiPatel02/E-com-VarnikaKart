@@ -177,3 +177,7 @@ def superadmin_logout(request):
     logout(request)
     messages.success(request, 'You have been successfully logged out.')
     return redirect('superadmin_login')
+
+def test_page(request):
+    """View for testing static files"""
+    return render(request, 'test.html')

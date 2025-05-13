@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load product_tags %}
+
+{% block title %}Payment - VarnikaKart{% endblock %}
+
+{% block extra_css %}
+<style>
+    .payment-card {
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .payment-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .payment-method-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .order-summary {
+        background-color: #f8f9fa;
+        border-radius: 15px;
+        padding: 1.5rem;
+    }
+
+    .razorpay-payment-button {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        width: 100%;
+        cursor: pointer;
+    }
+
+    .razorpay-payment-button:hover {
+        background-color: var(--primary-color-dark);
+        transform: translateY(-2px);
+    }
+
+    .payment-animation {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 2rem;
+    }
+
+    .payment-secure-badge {
+        display: inline-flex;
+        align-items: center;
+        background-color: rgba(var(--success-color-rgb), 0.1);
+        color: var(--success-color);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .payment-secure-badge i {
+        margin-right: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="mb-4">Complete Your Payment</h1>
+
+            <div class="card payment-card mb-4">
+                <div class="card-body text-center p-5">
+                    <div class="payment-animation">
+                        <lottie-player src="https://assets5.lottiefiles.com/packages/lf20_yt7b7vg3.json" background="transparent" speed="1" loop autoplay></lottie-player>
+                    </div>
+
+                    <div class="payment-secure-badge mb-4">
+                        <i class="fas fa-shield-alt"></i> Secure Payment
+                    </div>
+
+                    <h4 class="mb-3">Order #{{ order.order_number }}</h4>
+                    <p class="text-muted mb-4">Please complete your payment to confirm your order.</p>
+
+                    <div class="order-summary mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Order Total:</span>
+                            <span class="fw-bold">₹{{ order.order_total }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Tax (18%):</span>
+                            <span>₹{{ order.tax }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-bold">Total Amount:</span>
+                            <span class="fw-bold">₹{{ order.order_total }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Button -->
+                    {% if payment_data.mock %}
+                    <!-- Mock Payment Button for Development -->
+                    <form action="{% url 'orders:payment_callback' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="razorpay_payment_id" value="mock_payment_id">
+                        <input type="hidden" name="razorpay_order_id" value="{{ payment_data.order_id }}">
+                        <input type="hidden" name="razorpay_signature" value="mock_signature">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            Complete Mock Payment
+                        </button>
+                        <div class="alert alert-warning mt-3">
+                            <small><i class="fas fa-info-circle me-1"></i> Using mock payment because Razorpay is not installed.</small>
+                        </div>
+                    </form>
+                    {% else %}
+                    <!-- Razorpay Payment Button -->
+                    <form action="{% url 'orders:payment_callback' %}" method="POST">
+                        {% csrf_token %}
+                        <script
+                            src="https://checkout.razorpay.com/v1/checkout.js"
+                            data-key="{{ payment_data.key }}"
+                            data-amount="{{ payment_data.amount }}"
+                            data-currency="{{ payment_data.currency }}"
+                            data-order_id="{{ payment_data.order_id }}"
+                            data-buttontext="Pay with Razorpay"
+                            data-name="{{ payment_data.name }}"
+                            data-description="{{ payment_data.description }}"
+                            data-image="{{ payment_data.image }}"
+                            data-prefill.name="{{ payment_data.prefill.name }}"
+                            data-prefill.email="{{ payment_data.prefill.email }}"
+                            data-prefill.contact="{{ payment_data.prefill.contact }}"
+                            data-theme.color="{{ payment_data.theme.color }}">
+                        </script>
+                    </form>
+                    {% endif %}
+
+                    <div class="mt-4">
+                        <p class="text-muted small">By clicking the payment button, you agree to our <a href="#">Terms and Conditions</a>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a href="{% url 'orders:cart' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i> Return to Cart
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add animation when payment is processing
+        const paymentButton = document.querySelector('.razorpay-payment-button');
+        if (paymentButton) {
+            paymentButton.addEventListener('click', function() {
+                // Show loading state
+                this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Processing...';
+                this.disabled = true;
+
+                // Re-enable after 3 seconds (in case payment modal is closed)
+                setTimeout(() => {
+                    this.innerHTML = 'Pay with Razorpay';
+                    this.disabled = false;
+                }, 3000);
+            });
+        }
+    });
+</script>
+{% endblock %}

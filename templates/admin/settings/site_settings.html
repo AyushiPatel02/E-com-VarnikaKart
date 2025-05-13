@@ -57,11 +57,11 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-lg-9">
         <form id="site-settings-form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            
+
             <!-- General Settings -->
             <div class="card mb-4">
                 <div class="card-header">
@@ -75,7 +75,7 @@
                             <div class="form-text">The name of your e-commerce store.</div>
                         </div>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <label for="site_description" class="col-sm-3 col-form-label">Site Description</label>
                         <div class="col-sm-9">
@@ -83,7 +83,7 @@
                             <div class="form-text">A short description of your store for SEO purposes.</div>
                         </div>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <label for="site_logo" class="col-sm-3 col-form-label">Site Logo</label>
                         <div class="col-sm-9">
@@ -98,7 +98,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <label for="favicon" class="col-sm-3 col-form-label">Favicon</label>
                         <div class="col-sm-9">
@@ -113,7 +113,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <label for="contact_email" class="col-sm-3 col-form-label">Contact Email</label>
                         <div class="col-sm-9">
@@ -121,15 +121,15 @@
                             <div class="form-text">This email will be displayed on your website and used for contact forms.</div>
                         </div>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <label for="contact_phone" class="col-sm-3 col-form-label">Contact Phone</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="contact_phone" name="contact_phone" value="+91 9876543210">
+                            <input type="text" class="form-control" id="contact_phone" name="contact_phone" value="+91 6393260995">
                             <div class="form-text">This phone number will be displayed on your website.</div>
                         </div>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <label for="address" class="col-sm-3 col-form-label">Business Address</label>
                         <div class="col-sm-9">
@@ -139,7 +139,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Social Media Settings -->
             <div class="card mb-4">
                 <div class="card-header">
@@ -155,7 +155,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <label for="instagram_url" class="col-sm-3 col-form-label">Instagram</label>
                         <div class="col-sm-9">
@@ -165,7 +165,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <label for="twitter_url" class="col-sm-3 col-form-label">Twitter</label>
                         <div class="col-sm-9">
@@ -175,7 +175,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <label for="youtube_url" class="col-sm-3 col-form-label">YouTube</label>
                         <div class="col-sm-9">
@@ -185,7 +185,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <label for="pinterest_url" class="col-sm-3 col-form-label">Pinterest</label>
                         <div class="col-sm-9">
@@ -197,7 +197,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- SEO Settings -->
             <div class="card mb-4">
                 <div class="card-header">
@@ -211,7 +211,7 @@
                             <div class="form-text">The title that appears in search engine results. Recommended length: 50-60 characters.</div>
                         </div>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <label for="meta_description" class="col-sm-3 col-form-label">Meta Description</label>
                         <div class="col-sm-9">
@@ -219,7 +219,7 @@
                             <div class="form-text">The description that appears in search engine results. Recommended length: 150-160 characters.</div>
                         </div>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <label for="meta_keywords" class="col-sm-3 col-form-label">Meta Keywords</label>
                         <div class="col-sm-9">
@@ -227,7 +227,7 @@
                             <div class="form-text">Comma-separated keywords for search engines.</div>
                         </div>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <label for="google_analytics" class="col-sm-3 col-form-label">Google Analytics ID</label>
                         <div class="col-sm-9">
@@ -237,7 +237,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Legal Settings -->
             <div class="card mb-4">
                 <div class="card-header">
@@ -250,14 +250,14 @@
                             <textarea class="form-control rich-text-editor" id="privacy_policy" name="privacy_policy" rows="5">Your privacy policy content here...</textarea>
                         </div>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <label for="terms_conditions" class="col-sm-3 col-form-label">Terms & Conditions</label>
                         <div class="col-sm-9">
                             <textarea class="form-control rich-text-editor" id="terms_conditions" name="terms_conditions" rows="5">Your terms and conditions content here...</textarea>
                         </div>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <label for="return_policy" class="col-sm-3 col-form-label">Return Policy</label>
                         <div class="col-sm-9">
@@ -266,7 +266,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save me-1"></i> Save Changes

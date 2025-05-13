@@ -8,6 +8,7 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('about/', views.about, name='about'),
     path('deals/', views.deals, name='deals'),
+    path('test/', views.test_page, name='test'),
 
     # Super Admin URLs
     path('super-admin/', superadmin_login, name='superadmin_login'),
