@@ -11,9 +11,9 @@ document.addEventListener('DOMContentLoaded', function() {
             name: 'Artisanal Elegance',
             description: 'Soft, elegant, handcrafted feel with light neumorphism',
             colors: {
-                primary: '#d4a5a5',
-                secondary: '#a5a6d4',
-                accent: '#d4c9a5',
+                primary: '#d35f5f',
+                secondary: '#6a9b96',
+                accent: '#e6b33e',
                 background: '#f8f5f2',
                 text: '#3a3a3a',
                 cardBg: '#ffffff'

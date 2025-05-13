@@ -295,62 +295,7 @@
             .glass-left { display: none; }
         }
 
-        /* Simple Footer Styles */
-        .simple-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            font-size: 14px;
-            color: #fff;
-            margin-top: 20px;
-            max-width: 600px;
-            width: 90%;
-        }
 
-        .simple-footer .footer-text {
-            margin: 0;
-        }
-
-        .simple-footer .footer-links {
-            display: flex;
-            gap: 15px;
-        }
-
-        .simple-footer .footer-link {
-            color: #fff;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s;
-        }
-
-        .simple-footer .footer-link:hover {
-            text-decoration: underline;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .simple-footer .footer-link i {
-            margin-right: 5px;
-        }
-
-        /* Question mark icon styling */
-        .simple-footer .footer-link .fa-question-circle {
-            color: #fff;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-        }
-
-        @media (max-width: 576px) {
-            .simple-footer {
-                flex-direction: column;
-                gap: 10px;
-                text-align: center;
-            }
-        }
     </style>
 </head>
 <body>
@@ -419,20 +364,6 @@
                     <a href="{% url 'account_login' %}" class="back-link"><i class="fas fa-user"></i>{% trans "User Login" %}</a>
                 </div>
             </form>
-        </div>
-    </div>
-    <div class="simple-footer">
-        <div class="footer-text">
-            &copy; {% now "Y" %} VarnikaKart. {% trans "All rights reserved." %}
-        </div>
-        <div class="footer-links">
-            <a href="{% url 'home' %}" class="footer-link" target="_blank">
-                View Site
-            </a>
-            <a href="#" class="footer-link">
-                <i class="fas fa-question-circle me-1"></i>
-                Help
-            </a>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

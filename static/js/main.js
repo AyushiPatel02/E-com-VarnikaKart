@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     dropdownItems.forEach(item => {
         const dropdownMenu = item.querySelector('.dropdown-menu');
-        
+
         if (window.innerWidth >= 992) { // Only for desktop
             item.addEventListener('mouseenter', function() {
                 // Close any other open menus first
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 dropdownMenu.classList.add('show');
             });
-            
+
             item.addEventListener('mouseleave', function() {
                 dropdownMenu.classList.remove('show');
             });
@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const theme = e.detail.theme;
 
         if (theme === 'artisanal-elegance') {
-            logo.style.background = 'linear-gradient(90deg, #d4a5a5, #a5a6d4)';
+            logo.style.background = 'linear-gradient(90deg, #d35f5f, #6a9b96)';
         } else if (theme === 'boho-brush') {
             logo.style.background = 'linear-gradient(90deg, #c77d5e, #8ba888)';
         } else if (theme === 'modern-minimal') {

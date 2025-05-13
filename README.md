@@ -140,6 +140,9 @@ Password for superuser: Admin
 Admin@#12
 
 
+
+theme color : #d35f5f
+
 - [Django](https://www.djangoproject.com/)
 - [Bootstrap](https://getbootstrap.com/)
 - [Font Awesome](https://fontawesome.com/)

@@ -10,9 +10,9 @@ const themes = {
         description: 'Light artistic theme for paintings',
         category: 'paintings',
         colors: {
-            primary: '#7e9a9a',
-            secondary: '#a4c3b2',
-            accent: '#efd9ce',
+            primary: '#d35f5f',
+            secondary: '#6a9b96',
+            accent: '#e6b33e',
             background: '#f6f6f6',
             text: '#2c3e50',
             cardBg: '#ffffff',

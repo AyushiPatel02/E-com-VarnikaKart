@@ -7,34 +7,34 @@
 <style>
     /* Trending page specific styles */
     .trending-header {
-        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        background: linear-gradient(135deg, #d35f5f 0%, #b54b4b 100%);
         padding: 3rem 0;
         margin-bottom: 2rem;
         color: white;
         border-radius: 0.5rem;
     }
-    
+
     .trending-card {
         transition: all 0.3s ease;
         border: none;
         overflow: hidden;
     }
-    
+
     .trending-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
-    
+
     .trending-card .card-img-top {
         height: 220px;
         object-fit: cover;
         transition: all 0.5s ease;
     }
-    
+
     .trending-card:hover .card-img-top {
         transform: scale(1.05);
     }
-    
+
     .trending-badge {
         position: absolute;
         top: 10px;
@@ -46,7 +46,7 @@
         font-weight: 600;
         z-index: 2;
     }
-    
+
     .trending-search-tag {
         display: inline-block;
         background-color: #f8f9fa;
@@ -58,12 +58,12 @@
         cursor: pointer;
         font-size: 0.9rem;
     }
-    
+
     .trending-search-tag:hover {
         background-color: #6a11cb;
         color: white;
     }
-    
+
     .trending-category-card {
         position: relative;
         overflow: hidden;
@@ -71,18 +71,18 @@
         height: 150px;
         margin-bottom: 1.5rem;
     }
-    
+
     .trending-category-card img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         transition: all 0.5s ease;
     }
-    
+
     .trending-category-card:hover img {
         transform: scale(1.1);
     }
-    
+
     .trending-category-card .overlay {
         position: absolute;
         top: 0;
@@ -94,26 +94,26 @@
         align-items: flex-end;
         padding: 1rem;
     }
-    
+
     .trending-category-card .category-name {
         color: white;
         font-weight: 600;
         font-size: 1.2rem;
         margin-bottom: 0.5rem;
     }
-    
+
     .trending-category-card .product-count {
         color: rgba(255,255,255,0.8);
         font-size: 0.9rem;
     }
-    
+
     .section-title {
         position: relative;
         margin-bottom: 2rem;
         font-weight: 700;
         color: #333;
     }
-    
+
     .section-title::after {
         content: '';
         position: absolute;
@@ -123,34 +123,34 @@
         height: 3px;
         background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
     }
-    
+
     .trending-stats {
         background-color: #f8f9fa;
         border-radius: 0.5rem;
         padding: 1.5rem;
         margin-bottom: 2rem;
     }
-    
+
     .stat-item {
         text-align: center;
     }
-    
+
     .stat-number {
         font-size: 2rem;
         font-weight: 700;
         color: #6a11cb;
         margin-bottom: 0.5rem;
     }
-    
+
     .stat-label {
         font-size: 0.9rem;
         color: #6c757d;
     }
-    
+
     .product-rating {
         color: #ffc107;
     }
-    
+
     .wishlist-btn {
         position: absolute;
         top: 10px;
@@ -166,37 +166,37 @@
         z-index: 2;
         transition: all 0.3s ease;
     }
-    
+
     .wishlist-btn:hover {
         background-color: #ff6b6b;
         color: white;
     }
-    
+
     .product-price {
         font-weight: 600;
     }
-    
+
     .discount-price {
         color: #dc3545;
     }
-    
+
     .original-price {
         text-decoration: line-through;
         color: #6c757d;
         font-size: 0.9rem;
     }
-    
+
     .add-to-cart-btn {
         background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
         border: none;
         transition: all 0.3s ease;
     }
-    
+
     .add-to-cart-btn:hover {
         transform: translateY(-2px);
         box-shadow: 0 5px 10px rgba(0,0,0,0.1);
     }
-    
+
     /* Animation for trending items */
     @keyframes fadeInUp {
         from {
@@ -208,11 +208,11 @@
             transform: translateY(0);
         }
     }
-    
+
     .animate-fadeInUp {
         animation: fadeInUp 0.5s ease forwards;
     }
-    
+
     .delay-1 { animation-delay: 0.1s; }
     .delay-2 { animation-delay: 0.2s; }
     .delay-3 { animation-delay: 0.3s; }

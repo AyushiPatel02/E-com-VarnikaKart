@@ -5,10 +5,11 @@
 
 {% block extrastyle %}
 {{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/admin_sidebar_override.css' %}">
 <style>
     :root {
-        --primary-color: #4e73df;
-        --secondary-color: #224abe;
+        --primary-color: #d35f5f;
+        --secondary-color: #b54b4b;
         --success-color: #1cc88a;
         --info-color: #36b9cc;
         --warning-color: #f6c23e;

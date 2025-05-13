@@ -1,10 +1,10 @@
 /* Enhanced Admin Styling for VarnikaKart */
 
 :root {
-    --primary-color: #7952b3;
-    --primary-light: #9d74d2;
-    --primary-dark: #5a3d8a;
-    --secondary-color: #fd7e14;
+    --primary-color: #d35f5f;
+    --primary-light: #e07f7f;
+    --primary-dark: #b54b4b;
+    --secondary-color: #6a9b96;
     --secondary-light: #ff9843;
     --secondary-dark: #e56c00;
     --success-color: #28a745;
@@ -355,19 +355,19 @@
         flex-direction: column;
         align-items: flex-start;
     }
-    
+
     .card-tools {
         margin-top: 0.5rem;
         width: 100%;
         display: flex;
         justify-content: flex-end;
     }
-    
+
     .stat-card .card-body {
         flex-direction: column;
         text-align: center;
     }
-    
+
     .stat-icon {
         margin-right: 0;
         margin-bottom: 1rem;
