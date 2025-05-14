@@ -1,0 +1,333 @@
+{% extends "admin/super_base.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{% block title %}Payment Details | VarnikaKart Admin{% endblock %}
+
+{% block page_title %}Payment Details{% endblock %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item"><a href="{% url 'admin:orders_payment_changelist' %}">Payments</a></li>
+<li class="breadcrumb-item active" aria-current="page">Payment Details</li>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .payment-card {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .payment-header {
+        background: linear-gradient(135deg, #d35f5f 0%, #b54b4b 100%);
+        color: white;
+        padding: 20px;
+    }
+    
+    .payment-body {
+        padding: 25px;
+    }
+    
+    .payment-status {
+        display: inline-block;
+        padding: 8px 15px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+    
+    .payment-status.success {
+        background-color: rgba(40, 167, 69, 0.15);
+        color: #28a745;
+    }
+    
+    .payment-status.pending {
+        background-color: rgba(255, 193, 7, 0.15);
+        color: #ffc107;
+    }
+    
+    .payment-status.failed {
+        background-color: rgba(220, 53, 69, 0.15);
+        color: #dc3545;
+    }
+    
+    .payment-info-item {
+        margin-bottom: 15px;
+    }
+    
+    .payment-info-label {
+        font-size: 14px;
+        color: #6c757d;
+        margin-bottom: 5px;
+    }
+    
+    .payment-info-value {
+        font-size: 16px;
+        font-weight: 600;
+    }
+    
+    .payment-method-icon {
+        font-size: 24px;
+        margin-right: 10px;
+        vertical-align: middle;
+    }
+    
+    .order-link {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #495057;
+        transition: all 0.3s ease;
+    }
+    
+    .order-link:hover {
+        background-color: #e9ecef;
+        color: #212529;
+    }
+    
+    .order-link i {
+        margin-right: 10px;
+    }
+    
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+    }
+    
+    .action-buttons .btn {
+        margin-left: 10px;
+    }
+    
+    .transaction-details {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 20px;
+    }
+    
+    .transaction-details pre {
+        margin-bottom: 0;
+        white-space: pre-wrap;
+        font-size: 14px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Payment Details</h2>
+            <div class="d-flex">
+                <a href="{% url 'admin:orders_payment_changelist' %}" class="btn btn-outline-primary me-2">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Payments
+                </a>
+                <a href="{% url 'admin:orders_order_change' original.order.id %}" class="btn btn-outline-info me-2">
+                    <i class="fas fa-shopping-cart me-1"></i> View Order
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card payment-card mb-4">
+            <div class="payment-header">
+                <h4 class="mb-0">Payment Information</h4>
+            </div>
+            <div class="payment-body">
+                <div class="payment-status {% if original.status == 'S' %}success{% elif original.status == 'P' %}pending{% elif original.status == 'F' %}failed{% endif %}">
+                    <i class="fas {% if original.status == 'S' %}fa-check-circle{% elif original.status == 'P' %}fa-clock{% elif original.status == 'F' %}fa-times-circle{% endif %} me-2"></i>
+                    {% if original.status == 'S' %}Payment Successful
+                    {% elif original.status == 'P' %}Payment Pending
+                    {% elif original.status == 'F' %}Payment Failed
+                    {% endif %}
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="payment-info-item">
+                            <div class="payment-info-label">Payment ID</div>
+                            <div class="payment-info-value">{{ original.payment_id }}</div>
+                        </div>
+                        
+                        <div class="payment-info-item">
+                            <div class="payment-info-label">Amount Paid</div>
+                            <div class="payment-info-value">₹{{ original.amount_paid|floatformat:2 }}</div>
+                        </div>
+                        
+                        <div class="payment-info-item">
+                            <div class="payment-info-label">Payment Method</div>
+                            <div class="payment-info-value">
+                                <i class="payment-method-icon fas {% if original.payment_method == 'COD' %}fa-money-bill-wave{% elif original.payment_method == 'CC' %}fa-credit-card{% elif original.payment_method == 'DC' %}fa-credit-card{% elif original.payment_method == 'UPI' %}fa-mobile-alt{% elif original.payment_method == 'NB' %}fa-university{% else %}fa-money-check{% endif %}"></i>
+                                {{ original.get_payment_method_display }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="payment-info-item">
+                            <div class="payment-info-label">Payment Date</div>
+                            <div class="payment-info-value">{{ original.created_at|date:"F d, Y" }} at {{ original.created_at|time:"H:i" }}</div>
+                        </div>
+                        
+                        <div class="payment-info-item">
+                            <div class="payment-info-label">Last Updated</div>
+                            <div class="payment-info-value">{{ original.updated_at|date:"F d, Y" }} at {{ original.updated_at|time:"H:i" }}</div>
+                        </div>
+                        
+                        <div class="payment-info-item">
+                            <div class="payment-info-label">Status</div>
+                            <div class="payment-info-value">
+                                <form method="post" action="{% url 'admin:update_payment_status' %}" class="d-inline-block">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="payment_id" value="{{ original.id }}">
+                                    <select name="status" class="form-select" onchange="this.form.submit()">
+                                        <option value="S" {% if original.status == 'S' %}selected{% endif %}>Success</option>
+                                        <option value="P" {% if original.status == 'P' %}selected{% endif %}>Pending</option>
+                                        <option value="F" {% if original.status == 'F' %}selected{% endif %}>Failed</option>
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if original.transaction_id %}
+                <div class="payment-info-item">
+                    <div class="payment-info-label">Transaction ID</div>
+                    <div class="payment-info-value">{{ original.transaction_id }}</div>
+                </div>
+                {% endif %}
+                
+                {% if original.payment_processor_response %}
+                <div class="transaction-details">
+                    <div class="payment-info-label mb-2">Payment Processor Response</div>
+                    <pre>{{ original.payment_processor_response }}</pre>
+                </div>
+                {% endif %}
+                
+                <a href="{% url 'admin:orders_order_change' original.order.id %}" class="order-link">
+                    <i class="fas fa-shopping-cart"></i> View Order #{{ original.order.order_number }}
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Customer Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-3">
+                    <img src="{% if original.order.user.profile.profile_picture %}{{ original.order.user.profile.profile_picture.url }}{% else %}{% static 'img/default-avatar.png' %}{% endif %}" alt="{{ original.order.full_name }}" class="img-fluid rounded-circle mb-2" width="80">
+                    <h5 class="mb-0">{{ original.order.full_name }}</h5>
+                    {% if original.order.user %}
+                        <div class="text-muted">Customer since {{ original.order.user.date_joined|date:"M d, Y" }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-muted">Email</label>
+                    <div class="fw-bold">{{ original.order.email }}</div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-muted">Phone</label>
+                    <div class="fw-bold">{{ original.order.phone_number }}</div>
+                </div>
+
+                {% if original.order.user %}
+                    <div class="text-center mt-3">
+                        <a href="{% url 'admin:auth_user_change' original.order.user.id %}" class="btn btn-primary">
+                            <i class="fas fa-user me-1"></i> View Customer Profile
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Order Summary</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label text-muted">Order Number</label>
+                    <div class="fw-bold">{{ original.order.order_number }}</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label text-muted">Order Date</label>
+                    <div class="fw-bold">{{ original.order.created_at|date:"F d, Y" }}</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label text-muted">Order Status</label>
+                    <div class="fw-bold">
+                        <span class="badge {% if original.order.status == 'P' %}bg-warning{% elif original.order.status == 'C' %}bg-primary{% elif original.order.status == 'S' %}bg-info{% elif original.order.status == 'D' %}bg-success{% elif original.order.status == 'X' %}bg-danger{% endif %}">
+                            {% if original.order.status == 'P' %}Pending
+                            {% elif original.order.status == 'C' %}Confirmed
+                            {% elif original.order.status == 'S' %}Shipped
+                            {% elif original.order.status == 'D' %}Delivered
+                            {% elif original.order.status == 'X' %}Cancelled
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label text-muted">Order Total</label>
+                    <div class="fw-bold">₹{{ original.order.order_total|floatformat:2 }}</div>
+                </div>
+                
+                <div class="text-center mt-3">
+                    <a href="{% url 'admin:orders_order_change' original.order.id %}" class="btn btn-primary">
+                        <i class="fas fa-shopping-cart me-1"></i> View Order Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'admin:orders_payment_delete' original.pk %}" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">
+                        <i class="fas fa-trash me-1"></i> Delete Payment Record
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteConfirmModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this payment record? This action cannot be undone.</p>
+                <p class="text-danger"><strong>Warning:</strong> Deleting this payment record may cause inconsistencies with the associated order.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a href="{% url 'admin:orders_payment_delete' original.pk %}" class="btn btn-danger">Delete Payment</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

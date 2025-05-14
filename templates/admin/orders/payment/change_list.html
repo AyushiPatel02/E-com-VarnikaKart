@@ -1,0 +1,378 @@
+{% extends "admin/super_base.html" %}
+{% load i18n static admin_urls admin_list %}
+
+{% block title %}Payments | VarnikaKart Admin{% endblock %}
+
+{% block page_title %}Payments{% endblock %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item active" aria-current="page">Payments</li>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Payments</h2>
+            <div class="d-flex">
+                <a href="{% url 'home' %}" class="btn btn-outline-primary me-2" target="_blank">
+                    <i class="fas fa-external-link-alt me-1"></i> View Site
+                </a>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-download me-1"></i> Export
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="exportDropdown">
+                        <li><a class="dropdown-item" href="{% url 'admin:export_payments' %}?format=csv"><i class="fas fa-file-csv me-2"></i>CSV</a></li>
+                        <li><a class="dropdown-item" href="{% url 'admin:export_payments' %}?format=excel"><i class="fas fa-file-excel me-2"></i>Excel</a></li>
+                        <li><a class="dropdown-item" href="{% url 'admin:export_payments' %}?format=pdf"><i class="fas fa-file-pdf me-2"></i>PDF</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Successful Payments</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ successful_payments_count }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Pending Payments</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ pending_payments_count }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-clock fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-danger shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                            Failed Payments</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ failed_payments_count }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-times-circle fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Total Revenue</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">₹{{ total_revenue }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-rupee-sign fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold">All Payments</h6>
+        <div class="dropdown no-arrow">
+            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                <div class="dropdown-header">Filter By:</div>
+                <a class="dropdown-item" href="{% url 'admin:orders_payment_changelist' %}?status__exact=S">
+                    <i class="fas fa-check-circle fa-sm fa-fw me-2 text-success"></i>
+                    Successful Payments
+                </a>
+                <a class="dropdown-item" href="{% url 'admin:orders_payment_changelist' %}?status__exact=P">
+                    <i class="fas fa-clock fa-sm fa-fw me-2 text-warning"></i>
+                    Pending Payments
+                </a>
+                <a class="dropdown-item" href="{% url 'admin:orders_payment_changelist' %}?status__exact=F">
+                    <i class="fas fa-times-circle fa-sm fa-fw me-2 text-danger"></i>
+                    Failed Payments
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'admin:orders_payment_changelist' %}">
+                    <i class="fas fa-list fa-sm fa-fw me-2 text-gray-400"></i>
+                    All Payments
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <label for="paymentsPerPage" class="form-label mb-0 me-2">Show</label>
+                        <select class="form-select form-select-sm d-inline-block w-auto" id="paymentsPerPage">
+                            <option value="10">10</option>
+                            <option value="25" selected>25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <span class="ms-2">entries</span>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="search-box">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0">
+                                <i class="fas fa-search text-primary"></i>
+                            </span>
+                            <input type="text" class="form-control border-0 bg-light" id="paymentSearch" placeholder="Search payments...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-hover datatable">
+                <thead>
+                    <tr>
+                        <th width="30">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="selectAll">
+                            </div>
+                        </th>
+                        <th>Payment ID</th>
+                        <th>Order</th>
+                        <th>Customer</th>
+                        <th>Amount</th>
+                        <th>Method</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th width="120">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in cl.result_list %}
+                        <tr>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input bulk-select-checkbox" type="checkbox" name="selected_ids" value="{{ payment.id }}">
+                                </div>
+                            </td>
+                            <td>
+                                <a href="{% url 'admin:orders_payment_change' payment.id %}">{{ payment.payment_id }}</a>
+                            </td>
+                            <td>
+                                <a href="{% url 'admin:orders_order_change' payment.order.id %}">{{ payment.order.order_number }}</a>
+                            </td>
+                            <td>
+                                {% if payment.order.user %}
+                                    <a href="{% url 'admin:auth_user_change' payment.order.user.id %}">{{ payment.order.full_name }}</a>
+                                {% else %}
+                                    {{ payment.order.full_name }}
+                                {% endif %}
+                            </td>
+                            <td>₹{{ payment.amount_paid }}</td>
+                            <td>{{ payment.get_payment_method_display }}</td>
+                            <td>
+                                <span class="badge {% if payment.status == 'S' %}bg-success{% elif payment.status == 'P' %}bg-warning{% elif payment.status == 'F' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                    {% if payment.status == 'S' %}Success
+                                    {% elif payment.status == 'P' %}Pending
+                                    {% elif payment.status == 'F' %}Failed
+                                    {% else %}Unknown
+                                    {% endif %}
+                                </span>
+                            </td>
+                            <td>{{ payment.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                <div class="d-flex">
+                                    <a href="{% url 'admin:orders_payment_change' payment.id %}" class="action-btn" title="View">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'admin:orders_order_change' payment.order.id %}" class="action-btn" title="View Order">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </a>
+                                    <a href="{% url 'admin:orders_payment_delete' payment.id %}" class="action-btn delete-confirm" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div>
+                    Showing <span id="entriesStart">1</span> to <span id="entriesEnd">{{ cl.result_list|length }}</span> of <span id="entriesTotal">{{ cl.result_count }}</span> entries
+                </div>
+                <div>
+                    {% if cl.result_count > cl.list_per_page %}
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-end mb-0">
+                                {% if cl.page_num > 1 %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?p=1" aria-label="First">
+                                            <span aria-hidden="true">&laquo;&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?p={{ cl.page_num|add:"-1" }}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" aria-label="First">
+                                            <span aria-hidden="true">&laquo;&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                {% for i in cl.paginator.page_range %}
+                                    {% if cl.page_num == i %}
+                                        <li class="page-item active"><a class="page-link" href="?p={{ i }}">{{ i }}</a></li>
+                                    {% elif i|add:"-2" <= cl.page_num and i|add:"2" >= cl.page_num %}
+                                        <li class="page-item"><a class="page-link" href="?p={{ i }}">{{ i }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if cl.page_num < cl.paginator.num_pages %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?p={{ cl.page_num|add:"1" }}" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?p={{ cl.paginator.num_pages }}" aria-label="Last">
+                                            <span aria-hidden="true">&raquo;&raquo;</span>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" aria-label="Last">
+                                            <span aria-hidden="true">&raquo;&raquo;</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteConfirmModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this payment record? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a href="#" class="btn btn-danger" id="confirmDelete">Delete Payment</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Use the utility function to initialize DataTable
+        if (typeof initDataTables === 'function') {
+            initDataTables('.datatable', {
+                responsive: true,
+                dom: 'rt<"bottom"ip>',
+                language: {
+                    search: '',
+                    searchPlaceholder: 'Search payments...'
+                },
+                order: [[7, 'desc']], // Sort by date by default
+                pageLength: 25
+            });
+        }
+
+        // Get the DataTable instance
+        const table = $('.datatable').DataTable();
+
+        // Search functionality
+        $('#paymentSearch').on('keyup', function() {
+            table.search(this.value).draw();
+        });
+
+        // Change number of entries
+        $('#paymentsPerPage').on('change', function() {
+            table.page.len($(this).val()).draw();
+        });
+
+        // Delete confirmation
+        $('.delete-confirm').on('click', function(e) {
+            e.preventDefault();
+            const deleteUrl = $(this).attr('href');
+            $('#confirmDelete').attr('href', deleteUrl);
+            $('#deleteConfirmModal').modal('show');
+        });
+
+        // Select all checkboxes
+        $('#selectAll').on('change', function() {
+            $('.bulk-select-checkbox').prop('checked', $(this).prop('checked'));
+        });
+
+        // Update entries info
+        function updateEntriesInfo() {
+            const info = table.page.info();
+            $('#entriesStart').text(info.start + 1);
+            $('#entriesEnd').text(info.end);
+            $('#entriesTotal').text(info.recordsDisplay);
+        }
+
+        table.on('draw', updateEntriesInfo);
+        updateEntriesInfo();
+    });
+</script>
+{% endblock %}

@@ -19,7 +19,7 @@ class SuperuserRequiredMiddleware:
 
     def __call__(self, request):
         # Check if the request path starts with /admin/ and not with /super-admin/
-        if request.path.startswith('/admin/') and not request.path.startswith('/super-admin/'):
+        if request.path.startswith('/admin/'):
             # If the user is not authenticated or not a superuser
             if not request.user.is_authenticated or not request.user.is_superuser:
                 # Add a message

@@ -1,0 +1,291 @@
+{% extends "admin/super_base.html" %}
+{% load i18n static admin_urls admin_list %}
+
+{% block title %}Reviews | VarnikaKart Admin{% endblock %}
+
+{% block page_title %}Reviews{% endblock %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item active" aria-current="page">Reviews</li>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Reviews</h2>
+            <div class="d-flex">
+                <a href="{% url 'home' %}" class="btn btn-outline-primary me-2" target="_blank">
+                    <i class="fas fa-external-link-alt me-1"></i> View Site
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold">All Reviews</h6>
+        <div class="dropdown no-arrow">
+            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                <div class="dropdown-header">Actions:</div>
+                <a class="dropdown-item" href="#" id="exportReviewsBtn">
+                    <i class="fas fa-download fa-sm fa-fw me-2 text-gray-400"></i>
+                    Export Reviews
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" id="refreshTableBtn">
+                    <i class="fas fa-sync fa-sm fa-fw me-2 text-gray-400"></i>
+                    Refresh Table
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <label for="reviewsPerPage" class="form-label mb-0 me-2">Show</label>
+                        <select class="form-select form-select-sm d-inline-block w-auto" id="reviewsPerPage">
+                            <option value="10">10</option>
+                            <option value="25" selected>25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <span class="ms-2">entries</span>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="search-box">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0">
+                                <i class="fas fa-search text-primary"></i>
+                            </span>
+                            <input type="text" class="form-control border-0 bg-light" id="reviewSearch" placeholder="Search reviews...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-hover datatable">
+                <thead>
+                    <tr>
+                        <th width="30">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="selectAll">
+                            </div>
+                        </th>
+                        <th>Product</th>
+                        <th>Customer</th>
+                        <th>Rating</th>
+                        <th>Title</th>
+                        <th>Date</th>
+                        <th width="120">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for review in cl.result_list %}
+                        <tr>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input bulk-select-checkbox" type="checkbox" name="selected_ids" value="{{ review.id }}">
+                                </div>
+                            </td>
+                            <td>
+                                <a href="{% url 'admin:products_product_change' review.product.id %}">{{ review.product.name }}</a>
+                            </td>
+                            <td>
+                                <div>{{ review.user.username }}</div>
+                                <div class="small text-muted">{{ review.user.email }}</div>
+                            </td>
+                            <td>
+                                <div class="rating-stars">
+                                    {% for i in "12345" %}
+                                        <i class="fas fa-star {% if forloop.counter <= review.rating %}text-warning{% else %}text-muted{% endif %}"></i>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                            <td>{{ review.title|truncatechars:30 }}</td>
+                            <td>{{ review.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                <div class="d-flex">
+                                    <a href="{% url 'admin:products_review_change' review.id %}" class="action-btn" title="View">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'admin:products_product_change' review.product.id %}" class="action-btn" title="View Product">
+                                        <i class="fas fa-box"></i>
+                                    </a>
+                                    <a href="{% url 'admin:products_review_delete' review.id %}" class="action-btn delete-confirm" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div>
+                    Showing <span id="entriesStart">1</span> to <span id="entriesEnd">{{ cl.result_list|length }}</span> of <span id="entriesTotal">{{ cl.result_count }}</span> entries
+                </div>
+                <div>
+                    {% if cl.result_count > cl.list_per_page %}
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-end mb-0">
+                                {% if cl.page_num > 1 %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?p=1" aria-label="First">
+                                            <span aria-hidden="true">&laquo;&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?p={{ cl.page_num|add:"-1" }}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" aria-label="First">
+                                            <span aria-hidden="true">&laquo;&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                {% for i in cl.paginator.page_range %}
+                                    {% if cl.page_num == i %}
+                                        <li class="page-item active"><a class="page-link" href="?p={{ i }}">{{ i }}</a></li>
+                                    {% elif i|add:"-2" <= cl.page_num and i|add:"2" >= cl.page_num %}
+                                        <li class="page-item"><a class="page-link" href="?p={{ i }}">{{ i }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if cl.page_num < cl.paginator.num_pages %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?p={{ cl.page_num|add:"1" }}" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?p={{ cl.paginator.num_pages }}" aria-label="Last">
+                                            <span aria-hidden="true">&raquo;&raquo;</span>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" aria-label="Last">
+                                            <span aria-hidden="true">&raquo;&raquo;</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteConfirmModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this review? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a href="#" class="btn btn-danger" id="confirmDelete">Delete Review</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Use the utility function to initialize DataTable
+        if (typeof initDataTables === 'function') {
+            initDataTables('.datatable', {
+                responsive: true,
+                dom: 'rt<"bottom"ip>',
+                language: {
+                    search: '',
+                    searchPlaceholder: 'Search reviews...'
+                },
+                order: [[5, 'desc']], // Sort by date by default
+                pageLength: 25
+            });
+        }
+
+        // Get the DataTable instance
+        const table = $('.datatable').DataTable();
+
+        // Search functionality
+        $('#reviewSearch').on('keyup', function() {
+            table.search(this.value).draw();
+        });
+
+        // Change number of entries
+        $('#reviewsPerPage').on('change', function() {
+            table.page.len($(this).val()).draw();
+        });
+
+        // Delete confirmation
+        $('.delete-confirm').on('click', function(e) {
+            e.preventDefault();
+            const deleteUrl = $(this).attr('href');
+            $('#confirmDelete').attr('href', deleteUrl);
+            $('#deleteConfirmModal').modal('show');
+        });
+
+        // Select all checkboxes
+        $('#selectAll').on('change', function() {
+            $('.bulk-select-checkbox').prop('checked', $(this).prop('checked'));
+        });
+
+        // Update entries info
+        function updateEntriesInfo() {
+            const info = table.page.info();
+            $('#entriesStart').text(info.start + 1);
+            $('#entriesEnd').text(info.end);
+            $('#entriesTotal').text(info.recordsDisplay);
+        }
+
+        table.on('draw', updateEntriesInfo);
+        updateEntriesInfo();
+
+        // Refresh table
+        $('#refreshTableBtn').on('click', function(e) {
+            e.preventDefault();
+            location.reload();
+        });
+
+        // Export reviews (placeholder)
+        $('#exportReviewsBtn').on('click', function(e) {
+            e.preventDefault();
+            alert('Export functionality will be implemented soon.');
+        });
+    });
+</script>
+{% endblock %}
