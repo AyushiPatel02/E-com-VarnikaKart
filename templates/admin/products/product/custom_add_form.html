@@ -1,0 +1,961 @@
+{% extends "admin/custom_base.html" %}
+{% load i18n static %}
+
+{% block title %}{% if add %}Add Product{% else %}Edit Product: {{ original.name }}{% endif %} | VarnikaKart Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Layout Fixes */
+    .content-wrapper {
+        margin-left: var(--sidebar-width);
+        width: calc(100% - var(--sidebar-width));
+        transition: all var(--transition-speed);
+        min-height: calc(100vh - var(--header-height) - var(--footer-height));
+        padding-top: 20px;
+    }
+
+    @media (max-width: 991.98px) {
+        .content-wrapper {
+            margin-left: 0;
+            width: 100%;
+        }
+    }
+
+    /* Custom Product Form Styling */
+    .product-form-container {
+        padding: 1.5rem;
+    }
+
+    .product-form-header {
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    .product-form-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: linear-gradient(to right, var(--primary-color), transparent);
+    }
+
+    .product-form-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .product-form-subtitle {
+        color: var(--text-muted);
+        font-size: 1rem;
+    }
+
+    .product-form-card {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .product-form-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(211, 95, 95, 0.15);
+    }
+
+    .product-form-card-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        color: white;
+        padding: 1.25rem 1.5rem;
+        font-weight: 600;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .product-form-card-header i {
+        margin-right: 10px;
+        font-size: 1.2rem;
+    }
+
+    .product-form-card-body {
+        padding: 1.5rem;
+        background-color: white;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text-dark);
+        display: block;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+        background-color: #f9fafb;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(211, 95, 95, 0.25);
+        background-color: white;
+    }
+
+    .form-text {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .form-check-input:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .form-switch .form-check-input:focus {
+        box-shadow: 0 0 0 0.25rem rgba(211, 95, 95, 0.25);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        border: none;
+        box-shadow: 0 4px 10px rgba(211, 95, 95, 0.2);
+        transition: all 0.3s ease;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(211, 95, 95, 0.3);
+        background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+    }
+
+    .btn-secondary {
+        background-color: #f8f9fa;
+        color: #495057;
+        border: 1px solid #ced4da;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+    }
+
+    .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        background-color: #e9ecef;
+    }
+
+    .btn-outline-primary {
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+        transition: all 0.3s ease;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: var(--primary-color);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(211, 95, 95, 0.2);
+    }
+
+    /* Tab Navigation */
+    .nav-tabs {
+        border-bottom: none;
+        margin-bottom: 1.5rem;
+    }
+
+    .nav-tabs .nav-item {
+        margin-right: 0.5rem;
+    }
+
+    .nav-tabs .nav-link {
+        border: none;
+        background-color: #f8f9fa;
+        color: var(--text-muted);
+        border-radius: 8px;
+        padding: 0.75rem 1.25rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .nav-tabs .nav-link:hover {
+        background-color: rgba(211, 95, 95, 0.1);
+        color: var(--primary-color);
+    }
+
+    .nav-tabs .nav-link.active {
+        background-color: var(--primary-color);
+        color: white;
+        box-shadow: 0 4px 10px rgba(211, 95, 95, 0.2);
+    }
+
+    .nav-tabs .nav-link i {
+        margin-right: 8px;
+    }
+
+    /* Animations */
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .slide-in-left {
+        animation: slideInLeft 0.5s ease-out;
+    }
+
+    .slide-in-right {
+        animation: slideInRight 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideInLeft {
+        from {
+            transform: translateX(-30px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideInRight {
+        from {
+            transform: translateX(30px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* Helper Card */
+    .helper-card {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .helper-card-header {
+        background: linear-gradient(135deg, var(--secondary-color) 0%, #5a8a85 100%);
+        color: white;
+        padding: 1.25rem 1.5rem;
+        font-weight: 600;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .helper-card-header i {
+        margin-right: 10px;
+        font-size: 1.2rem;
+    }
+
+    .helper-card-body {
+        padding: 1.5rem;
+        background-color: white;
+    }
+
+    .helper-tip {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .helper-tip:last-child {
+        margin-bottom: 0;
+    }
+
+    .helper-tip i {
+        color: var(--primary-color);
+        margin-right: 10px;
+        margin-top: 3px;
+    }
+
+    .helper-tip-content {
+        flex: 1;
+    }
+
+    .helper-tip-title {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .helper-tip-text {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="container-fluid">
+        <div class="product-form-container">
+            <div class="product-form-header fade-in">
+                <h1 class="product-form-title">{% if add %}Add New Product{% else %}Edit Product: {{ original.name }}{% endif %}</h1>
+                <p class="product-form-subtitle">Fill in the details below to {% if add %}create a new product{% else %}update this product{% endif %}.</p>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <form method="post" enctype="multipart/form-data" id="product_form" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Basic Information Card -->
+                        <div class="product-form-card slide-in-left">
+                            <div class="product-form-card-header">
+                                <i class="fas fa-info-circle"></i> Basic Information
+                            </div>
+                            <div class="product-form-card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="id_category" class="form-label">Category <span class="text-danger">*</span></label>
+                                            {{ adminform.form.category }}
+                                            {% if adminform.form.category.errors %}
+                                                <div class="invalid-feedback d-block">{{ adminform.form.category.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="id_name" class="form-label">Product Name <span class="text-danger">*</span></label>
+                                            {{ adminform.form.name }}
+                                            {% if adminform.form.name.errors %}
+                                                <div class="invalid-feedback d-block">{{ adminform.form.name.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="id_slug" class="form-label">Slug <span class="text-danger">*</span></label>
+                                            {{ adminform.form.slug }}
+                                            {% if adminform.form.slug.errors %}
+                                                <div class="invalid-feedback d-block">{{ adminform.form.slug.errors }}</div>
+                                            {% endif %}
+                                            <div class="form-text">URL-friendly name for the product.</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Status</label>
+                                            <div class="d-flex flex-column">
+                                                <div class="form-check form-switch mb-2">
+                                                    {{ adminform.form.is_available }}
+                                                    <label class="form-check-label" for="id_is_available">Available on website</label>
+                                                </div>
+                                                <div class="form-check form-switch">
+                                                    {{ adminform.form.is_featured }}
+                                                    <label class="form-check-label" for="id_is_featured">Featured product</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-0">
+                                    <label for="id_description" class="form-label">Description <span class="text-danger">*</span></label>
+                                    {{ adminform.form.description }}
+                                    {% if adminform.form.description.errors %}
+                                        <div class="invalid-feedback d-block">{{ adminform.form.description.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pricing Card -->
+                        <div class="product-form-card slide-in-left">
+                            <div class="product-form-card-header">
+                                <i class="fas fa-tag"></i> Pricing & Inventory
+                            </div>
+                            <div class="product-form-card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="id_price" class="form-label">Price (₹) <span class="text-danger">*</span></label>
+                                            {{ adminform.form.price }}
+                                            {% if adminform.form.price.errors %}
+                                                <div class="invalid-feedback d-block">{{ adminform.form.price.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="id_discount_price" class="form-label">Discount Price (₹)</label>
+                                            {{ adminform.form.discount_price }}
+                                            {% if adminform.form.discount_price.errors %}
+                                                <div class="invalid-feedback d-block">{{ adminform.form.discount_price.errors }}</div>
+                                            {% endif %}
+                                            <div class="form-text">Leave empty if no discount.</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="id_stock" class="form-label">Stock <span class="text-danger">*</span></label>
+                                            {{ adminform.form.stock }}
+                                            {% if adminform.form.stock.errors %}
+                                                <div class="invalid-feedback d-block">{{ adminform.form.stock.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="id_sku" class="form-label">SKU</label>
+                                            {{ adminform.form.sku }}
+                                            {% if adminform.form.sku.errors %}
+                                                <div class="invalid-feedback d-block">{{ adminform.form.sku.errors }}</div>
+                                            {% endif %}
+                                            <div class="form-text">Stock Keeping Unit (unique identifier).</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Images Card -->
+                        <div class="product-form-card slide-in-left">
+                            <div class="product-form-card-header">
+                                <i class="fas fa-images"></i> Product Images
+                            </div>
+                            <div class="product-form-card-body">
+                                {% if not add %}
+                                <div class="mb-4">
+                                    <h5 class="mb-3">Current Images</h5>
+                                    <div class="row">
+                                        {% for image in original.images.all %}
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card h-100 {% if image.is_primary %}border-primary{% endif %}">
+                                                <img src="{{ image.image.url }}" class="card-img-top" alt="{{ original.name }}">
+                                                <div class="card-body">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="primary_image" value="{{ image.id }}" {% if image.is_primary %}checked{% endif %}>
+                                                        <label class="form-check-label">Primary Image</label>
+                                                    </div>
+                                                </div>
+                                                <div class="card-footer bg-white">
+                                                    <button type="button" class="btn btn-sm btn-outline-danger delete-image" data-image-id="{{ image.id }}">
+                                                        <i class="fas fa-trash-alt"></i> Remove
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% empty %}
+                                        <div class="col-12">
+                                            <div class="alert alert-info">
+                                                <i class="fas fa-info-circle me-2"></i> No images uploaded yet.
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                <div class="mb-3">
+                                    <h5 class="mb-3">Upload New Images</h5>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="id_images" class="form-label">Product Images</label>
+                                                <input type="file" class="form-control" id="id_images" name="images" multiple accept="image/*">
+                                                <div class="form-text">You can select multiple images at once. First image will be set as primary if no primary image exists.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SEO Card -->
+                        <div class="product-form-card slide-in-left">
+                            <div class="product-form-card-header">
+                                <i class="fas fa-search"></i> SEO Information
+                            </div>
+                            <div class="product-form-card-body">
+                                <div class="form-group">
+                                    <label for="id_meta_title" class="form-label">Meta Title</label>
+                                    {{ adminform.form.meta_title }}
+                                    {% if adminform.form.meta_title.errors %}
+                                        <div class="invalid-feedback d-block">{{ adminform.form.meta_title.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Leave empty to use product name.</div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="id_meta_description" class="form-label">Meta Description</label>
+                                    {{ adminform.form.meta_description }}
+                                    {% if adminform.form.meta_description.errors %}
+                                        <div class="invalid-feedback d-block">{{ adminform.form.meta_description.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Brief description for search engines. Leave empty to use product description.</div>
+                                </div>
+
+                                <div class="form-group mb-0">
+                                    <label for="id_meta_keywords" class="form-label">Meta Keywords</label>
+                                    {{ adminform.form.meta_keywords }}
+                                    {% if adminform.form.meta_keywords.errors %}
+                                        <div class="invalid-feedback d-block">{{ adminform.form.meta_keywords.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Comma-separated keywords related to the product.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-between mt-4 mb-5">
+                            <div>
+                                <button type="submit" class="btn btn-primary me-2">
+                                    <i class="fas fa-save me-2"></i> Save Product
+                                </button>
+                                <a href="{% url 'admin:products_product_changelist' %}" class="btn btn-secondary">
+                                    <i class="fas fa-times me-2"></i> Cancel
+                                </a>
+                            </div>
+                            {% if not add %}
+                            <div>
+                                <button type="submit" name="_continue" class="btn btn-outline-primary">
+                                    <i class="fas fa-save me-2"></i> Save and continue editing
+                                </button>
+                            </div>
+                            {% endif %}
+                        </div>
+            </form>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Helper Card -->
+            <div class="helper-card slide-in-right">
+                <div class="helper-card-header">
+                    <i class="fas fa-lightbulb"></i> Tips for Adding Products
+                </div>
+                <div class="helper-card-body">
+                    <div class="helper-tip">
+                        <i class="fas fa-check-circle"></i>
+                        <div class="helper-tip-content">
+                            <div class="helper-tip-title">Use Descriptive Names</div>
+                            <div class="helper-tip-text">Choose clear, descriptive product names that include key features or benefits.</div>
+                        </div>
+                    </div>
+
+                    <div class="helper-tip">
+                        <i class="fas fa-check-circle"></i>
+                        <div class="helper-tip-content">
+                            <div class="helper-tip-title">Write Detailed Descriptions</div>
+                            <div class="helper-tip-text">Include all important details like materials, dimensions, and usage instructions.</div>
+                        </div>
+                    </div>
+
+                    <div class="helper-tip">
+                        <i class="fas fa-check-circle"></i>
+                        <div class="helper-tip-content">
+                            <div class="helper-tip-title">Add High-Quality Images</div>
+                            <div class="helper-tip-text">Upload clear, well-lit images from multiple angles. Recommended size: 1000x1000px.</div>
+                        </div>
+                    </div>
+
+                    <div class="helper-tip">
+                        <i class="fas fa-check-circle"></i>
+                        <div class="helper-tip-content">
+                            <div class="helper-tip-title">Set Competitive Pricing</div>
+                            <div class="helper-tip-text">Research market prices and set competitive rates. Use discount prices for promotions.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Links Card -->
+            <div class="helper-card slide-in-right">
+                <div class="helper-card-header">
+                    <i class="fas fa-link"></i> Quick Links
+                </div>
+                <div class="helper-card-body">
+                    <div class="list-group">
+                        <a href="{% url 'admin:products_product_changelist' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+                            <i class="fas fa-list me-3 text-primary"></i>
+                            <span>View All Products</span>
+                        </a>
+                        <a href="{% url 'admin:products_category_add' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+                            <i class="fas fa-folder-plus me-3 text-success"></i>
+                            <span>Add New Category</span>
+                        </a>
+                        <a href="{% url 'home' %}" class="list-group-item list-group-item-action d-flex align-items-center" target="_blank">
+                            <i class="fas fa-external-link-alt me-3 text-info"></i>
+                            <span>View Website</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {% if not add %}
+            <!-- Product Stats Card -->
+            <div class="helper-card slide-in-right">
+                <div class="helper-card-header">
+                    <i class="fas fa-chart-bar"></i> Product Statistics
+                </div>
+                <div class="helper-card-body">
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <div class="card h-100 text-center p-3">
+                                <h3 class="mb-0 text-primary">{{ original.stock }}</h3>
+                                <small class="text-muted">In Stock</small>
+                                <div class="progress mt-2" style="height: 5px;">
+                                    <div class="progress-bar bg-primary" role="progressbar" style="width: {% if original.stock > 100 %}100{% else %}{{ original.stock }}{% endif %}%;" aria-valuenow="{{ original.stock }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="card h-100 text-center p-3">
+                                <h3 class="mb-0 text-info">{{ original.reviews.count }}</h3>
+                                <small class="text-muted">Reviews</small>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="card h-100 text-center p-3">
+                                <h3 class="mb-0 text-success">{{ original.variations.count }}</h3>
+                                <small class="text-muted">Variations</small>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="card h-100 text-center p-3">
+                                <h3 class="mb-0 text-warning">0</h3>
+                                <small class="text-muted">Orders</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="flex-shrink-0 me-3">
+                            <div class="icon-circle bg-light" style="width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-calendar-alt text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0">Created</h6>
+                            <div class="text-muted">{{ original.created_at|date:"F d, Y" }}</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 me-3">
+                            <div class="icon-circle bg-light" style="width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-clock text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0">Last Updated</h6>
+                            <div class="text-muted">{{ original.updated_at|date:"F d, Y" }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize rich text editor for description
+        if (typeof CKEDITOR !== 'undefined') {
+            CKEDITOR.replace('id_description', {
+                height: 300,
+                toolbar: [
+                    { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'RemoveFormat' ] },
+                    { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote' ] },
+                    { name: 'links', items: [ 'Link', 'Unlink' ] },
+                    { name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule', 'SpecialChar' ] },
+                    { name: 'tools', items: [ 'Maximize' ] },
+                    { name: 'document', items: [ 'Source' ] }
+                ],
+                removePlugins: 'elementspath',
+                resize_enabled: false,
+                extraPlugins: 'autogrow',
+                autoGrow_minHeight: 300,
+                autoGrow_maxHeight: 600,
+                autoGrow_bottomSpace: 50,
+                removeDialogTabs: 'image:advanced;link:advanced'
+            });
+        }
+
+        // Initialize Select2 for dropdowns with enhanced styling
+        if (typeof $.fn.select2 !== 'undefined') {
+            $('#id_category').select2({
+                theme: 'bootstrap4',
+                placeholder: 'Select a category',
+                allowClear: true,
+                width: '100%',
+                dropdownCssClass: 'select2-dropdown-primary'
+            });
+        }
+
+        // Auto-generate slug from name with improved functionality
+        const nameInput = document.getElementById('id_name');
+        const slugInput = document.getElementById('id_slug');
+
+        if (nameInput && slugInput) {
+            // Function to generate slug
+            const generateSlug = (text) => {
+                return text
+                    .toLowerCase()
+                    .replace(/[^\w\s-]/g, '') // Remove special chars
+                    .replace(/\s+/g, '-')     // Replace spaces with hyphens
+                    .replace(/-+/g, '-')      // Replace multiple hyphens with single
+                    .replace(/^-+|-+$/g, ''); // Trim hyphens from start and end
+            };
+
+            // Generate slug on input (not just keyup)
+            nameInput.addEventListener('input', function() {
+                if (!slugInput.dataset.manuallyChanged) {
+                    slugInput.value = generateSlug(nameInput.value);
+                }
+            });
+
+            // Mark as manually changed when user edits
+            slugInput.addEventListener('input', function() {
+                slugInput.dataset.manuallyChanged = 'true';
+            });
+
+            // Add button to regenerate slug
+            const slugContainer = slugInput.parentElement;
+            const regenerateBtn = document.createElement('button');
+            regenerateBtn.type = 'button';
+            regenerateBtn.className = 'btn btn-sm btn-outline-secondary mt-2';
+            regenerateBtn.innerHTML = '<i class="fas fa-sync-alt me-1"></i> Regenerate from name';
+            regenerateBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                slugInput.value = generateSlug(nameInput.value);
+                slugInput.dataset.manuallyChanged = 'false';
+                // Show feedback
+                this.innerHTML = '<i class="fas fa-check me-1"></i> Updated';
+                this.classList.remove('btn-outline-secondary');
+                this.classList.add('btn-success');
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-sync-alt me-1"></i> Regenerate from name';
+                    this.classList.remove('btn-success');
+                    this.classList.add('btn-outline-secondary');
+                }, 2000);
+            });
+            slugContainer.appendChild(regenerateBtn);
+        }
+
+        // Handle image upload preview
+        const imageInput = document.getElementById('id_images');
+        if (imageInput) {
+            imageInput.addEventListener('change', function() {
+                // Create preview container if it doesn't exist
+                let previewContainer = document.querySelector('.image-preview-container');
+                if (!previewContainer) {
+                    previewContainer = document.createElement('div');
+                    previewContainer.className = 'image-preview-container mt-3';
+                    this.parentElement.appendChild(previewContainer);
+                } else {
+                    previewContainer.innerHTML = '';
+                }
+
+                // Create previews for each selected file
+                for (let i = 0; i < this.files.length; i++) {
+                    const file = this.files[i];
+                    if (!file.type.match('image.*')) continue;
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const previewItem = document.createElement('div');
+                        previewItem.className = 'image-preview-item';
+                        previewItem.innerHTML = `
+                            <img src="${e.target.result}" class="product-image-preview" alt="Preview">
+                            <div class="mt-1 text-center">Image ${i + 1}</div>
+                        `;
+                        previewContainer.appendChild(previewItem);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Handle primary image selection
+        const primaryCheckboxes = document.querySelectorAll('input[name="primary_image"]');
+        primaryCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    // Uncheck other primary checkboxes
+                    primaryCheckboxes.forEach(cb => {
+                        if (cb !== this) {
+                            cb.checked = false;
+                            // Remove visual indicator from parent card
+                            const card = cb.closest('.card');
+                            if (card) {
+                                card.classList.remove('border-primary');
+                            }
+                        }
+                    });
+
+                    // Add visual indicator to selected card
+                    const card = this.closest('.card');
+                    if (card) {
+                        card.classList.add('border-primary');
+                    }
+
+                    // Show feedback toast
+                    showToast('Primary image updated', 'success');
+                }
+            });
+        });
+
+        // Delete image functionality
+        const deleteButtons = document.querySelectorAll('.delete-image');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                if (confirm('Are you sure you want to delete this image? This action cannot be undone.')) {
+                    const imageId = this.dataset.imageId;
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'delete_image';
+                    hiddenInput.value = imageId;
+                    document.getElementById('product_form').appendChild(hiddenInput);
+
+                    // Remove the image card from the UI
+                    this.closest('.col-md-4').remove();
+
+                    // Show feedback toast
+                    showToast('Image removed', 'info');
+                }
+            });
+        });
+
+        // Add form validation
+        const form = document.getElementById('product_form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                // Check required fields
+                const requiredFields = form.querySelectorAll('[required]');
+                let hasErrors = false;
+
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        hasErrors = true;
+                        field.classList.add('is-invalid');
+
+                        // Add error message if not exists
+                        let errorMsg = field.nextElementSibling;
+                        if (!errorMsg || !errorMsg.classList.contains('invalid-feedback')) {
+                            errorMsg = document.createElement('div');
+                            errorMsg.className = 'invalid-feedback';
+                            errorMsg.textContent = 'This field is required.';
+                            field.parentNode.insertBefore(errorMsg, field.nextSibling);
+                        }
+                    } else {
+                        field.classList.remove('is-invalid');
+                    }
+                });
+
+                if (hasErrors) {
+                    e.preventDefault();
+                    showToast('Please fill in all required fields', 'danger');
+
+                    // Scroll to first error
+                    const firstError = form.querySelector('.is-invalid');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstError.focus();
+                    }
+                }
+            });
+
+            // Clear validation on input
+            form.querySelectorAll('input, select, textarea').forEach(field => {
+                field.addEventListener('input', function() {
+                    this.classList.remove('is-invalid');
+                    const errorMsg = this.nextElementSibling;
+                    if (errorMsg && errorMsg.classList.contains('invalid-feedback')) {
+                        errorMsg.remove();
+                    }
+                });
+            });
+        }
+
+        // Toast notification system
+        function showToast(message, type = 'info') {
+            // Create toast container if it doesn't exist
+            let toastContainer = document.querySelector('.toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
+                toastContainer.style.zIndex = '1100';
+                document.body.appendChild(toastContainer);
+            }
+
+            // Create toast
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-white bg-${type} border-0`;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+
+            // Toast content
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'danger' ? 'exclamation-circle' : 'info-circle'} me-2"></i>
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            `;
+
+            toastContainer.appendChild(toast);
+
+            // Initialize and show toast
+            const bsToast = new bootstrap.Toast(toast, {
+                animation: true,
+                autohide: true,
+                delay: 3000
+            });
+            bsToast.show();
+
+            // Remove toast after it's hidden
+            toast.addEventListener('hidden.bs.toast', function() {
+                toast.remove();
+            });
+        }
+    });
+</script>
+{% endblock %}

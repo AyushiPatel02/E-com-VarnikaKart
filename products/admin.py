@@ -125,6 +125,9 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductImageInline, ProductVariationInline, ReviewInline]
     actions = [make_available, make_unavailable]
 
+    # Use custom template for add/edit form
+    change_form_template = 'admin/products/product/custom_add_form.html'
+
     def save_model(self, request, obj, form, change):
         """
         Override save_model to ensure products are available by default

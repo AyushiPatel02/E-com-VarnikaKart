@@ -12,13 +12,15 @@
 
 {% block extra_css %}
 <style>
+    /* Enhanced Product Form Styling */
     .product-image-preview {
         width: 150px;
         height: 150px;
         object-fit: cover;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         margin-bottom: 10px;
+        transition: all 0.3s ease;
     }
 
     .image-preview-container {
@@ -31,10 +33,13 @@
     .image-preview-item {
         position: relative;
         transition: all 0.3s ease;
+        border-radius: 10px;
+        overflow: hidden;
     }
 
     .image-preview-item:hover {
-        transform: scale(1.05);
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(211, 95, 95, 0.15);
     }
 
     .image-actions {
@@ -46,8 +51,8 @@
     }
 
     .image-action-btn {
-        width: 30px;
-        height: 30px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         background: rgba(255,255,255,0.9);
         display: flex;
@@ -55,22 +60,26 @@
         justify-content: center;
         cursor: pointer;
         transition: all 0.2s ease;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
     .image-action-btn:hover {
         background: var(--primary-color);
         color: white;
+        transform: scale(1.1);
     }
 
     .primary-badge {
         position: absolute;
         bottom: 15px;
         left: 0;
-        background: var(--primary-color);
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
         color: white;
-        padding: 2px 8px;
+        padding: 3px 10px;
         font-size: 0.7rem;
+        font-weight: 600;
         border-radius: 0 4px 4px 0;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
     .product-stats {
@@ -88,97 +97,295 @@
         background: var(--white-color);
         box-shadow: var(--box-shadow-sm);
         text-align: center;
+        transition: all 0.3s ease;
+        border-left: 4px solid var(--primary-color);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--box-shadow-hover);
     }
 
     .stat-value {
         font-size: 1.8rem;
         font-weight: 700;
         margin-bottom: 5px;
+        color: var(--primary-color);
     }
 
     .stat-label {
         color: var(--secondary-color);
         font-size: 0.9rem;
+        font-weight: 600;
     }
 
     .variation-table {
         width: 100%;
         margin-bottom: 20px;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: var(--box-shadow-sm);
     }
 
     .variation-table th {
-        background-color: var(--light-color);
-        padding: 10px;
+        background: linear-gradient(to right, rgba(211, 95, 95, 0.05), rgba(211, 95, 95, 0.1));
+        padding: 12px 15px;
+        font-weight: 600;
+        color: var(--primary-dark);
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
     }
 
     .variation-table td {
-        padding: 10px;
+        padding: 12px 15px;
         border-bottom: 1px solid rgba(0,0,0,0.05);
+        vertical-align: middle;
     }
 
-    .tab-content {
-        padding: 20px 0;
+    .variation-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .variation-table tr:hover td {
+        background-color: rgba(211, 95, 95, 0.03);
+    }
+
+    /* Enhanced Tab Navigation */
+    .card-header-tabs {
+        margin-top: -0.5rem;
+        margin-bottom: -0.5rem;
+        border-bottom: none;
     }
 
     .nav-tabs .nav-link {
-        font-weight: 500;
+        font-weight: 600;
+        color: var(--text-muted);
+        padding: 1rem 1.25rem;
+        border: none;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .nav-tabs .nav-link:hover {
+        color: var(--primary-color);
+        background-color: rgba(211, 95, 95, 0.05);
     }
 
     .nav-tabs .nav-link.active {
-        border-bottom: 2px solid var(--primary-color);
         color: var(--primary-color);
+        border-bottom: 2px solid var(--primary-color);
+        background-color: transparent;
     }
 
+    .nav-tabs .nav-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+    }
+
+    .nav-tabs .nav-link i {
+        margin-right: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .nav-tabs .nav-link:hover i,
+    .nav-tabs .nav-link.active i {
+        transform: scale(1.2);
+    }
+
+    .tab-content {
+        padding: 25px 0;
+    }
+
+    /* Form Styling */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text-dark);
+        display: block;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(211, 95, 95, 0.25);
+    }
+
+    .form-text {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .form-check-input:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .form-switch .form-check-input:focus {
+        box-shadow: 0 0 0 0.25rem rgba(211, 95, 95, 0.25);
+    }
+
+    /* Stock Indicator */
     .stock-indicator {
         width: 100%;
-        height: 6px;
+        height: 8px;
         background-color: #e9ecef;
-        border-radius: 3px;
+        border-radius: 4px;
         overflow: hidden;
-        margin-top: 5px;
+        margin-top: 8px;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
     }
 
     .stock-level {
         height: 100%;
-        border-radius: 3px;
+        border-radius: 4px;
+        transition: width 0.5s ease;
     }
 
     .stock-low {
-        background-color: var(--danger-color);
+        background: linear-gradient(90deg, var(--danger-color), #ff6b6b);
     }
 
     .stock-medium {
-        background-color: var(--warning-color);
+        background: linear-gradient(90deg, var(--warning-color), #ffd166);
     }
 
     .stock-high {
-        background-color: var(--success-color);
+        background: linear-gradient(90deg, var(--success-color), #6ede8a);
+    }
+
+    /* Button Styling */
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        border: none;
+        box-shadow: 0 4px 10px rgba(211, 95, 95, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(211, 95, 95, 0.3);
+        background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+    }
+
+    /* Card Animations */
+    .slide-in-left {
+        animation: slideInLeft 0.5s ease-out;
+    }
+
+    .slide-in-right {
+        animation: slideInRight 0.5s ease-out;
+    }
+
+    @keyframes slideInLeft {
+        from {
+            transform: translateX(-30px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideInRight {
+        from {
+            transform: translateX(30px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* Page Header Styling */
+    .page-header {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(211, 95, 95, 0.1);
+    }
+
+    .page-header h2 {
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 0;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .nav-tabs .nav-link {
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .nav-tabs .nav-link i {
+            margin-right: 5px;
+        }
+
+        .stat-card {
+            min-width: 120px;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="page-header">
-    <div>
-        <div class="d-flex justify-content-between align-items-center">
-            <h2 class="mb-0">{% if add %}Add Product{% else %}Edit Product: {{ original.name }}{% endif %}</h2>
-            {% if not add %}
-            <div class="btn-group">
-                <a href="{% url 'products:product_detail' original.slug %}" class="btn btn-info" target="_blank">
-                    <i class="fas fa-eye me-1"></i> View on Site
-                </a>
-            <a href="{% url 'admin:products_product_delete' original.pk %}" class="btn btn-danger delete-confirm">
-                <i class="fas fa-trash me-1"></i> Delete
-            </a>
+    <div class="container-fluid p-0">
+        <div class="row align-items-center">
+            <div class="col-md-6 text-start">
+                <h2 class="mb-0">{% if add %}Add Product{% else %}Edit Product: {{ original.name }}{% endif %}</h2>
+            </div>
+            <div class="col-md-6 text-end">
+                <div class="d-flex justify-content-end">
+                    {% if not add %}
+                    <div class="btn-group me-2">
+                        <a href="{% url 'products:product_detail' original.slug %}" class="btn btn-info" target="_blank">
+                            <i class="fas fa-eye me-1"></i> View on Site
+                        </a>
+                    </div>
+                    <div class="btn-group me-2">
+                        <a href="{% url 'admin:products_product_delete' original.pk %}" class="btn btn-danger delete-confirm">
+                            <i class="fas fa-trash me-1"></i> Delete
+                        </a>
+                    </div>
+                    {% endif %}
+                    <div class="btn-group">
+                        <a href="{% url 'admin:products_product_changelist' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Products
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-        {% endif %}
     </div>
 </div>
 
 <div class="row">
     <div class="col-lg-8">
         <div class="card mb-4 slide-in-left">
-            <div class="card-header">
+            <div class="card-header bg-white">
                 <ul class="nav nav-tabs card-header-tabs" id="productTabs" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="basic-tab" data-bs-toggle="tab" data-bs-target="#basic" type="button" role="tab" aria-controls="basic" aria-selected="true">
@@ -209,8 +416,33 @@
                     {% endif %}
                 </ul>
             </div>
-            <div class="card-body">
-                <form method="post" enctype="multipart/form-data" id="product_form" novalidate>
+            <div class="card-body p-4">
+                {% if errors %}
+                <div class="alert alert-danger mb-4">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-exclamation-circle fa-2x me-3"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="alert-heading mb-1">Please correct the errors below</h5>
+                            <ul class="mb-0 mt-2">
+                                {% for field in adminform.form %}
+                                    {% if field.errors %}
+                                        {% for error in field.errors %}
+                                            <li>{{ field.label }}: {{ error }}</li>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% for error in adminform.form.non_field_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data" id="product_form" novalidate class="product-form">
                     {% csrf_token %}
                     <div class="tab-content" id="productTabsContent">
                         <div class="tab-pane fade show active" id="basic" role="tabpanel" aria-labelledby="basic-tab">
@@ -462,22 +694,24 @@
                         {% endif %}
                     </div>
 
-                    <div class="mt-4 d-flex justify-content-between">
-                        <div>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-1"></i> Save
-                            </button>
-                            <a href="{% url 'admin:products_product_changelist' %}" class="btn btn-secondary">
-                                <i class="fas fa-times me-1"></i> Cancel
-                            </a>
+                    <div class="mt-4 border-top pt-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-primary me-2">
+                                    <i class="fas fa-save me-1"></i> Save
+                                </button>
+                                <a href="{% url 'admin:products_product_changelist' %}" class="btn btn-secondary">
+                                    <i class="fas fa-times me-1"></i> Cancel
+                                </a>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                {% if not add %}
+                                <button type="submit" name="_continue" class="btn btn-outline-primary">
+                                    <i class="fas fa-save me-1"></i> Save and continue editing
+                                </button>
+                                {% endif %}
+                            </div>
                         </div>
-                        {% if not add %}
-                        <div>
-                            <button type="submit" name="_continue" class="btn btn-outline-primary">
-                                <i class="fas fa-save me-1"></i> Save and continue editing
-                            </button>
-                        </div>
-                        {% endif %}
                     </div>
                 </form>
             </div>
@@ -487,8 +721,8 @@
     <div class="col-lg-4">
         {% if not add %}
         <div class="card mb-4 slide-in-right">
-            <div class="card-header">
-                <h5>Product Stats</h5>
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="fas fa-chart-bar me-2 text-primary"></i>Product Stats</h5>
             </div>
             <div class="card-body">
                 <div class="product-stats">
@@ -509,29 +743,40 @@
                     </div>
                 </div>
 
+                <hr class="my-4">
+
                 <div class="d-flex align-items-center mb-3">
+                    <div class="flex-shrink-0 me-3">
+                        <div class="icon-circle bg-light" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-calendar-alt text-primary"></i>
+                        </div>
+                    </div>
                     <div class="flex-grow-1">
                         <h6 class="mb-0">Created</h6>
-                    </div>
-                    <div>
-                        <span class="badge bg-light text-dark">{{ original.created_at|date:"F d, Y" }}</span>
+                        <div class="text-muted">{{ original.created_at|date:"F d, Y" }}</div>
                     </div>
                 </div>
 
                 <div class="d-flex align-items-center mb-3">
+                    <div class="flex-shrink-0 me-3">
+                        <div class="icon-circle bg-light" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-clock text-primary"></i>
+                        </div>
+                    </div>
                     <div class="flex-grow-1">
                         <h6 class="mb-0">Last Updated</h6>
-                    </div>
-                    <div>
-                        <span class="badge bg-light text-dark">{{ original.updated_at|date:"F d, Y" }}</span>
+                        <div class="text-muted">{{ original.updated_at|date:"F d, Y" }}</div>
                     </div>
                 </div>
 
                 <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 me-3">
+                        <div class="icon-circle bg-light" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-folder text-primary"></i>
+                        </div>
+                    </div>
                     <div class="flex-grow-1">
                         <h6 class="mb-0">Category</h6>
-                    </div>
-                    <div>
                         <a href="{% url 'admin:products_category_change' original.category.id %}" class="badge bg-primary">
                             {{ original.category.name }}
                         </a>
@@ -541,18 +786,67 @@
         </div>
 
         <div class="card mb-4 slide-in-right">
-            <div class="card-header">
-                <h5>Related Orders</h5>
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="fas fa-shopping-cart me-2 text-primary"></i>Related Orders</h5>
             </div>
             <div class="card-body">
                 <!-- This would require a custom query to get orders containing this product -->
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i> Order information will be displayed here.
+                <div class="alert alert-info d-flex align-items-center">
+                    <i class="fas fa-info-circle fa-lg me-3"></i>
+                    <div>Order information will be displayed here.</div>
                 </div>
 
-                <a href="#" class="btn btn-sm btn-outline-primary w-100">
+                <a href="#" class="btn btn-outline-primary w-100">
                     <i class="fas fa-list me-1"></i> View All Related Orders
                 </a>
+            </div>
+        </div>
+
+        <div class="card slide-in-right">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="fas fa-link me-2 text-primary"></i>Quick Links</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="{% url 'admin:products_category_change' original.category.id %}" class="list-group-item list-group-item-action d-flex align-items-center">
+                        <i class="fas fa-folder me-3 text-primary"></i>
+                        <span>Edit Category: {{ original.category.name }}</span>
+                    </a>
+                    <a href="{% url 'admin:products_product_add' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+                        <i class="fas fa-plus-circle me-3 text-success"></i>
+                        <span>Add Another Product</span>
+                    </a>
+                    <a href="{% url 'products:product_detail' original.slug %}" class="list-group-item list-group-item-action d-flex align-items-center" target="_blank">
+                        <i class="fas fa-external-link-alt me-3 text-info"></i>
+                        <span>View on Website</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <!-- Help card for Add Product page -->
+        <div class="card slide-in-right">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="fas fa-question-circle me-2 text-primary"></i>Adding a Product</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info d-flex">
+                    <i class="fas fa-lightbulb fa-lg me-3 mt-1"></i>
+                    <div>
+                        <p>Fill in the product details in the form. Required fields are marked with an asterisk (*).</p>
+                        <p class="mb-0">After saving, you'll be able to add images and variations to your product.</p>
+                    </div>
+                </div>
+
+                <hr class="my-3">
+
+                <h6 class="mb-3">Tips for adding products:</h6>
+                <ul class="mb-0">
+                    <li class="mb-2">Use descriptive product names</li>
+                    <li class="mb-2">Add detailed descriptions</li>
+                    <li class="mb-2">Set competitive pricing</li>
+                    <li>Add high-quality images</li>
+                </ul>
             </div>
         </div>
         {% endif %}
@@ -565,7 +859,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize rich text editor for description
-        if (CKEDITOR) {
+        if (typeof CKEDITOR !== 'undefined') {
             CKEDITOR.replace('id_description', {
                 height: 300,
                 toolbar: [
@@ -575,51 +869,221 @@
                     { name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule', 'SpecialChar' ] },
                     { name: 'tools', items: [ 'Maximize' ] },
                     { name: 'document', items: [ 'Source' ] }
-                ]
+                ],
+                removePlugins: 'elementspath',
+                resize_enabled: false,
+                extraPlugins: 'autogrow',
+                autoGrow_minHeight: 300,
+                autoGrow_maxHeight: 600,
+                autoGrow_bottomSpace: 50,
+                removeDialogTabs: 'image:advanced;link:advanced'
             });
         }
 
-        // Initialize Select2 for dropdowns
-        if ($.fn.select2) {
+        // Initialize Select2 for dropdowns with enhanced styling
+        if (typeof $.fn.select2 !== 'undefined') {
             $('#id_category').select2({
                 theme: 'bootstrap4',
-                placeholder: 'Select a category'
+                placeholder: 'Select a category',
+                allowClear: true,
+                width: '100%',
+                dropdownCssClass: 'select2-dropdown-primary'
             });
         }
 
-        // Auto-generate slug from name
+        // Auto-generate slug from name with improved functionality
         const nameInput = document.getElementById('id_name');
         const slugInput = document.getElementById('id_slug');
 
         if (nameInput && slugInput) {
-            nameInput.addEventListener('keyup', function() {
+            // Function to generate slug
+            const generateSlug = (text) => {
+                return text
+                    .toLowerCase()
+                    .replace(/[^\w\s-]/g, '') // Remove special chars
+                    .replace(/\s+/g, '-')     // Replace spaces with hyphens
+                    .replace(/-+/g, '-')      // Replace multiple hyphens with single
+                    .replace(/^-+|-+$/g, ''); // Trim hyphens from start and end
+            };
+
+            // Generate slug on input (not just keyup)
+            nameInput.addEventListener('input', function() {
                 if (!slugInput.dataset.manuallyChanged) {
-                    slugInput.value = nameInput.value
-                        .toLowerCase()
-                        .replace(/[^\w\s-]/g, '')
-                        .replace(/[\s_-]+/g, '-')
-                        .replace(/^-+|-+$/g, '');
+                    slugInput.value = generateSlug(nameInput.value);
                 }
             });
 
-            slugInput.addEventListener('change', function() {
+            // Mark as manually changed when user edits
+            slugInput.addEventListener('input', function() {
                 slugInput.dataset.manuallyChanged = 'true';
             });
+
+            // Add button to regenerate slug
+            const slugContainer = slugInput.parentElement;
+            const regenerateBtn = document.createElement('button');
+            regenerateBtn.type = 'button';
+            regenerateBtn.className = 'btn btn-sm btn-outline-secondary mt-2';
+            regenerateBtn.innerHTML = '<i class="fas fa-sync-alt me-1"></i> Regenerate from name';
+            regenerateBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                slugInput.value = generateSlug(nameInput.value);
+                slugInput.dataset.manuallyChanged = 'false';
+                // Show feedback
+                this.innerHTML = '<i class="fas fa-check me-1"></i> Updated';
+                this.classList.remove('btn-outline-secondary');
+                this.classList.add('btn-success');
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-sync-alt me-1"></i> Regenerate from name';
+                    this.classList.remove('btn-success');
+                    this.classList.add('btn-outline-secondary');
+                }, 2000);
+            });
+            slugContainer.appendChild(regenerateBtn);
         }
 
-        // Handle primary image selection
+        // Handle primary image selection with visual feedback
         const primaryCheckboxes = document.querySelectorAll('input[name$="-is_primary"]');
         primaryCheckboxes.forEach(checkbox => {
             checkbox.addEventListener('change', function() {
                 if (this.checked) {
+                    // Uncheck other primary checkboxes
                     primaryCheckboxes.forEach(cb => {
                         if (cb !== this) {
                             cb.checked = false;
+                            // Remove visual indicator from parent card
+                            const card = cb.closest('.card');
+                            if (card) {
+                                card.classList.remove('border-primary');
+                            }
                         }
                     });
+
+                    // Add visual indicator to selected card
+                    const card = this.closest('.card');
+                    if (card) {
+                        card.classList.add('border-primary');
+                    }
+
+                    // Show feedback toast
+                    showToast('Primary image updated', 'success');
                 }
             });
+
+            // Set initial visual state
+            if (checkbox.checked) {
+                const card = checkbox.closest('.card');
+                if (card) {
+                    card.classList.add('border-primary');
+                }
+            }
         });
+
+        // Add delete confirmation for product
+        const deleteBtn = document.querySelector('.delete-confirm');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
+                    window.location.href = this.getAttribute('href');
+                }
+            });
+        }
+
+        // Add toast notification system
+        function showToast(message, type = 'info') {
+            // Create toast container if it doesn't exist
+            let toastContainer = document.querySelector('.toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
+                toastContainer.style.zIndex = '1100';
+                document.body.appendChild(toastContainer);
+            }
+
+            // Create toast
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-white bg-${type} border-0`;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+
+            // Toast content
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'danger' ? 'exclamation-circle' : 'info-circle'} me-2"></i>
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            `;
+
+            toastContainer.appendChild(toast);
+
+            // Initialize and show toast
+            const bsToast = new bootstrap.Toast(toast, {
+                animation: true,
+                autohide: true,
+                delay: 3000
+            });
+            bsToast.show();
+
+            // Remove toast after it's hidden
+            toast.addEventListener('hidden.bs.toast', function() {
+                toast.remove();
+            });
+        }
+
+        // Add form validation
+        const form = document.getElementById('product_form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                // Check required fields
+                const requiredFields = form.querySelectorAll('[required]');
+                let hasErrors = false;
+
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        hasErrors = true;
+                        field.classList.add('is-invalid');
+
+                        // Add error message if not exists
+                        let errorMsg = field.nextElementSibling;
+                        if (!errorMsg || !errorMsg.classList.contains('invalid-feedback')) {
+                            errorMsg = document.createElement('div');
+                            errorMsg.className = 'invalid-feedback';
+                            errorMsg.textContent = 'This field is required.';
+                            field.parentNode.insertBefore(errorMsg, field.nextSibling);
+                        }
+                    } else {
+                        field.classList.remove('is-invalid');
+                    }
+                });
+
+                if (hasErrors) {
+                    e.preventDefault();
+                    showToast('Please fill in all required fields', 'danger');
+
+                    // Scroll to first error
+                    const firstError = form.querySelector('.is-invalid');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstError.focus();
+                    }
+                }
+            });
+
+            // Clear validation on input
+            form.querySelectorAll('input, select, textarea').forEach(field => {
+                field.addEventListener('input', function() {
+                    this.classList.remove('is-invalid');
+                    const errorMsg = this.nextElementSibling;
+                    if (errorMsg && errorMsg.classList.contains('invalid-feedback')) {
+                        errorMsg.remove();
+                    }
+                });
+            });
+        }
     });
 </script>
 {% endblock %}

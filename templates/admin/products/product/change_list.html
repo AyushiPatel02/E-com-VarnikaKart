@@ -11,6 +11,22 @@
 
 {% block extra_css %}
 <style>
+    /* Page header alignment styles */
+    .page-header .row {
+        width: 100%;
+    }
+
+    .page-header h2 {
+        text-align: left;
+        margin-right: auto;
+        font-weight: 700;
+    }
+
+    .page-header .text-end {
+        text-align: right !important;
+    }
+
+    /* Product card styles */
     .product-card {
         transition: all 0.3s ease;
         border-radius: 10px;
@@ -409,31 +425,35 @@
 
 {% block content %}
 <div class="page-header">
-    <div>
-        <div class="d-flex justify-content-between align-items-center">
-            <h2 class="mb-0">Products</h2>
-            <div class="d-flex">
-                <div class="btn-group">
-                    <a href="{% url 'admin:products_product_add' %}" class="btn btn-primary">
-                        <i class="fas fa-plus me-1"></i> Add Product
-                    </a>
-                    <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="visually-hidden">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'admin:products_product_add' %}"><i class="fas fa-plus me-2"></i>Add Single Product</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-file-import me-2"></i>Import Products</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Product Settings</a></li>
-                    </ul>
-                </div>
-                <div class="btn-group ms-2 view-toggle">
-                    <button type="button" class="list-view-btn active" title="List View">
-                        <i class="fas fa-list"></i>
-                    </button>
-                    <button type="button" class="grid-view-btn" title="Grid View">
-                        <i class="fas fa-th-large"></i>
-                    </button>
+    <div class="container-fluid p-0">
+        <div class="row align-items-center">
+            <div class="col-6 text-start">
+                <h2 class="mb-0">Products</h2>
+            </div>
+            <div class="col-6 text-end">
+                <div class="d-flex justify-content-end">
+                    <div class="btn-group">
+                        <a href="{% url 'admin:products_product_add' %}" class="btn btn-primary">
+                            <i class="fas fa-plus me-1"></i> Add Product
+                        </a>
+                        <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'admin:products_product_add' %}"><i class="fas fa-plus me-2"></i>Add Single Product</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-file-import me-2"></i>Import Products</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Product Settings</a></li>
+                        </ul>
+                    </div>
+                    <div class="btn-group ms-2 view-toggle">
+                        <button type="button" class="list-view-btn active" title="List View">
+                            <i class="fas fa-list"></i>
+                        </button>
+                        <button type="button" class="grid-view-btn" title="Grid View">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

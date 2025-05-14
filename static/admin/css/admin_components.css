@@ -238,12 +238,38 @@
 
 /* Modern Dashboard Components */
 .page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     margin-bottom: 2rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid rgba(211, 95, 95, 0.1);
+}
+
+.page-header .container-fluid {
+    padding: 0;
+}
+
+.page-header .row {
+    width: 100%;
+    margin: 0;
+}
+
+.page-header h2 {
+    text-align: left;
+    margin-right: auto;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.page-header .text-start {
+    text-align: left !important;
+}
+
+.page-header .text-end {
+    text-align: right !important;
+}
+
+.page-header .d-flex.justify-content-end {
+    display: flex;
+    justify-content: flex-end;
 }
 
 .page-title {
